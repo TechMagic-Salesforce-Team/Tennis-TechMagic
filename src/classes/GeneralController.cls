@@ -6,7 +6,7 @@ public class GeneralController {
             currentPlayer = getCurrentPlayer();
             return currentPlayer;
         }set;
-        }
+    }
     
     public GeneralController(){
         
