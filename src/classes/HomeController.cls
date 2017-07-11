@@ -3,6 +3,6 @@ public class HomeController {
   public String myName{get;set;}
     //sdafdsf//sadf
   public HomeController(){
-        System.debug('A');
+        System.debug('Avs');
   }
 }
