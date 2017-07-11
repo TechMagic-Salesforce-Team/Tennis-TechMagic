@@ -1,6 +1,41 @@
-<apex:page>
-<!-- Begin Default Content REMOVE THIS -->
-        <h1>Congratulations</h1>
-This is your new Page
-<!-- End Default Content REMOVE THIS -->
+<apex:page id="LoginRegister" controller="PlayerController">
+   <apex:sectionHeader title="Visualforce Example" subtitle="Create a Player"/>
+    <div style = 'float:left; height:100%; width:100%;'>
+    <apex:form rendered="{!registrationPage}">
+        <apex:pageMessages />
+        <apex:pageBlock title="Player Info">
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!registration}" value="Save"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection showHeader="true" columns="2">
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Name of player" for="player_name"/>
+                <apex:inputField value="{!player.Name}" id="player_name" required="true"/>
+                </apex:pageBlockSectionItem>
+                <p style="clear: left"/>
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Email player" for="player_email"/>
+                <apex:inputField value="{!player.Email__c}" id="player_email" />
+                </apex:pageBlockSectionItem>
+                <p style="clear: left"/>
+
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Password " for="player_password"/>
+                <apex:inputSecret value="{!player.Password__c}" required="true"/>
+                </apex:pageBlockSectionItem>
+                <p style="clear: left"/>
+
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Confirm password " for="player_password"/>
+                <apex:inputSecret value="{!confirmPassword}"/>
+                </apex:pageBlockSectionItem>
+                <p style="clear: left"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    </div>
 </apex:page>
