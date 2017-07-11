@@ -5,6 +5,8 @@
             <property name="username" value="rgaidukevych@gmail.com"/>
             <property name="endpointEnvironment" value="Production/Developer Edition"/>
             <property name="endpointServerCustomUrl" value=""/>
+            <property name="overrideGlobals" value="true"/>
+            <property name="hideXMLFiles" value="true"/>
         </module>
         <module name="org-netbeans-modules-html-editor-lib"/>
         <module name="org-netbeans-modules-editor-indent">
