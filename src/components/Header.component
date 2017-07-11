@@ -1,0 +1,10 @@
+<apex:component controller="PlayerController">
+    <apex:pageBlock rendered = "{!!isLoggedIn}">
+       <a href = "LoginRegister?pageType=registration">Registration</a>
+       <a href = "LoginRegister?pageType=login">Login</a>
+    </apex:pageBlock> 
+  
+    <apex:pageBlock rendered = "{!isLoggedIn}">
+        <a href = "LogoutPage">Logout</a>
+    </apex:pageBlock>
+</apex:component>
