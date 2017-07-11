@@ -1,0 +1,52 @@
+<apex:page controller="HomeController" cache="false">
+    <apex:pageBlock rendered="{!checkPlayerCookie== false}" title="Login/Registration">
+        <apex:outputLink value="Test" id="theLoginLink">Login</apex:outputLink><br/>
+        <apex:outputLink value="Test" id="theRegisterLink">Register</apex:outputLink>
+     </apex:pageBlock>
+     <apex:pageBlock rendered="{!checkPlayerCookie}">
+        <apex:pageblockSection title="Personal information about me">         
+             <apex:outputField value="{!currentPlayer.Name}"/> : <br/>
+             <apex:outputField value="{!currentPlayer.Email__c}"/>
+             <apex:outputLink value="PersonalPage">Personal page</apex:outputLink>
+         </apex:pageblockSection> 
+         <br/><apex:outputLink value="Logout" id="theLogoutLink">Logout</apex:outputLink><br/>
+     </apex:pageBlock>
+     <apex:pageBlock rendered="{!statusPlayer}" title="Tournament">
+         <apex:outputText >If you want to create tournament you must -> </apex:outputText>
+         <apex:outputLink value="CreateTournament" style="background-color: #f4427a;">click here</apex:outputLink>
+     </apex:pageBlock>
+     <apex:pageBlock title="Tournament in progress">
+        <apex:form > 
+            <apex:selectList value="{!selectedTournament}" size="1" required="true">
+                <apex:selectOptions value="{!playersOptions}"></apex:selectOptions>
+            </apex:selectList>
+            <apex:commandButton action="rerenderPageBlockForSelectedTournament" value="GO"/>    
+        </apex:form>
+        <apex:pageBlockTable value="{!tournamentBySelectOption }" var="tournament">
+                <apex:column headerValue="Name"><apex:outputLink value="CurrentTournament?id={!tournament.id}">{!tournament.Name}</apex:outputLink></apex:column>
+                <apex:column value="{!tournament.StartDate__c}"/>             
+                <apex:column >
+                    <apex:facet name="header">Type</apex:facet>
+                    <apex:outputField value="{!tournament.Type__c}"/>
+                </apex:column>
+                <apex:column value="{!tournament.Format__c}"/>
+                <apex:column value="{!tournament.Status__c}"/>
+        </apex:pageBlockTable>
+        <apex:pageBlockTable value="{!tournamentsInProgress}" var="tournament">
+                <apex:column headerValue="Name"><apex:outputLink value="CurrentTournament?id={!tournament.id}">{!tournament.Name}</apex:outputLink></apex:column>
+                <apex:column value="{!tournament.StartDate__c}"/>             
+                <apex:column >
+                    <apex:facet name="header">Type</apex:facet>
+                    <apex:outputField value="{!tournament.Type__c}"/>
+                </apex:column>
+                <apex:column value="{!tournament.Format__c}"/>
+                <apex:column value="{!tournament.Status__c}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="Helpfull links">
+         See all active Users : <apex:outputLink value="PlayerList" id="UsersListLink">Look For Your Team</apex:outputLink><br/>
+         My team : <apex:outputLink value="MyTeam" id="theRegisterLink">Check your team</apex:outputLink><br/>
+         See all torunaments : <apex:outputLink value="RepresentTableTennisTournament" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
+     </apex:pageBlock>
+
+</apex:page>
