@@ -2,7 +2,7 @@
 <auxiliary-configuration xmlns="http://www.netbeans.org/ns/auxiliary-configuration/1">
     <preferences xmlns="http://www.netbeans.org/ns/auxiliary-configuration-preferences/1">
         <module name="com-forcenb">
-            <property name="username" value="rgaidukevych@gmail.com"/>
+            <property name="username" value="ihor.maiba@techmagic.com"/>
             <property name="endpointEnvironment" value="Production/Developer Edition"/>
             <property name="endpointServerCustomUrl" value=""/>
         </module>

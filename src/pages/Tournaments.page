@@ -1,0 +1,44 @@
+<apex:page controller="TournamentController" tabstyle="Tournament__c" standardStylesheets="true" showHeader="true" cache="false" action="{!findAll}">
+    <h1>Tournaments page</h1>
+    <apex:form >
+        <apex:pageBlock mode="edit">
+            <apex:pageBlockSection>
+                <apex:inputField value="{!searchTournament.Name}" required="false"/>
+                <apex:inputField value="{!searchTournament.Type__c}" required="false"/>
+                <apex:inputField value="{!searchTournament.Format__c}" required="false"/>
+                <apex:inputField value="{!searchTournament.Status__c}" required="false"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Search" action="{!findAll}" rerender="allTournamentsTable"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock id="allTournamentsTable">
+            <apex:pageMessages />
+            <apex:pageBlockSection rendered="{!allTournamentsSize == 0}">
+                <p>No tournaments found</p>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournamentsSize != 0}">
+                <apex:column value="{!t.Name}"/>
+                <apex:column value="{!t.Type__c}"/>
+                <apex:column value="{!t.Format__c}"/>
+                <apex:column value="{!t.StartDate__c}"/>
+                <apex:column value="{!t.Status__c}"/>
+                <apex:column headerValue="View">
+                    <apex:commandButton value="View" action="{!view}">
+                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>        
+                <apex:column headerValue="Edit">
+                    <apex:commandButton value="Edit" action="{!editUpcoming}">
+                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>
+                <apex:column headerValue="Delete">
+                    <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
+                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
