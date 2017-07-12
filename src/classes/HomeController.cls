@@ -1,22 +1,14 @@
 public with sharing class HomeController {
-    public Tournament__c tournamentBySelectOption{
-        get{
-            if(tournamentBySelectOption == null) tournamentBySelectOption = new Tournament__c();
-            return tournamentBySelectOption;
-        }
-        set;
-    }
-    public Tournament__c selectedTournament{
-        get{
-            if (selectedTournament == null) selectedTournament = new Tournament__c();
-            return selectedTournament;
-        }
-        set;
-    }
+
     public List<Tournament__c> tournamentsInProgress{get;set;}
+    public Integer tournamentsInProgressSize{get;set;}
     public Cookie playerCookie{get; set;}
     public boolean statusPlayer{get; set;}
     public boolean checkPlayerCookie{get; set;}
+    public Boolean rend {get; set;}    
+    public String selectedTournamentInputName{get;set;}
+    public String selectedTournamentType{get;set;}
+    public String selectedTournamentFormat{get;set;}
     public Player__c currentPlayer {
         get {
             if (currentPlayer == null)
@@ -25,23 +17,64 @@ public with sharing class HomeController {
             }
         set;
     }
-    
-    public List<SelectOption> playersOptions{
+    public Tournament__c tournamentBySelectOption{
         get{
-            if (playersOptions == null) {
-                playersOptions = new List<SelectOption>();
+            if(tournamentBySelectOption == null) tournamentBySelectOption = new Tournament__c();
+            return tournamentBySelectOption;
+        }
+        set;
+    }
+    public String selectedTournament{
+        get{
+            if (selectedTournament == null) selectedTournament = '';
+            return selectedTournament;
+        }
+        set;
+    }
+    public List<SelectOption> tournamentOptions{
+        get{
+            if (tournamentOptions == null) {
+                tournamentOptions = new List<SelectOption>();
             }
             Set<Tournament__c> thisTournaments = new Set<Tournament__c>();
             thisTournaments.addAll(getAllTournamentsInProgress());
             for(Tournament__c thisTournament : thisTournaments){
                 SelectOption SO = new SelectOption(thisTournament.Id, thisTournament.Name);
-                playersOptions.add(SO);
+                tournamentOptions.add(SO);
             }
-            return playersOptions;
+            return tournamentOptions;
         }
         set;
     }
-    
+    public List<SelectOption> tournamentTypeOptions{
+        get{
+            if (tournamentTypeOptions== null) {
+                tournamentTypeOptions= new List<SelectOption>();
+            }
+            Set<Tournament__c> thisTournaments = new Set<Tournament__c>();
+            thisTournaments.addAll(getAllTournamentsInProgress());
+            tournamentTypeOptions.add(new SelectOption('AnyType','Any Type'));
+            tournamentTypeOptions.add(new SelectOption('Round Robin','Round Robin'));
+            tournamentTypeOptions.add(new SelectOption('Single Elimination','Single Elimination'));
+            tournamentTypeOptions.add(new SelectOption('Double Elimination','Double Elimination'));
+            return tournamentTypeOptions;
+        }
+        set;
+    }
+    public List<SelectOption> tournamentFormatOptions{
+        get{
+            if (tournamentFormatOptions== null) {
+                tournamentFormatOptions= new List<SelectOption>();
+            }
+            Set<Tournament__c> thisTournaments = new Set<Tournament__c>();
+            thisTournaments.addAll(getAllTournamentsInProgress());
+            tournamentFormatOptions.add(new SelectOption('AnyFormat','Any Format'));
+            tournamentFormatOptions.add(new SelectOption('1 x 1','1 x 1'));
+            tournamentFormatOptions.add(new SelectOption('2 x 2','2 x 2'));
+            return tournamentFormatOptions;
+        }
+        set;
+    }
     public HomeController(){
         playerCookie = ApexPages.currentPage().getCookies().get('PlayerSession');
         if(playerCookie != null){
@@ -54,6 +87,8 @@ public with sharing class HomeController {
              statusPlayer = false;
          }
          tournamentsInProgress = getAllTournamentsInProgress();
+         tournamentBySelectOption = tournamentsInProgress.get(0);
+         tournamentsInProgressSize = tournamentsInProgress.size();
     }
     
     public Player__c getPlayer(){
@@ -86,8 +121,37 @@ public with sharing class HomeController {
         return 0;
     }
     
-    public void rerenderPageBlockForSelectedTournament(){
-       // tournamentBySelectOption = [Select ID, Name, StartDate__c, Type__c, Status__c, Format__c From Tournament__c Where Id = :selectedTournament.Id];        
-    }
-       
+    public PageReference rerenderPageBlockForSelectedTournament(){
+        List<Tournament__c> thisTournament = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
+                                              FROM Tournament__c Where Status__c = 'Current' AND Id = :selectedTournament];
+        if(thisTournament.size() !=null && thisTournament.size()>0){
+            tournamentBySelectOption = thisTournament.get(0);
+        }
+        return null;    
+    }    
+    public PageReference rerenderPageBlockForSelectedTournamentsName(){
+        List<Tournament__c> thisTournament = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
+                                              FROM Tournament__c Where Status__c = 'Current' AND Name = :selectedTournament];
+        if(thisTournament.size() !=null && thisTournament.size()>0){
+            tournamentBySelectOption = thisTournament.get(0);
+        }
+        return null;    
+    }    
+    public PageReference rerenderPageBlockForSelectedTournamentsType(){
+        List<Tournament__c> thisTournament = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
+                                              FROM Tournament__c Where Status__c = 'Current' AND Type__c = :selectedTournamentType AND Format__c = :selectedTournamentFormat];
+        if(thisTournament.size() !=null && thisTournament.size()>0){
+            tournamentsInProgress = thisTournament;
+        }else{tournamentsInProgress  = new List<Tournament__c>();}
+        return null;    
+    }    
+    public PageReference rerenderPageBlockForSelectedTournamentsFormat(){
+        
+        List<Tournament__c> thisTournament = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
+                                              FROM Tournament__c Where Status__c = 'Current' AND Format__c = :selectedTournamentFormat AND Type__c = :selectedTournamentType];
+        if(thisTournament.size() !=null && thisTournament.size()>0){
+            tournamentsInProgress  = thisTournament;
+        }else{tournamentsInProgress  = new List<Tournament__c>();}
+        return null;    
+    }   
 }
