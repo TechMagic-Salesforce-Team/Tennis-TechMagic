@@ -1,4 +1,4 @@
-<apex:page controller="TournamentController" tabstyle="Tournament__c" standardStylesheets="true" showHeader="true" cache="false" action="{!findAll}">
+<apex:page controller="TournamentController" tabstyle="Tournament__c" standardStylesheets="true" showHeader="true" cache="false">
     <h1>Tournaments page</h1>
     <apex:form >
         <apex:pageBlock mode="edit">
@@ -24,12 +24,12 @@
                 <apex:column value="{!t.StartDate__c}"/>
                 <apex:column value="{!t.Status__c}"/>
                 <apex:column headerValue="View">
-                    <apex:commandButton value="View" action="{!view}">
+                    <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>        
                 <apex:column headerValue="Edit">
-                    <apex:commandButton value="Edit" action="{!editUpcoming}">
+                    <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
