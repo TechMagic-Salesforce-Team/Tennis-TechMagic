@@ -1,0 +1,8 @@
+<apex:component controller="TournamentController">
+    <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" description="Value to pass into the controller"/>
+<!-- Begin Default Content REMOVE THIS -->
+        <p>{!currentTournament.Name}</p>
+        <h1>Tournament information</h1>
+This is your new Component
+<!-- End Default Content REMOVE THIS -->
+</apex:component>

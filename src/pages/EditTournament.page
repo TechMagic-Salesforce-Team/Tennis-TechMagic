@@ -1,4 +1,4 @@
-<apex:page>
+<apex:page controller="TournamentController">
 <!-- Begin Default Content REMOVE THIS -->
         <h1>Tournament E±dit</h1>
 This is your new Page

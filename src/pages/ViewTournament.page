@@ -1,6 +1,5 @@
-<apex:page>
+<apex:page controller="TournamentController">
 <!-- Begin Default Content REMOVE THIS -->
         <h1>Tournament View</h1>
-This is your new Page
-<!-- End Default Content REMOVE THIS -->
+        <c:TournamentInformation tournament="{!currentTournament}"/>
 </apex:page>
