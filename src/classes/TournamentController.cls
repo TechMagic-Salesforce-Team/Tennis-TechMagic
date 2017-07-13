@@ -14,14 +14,8 @@ public with sharing class TournamentController {
     public TournamentController() {
         searchTournament = new Tournament__c();
         url = ApexPages.currentPage().getUrl();
-        if (url.containsIgnoreCase('Tournaments')) {
-            findAll();
-        } else if (url.containsIgnoreCase('ViewTournament') || url.containsIgnoreCase('EditTournament')) {
-            currentTournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
-            if (currentTournamentId != null) {
-                currentTournament = findById();
-            }
-        } else if (url.containsIgnoreCase('Player')) {
+        findAll();
+        if (url.containsIgnoreCase('Player')) {
             currentPlayerId = ApexPages.currentPage().getParameters().get('playerId');
             if (currentPlayerId != null) {
                 List<Player__c> players = [SELECT Id FROM Player__c WHERE Id = :currentPlayerId];
@@ -33,19 +27,31 @@ public with sharing class TournamentController {
         }
     }
     
-    public PageReference view() {
-        currentTournament = findById();
-        if (currentTournament != null) {
-            return new PageReference('/apex/ViewTournament?tournamentId=' + currentTournamentId);
+    public PageReference save() {
+        try {
+            upsert(currentTournament);
+            return Page.Tournaments;
+        } catch (System.DmlException e) {
+            ApexPages.addMessages(e);
         }
         return null;
+    }
+    
+    public void view() {
+        for (TournamentWrapper tW : allTournaments) {
+            if (tW.tournament.Id == currentTournamentId) {
+                tW.isShowed = tW.isShowed ? false : true;
+            }
+        }
     }
     
     public PageReference editUpcoming() {
         currentTournament = findById();
         if (currentTournament != null) {
             if (currentTournament.Status__c == 'Upcoming') {
-                return new PageReference('/apex/EditTournament?tournamentId=' + currentTournamentId);
+                Pagereference pageRef = Page.EditTournament;
+                pageRef.getParameters().put('tournamentId', currentTournament.Id);
+                return pageRef;
             } else {
                 ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING, 
                     'You can not edit this tournament as it is ' + currentTournament.Status__c));
@@ -61,6 +67,8 @@ public with sharing class TournamentController {
                 try {
                     delete(currentTournament);
                     findAll();
+                    ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO, 
+                        'You have just deleted the tournament!'));
                 } catch(System.DmlException e) {
                     ApexPages.addMessages(e);
                 }
@@ -69,6 +77,19 @@ public with sharing class TournamentController {
                     'You can not delete this tournament as it is ' + currentTournament.Status__c));
             }
         }
+    }
+    
+    public PageReference checkTournamentExistance() {
+        // NEED to check if user is logged in and manager
+        currentTournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
+        if (currentTournamentId != null) {
+            currentTournament = findById();
+            if (currentTournament != null) {
+                return null;
+            }
+        }
+        // better to replace tournaments page with some error page
+        return Page.Tournaments;
     }
     
     private Tournament__c findById() {

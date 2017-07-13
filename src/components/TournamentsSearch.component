@@ -1,4 +1,4 @@
-<apex:component controller="TournamentController">
+<apex:component controller="TournamentController" allowDML="true">
     <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
@@ -16,8 +16,7 @@
             <apex:pageBlockSection rendered="{!allTournaments.size == 0}">
                 <p>No tournaments found</p>
             </apex:pageBlockSection>
-            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments.size != 0}">
-                    
+            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments.size != 0}">         
                 <apex:column value="{!t.tournament.Name}"/>
                 <apex:column value="{!t.tournament.Type__c}"/>
                 <apex:column value="{!t.tournament.Format__c}"/>
@@ -38,12 +37,9 @@
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
-                <apex:column headerValue="Delete">
-                        {!t.isShowed}
-                </apex:column>
                 <apex:column breakBefore="true" colspan="8" rendered="{!t.isShowed}">
                     <apex:pageBlock>
-                        dfbh
+                        <c:TournamentInformation tournament="{!t.tournament}"/>
                     </apex:pageBlock>
                 </apex:column>
             </apex:pageBlockTable>
