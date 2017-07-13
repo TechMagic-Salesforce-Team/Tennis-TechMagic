@@ -13,29 +13,38 @@
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
             <apex:pageMessages />
-            <apex:pageBlockSection rendered="{!allTournamentsSize == 0}">
+            <apex:pageBlockSection rendered="{!allTournaments.size == 0}">
                 <p>No tournaments found</p>
             </apex:pageBlockSection>
-            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournamentsSize != 0}">
-                <apex:column value="{!t.Name}"/>
-                <apex:column value="{!t.Type__c}"/>
-                <apex:column value="{!t.Format__c}"/>
-                <apex:column value="{!t.StartDate__c}"/>
-                <apex:column value="{!t.Status__c}"/>
+            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments.size != 0}">
+                    
+                <apex:column value="{!t.tournament.Name}"/>
+                <apex:column value="{!t.tournament.Type__c}"/>
+                <apex:column value="{!t.tournament.Format__c}"/>
+                <apex:column value="{!t.tournament.StartDate__c}"/>
+                <apex:column value="{!t.tournament.Status__c}"/>
                 <apex:column headerValue="View">
                     <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable">
-                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>        
                 <apex:column headerValue="Edit">
                     <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable">
-                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
                 <apex:column headerValue="Delete">
                     <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
-                        <apex:param name="currentTournamentId" value="{!t.Id}" assignTo="{!currentTournamentId}"/>
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
+                </apex:column>
+                <apex:column headerValue="Delete">
+                        {!t.isShowed}
+                </apex:column>
+                <apex:column breakBefore="true" colspan="8" rendered="{!t.isShowed}">
+                    <apex:pageBlock>
+                        dfbh
+                    </apex:pageBlock>
                 </apex:column>
             </apex:pageBlockTable>
         </apex:pageBlock>

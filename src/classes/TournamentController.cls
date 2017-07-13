@@ -1,8 +1,7 @@
 public with sharing class TournamentController {
     
     public Tournament__c searchTournament {get; set;}
-    public List<Tournament__c> allTournaments {get; private set;}
-    public Integer allTournamentsSize {get; private set;}
+    public List<TournamentWrapper> allTournaments {get; private set;}
     
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
@@ -87,7 +86,7 @@ public with sharing class TournamentController {
         String tType = searchTournament.Type__c == null ? '%' : searchTournament.Type__c;
         String tFormat = searchTournament.Format__c == null ? '%' : searchTournament.Format__c;
         String tStatus = searchTournament.Status__c == null ? '%' : searchTournament.Status__c;
-        allTournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
+        List<Tournament__c> tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
             FROM Tournament__c
             WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
             AND Status__c LIKE :tStatus];
@@ -108,16 +107,28 @@ public with sharing class TournamentController {
             }
             List<Tournament__c> appliedTournaments = new List<Tournament__c>();
             for (String id : tournamentIds) {
-                for (Tournament__c t : allTournaments) {
+                for (Tournament__c t : tournaments) {
                     if (t.Id == id) {
                         appliedTournaments.add(t);
                         break;
                     }
                 }
             }
-            allTournaments = appliedTournaments;
+            tournaments = appliedTournaments;
         }
-        allTournamentsSize = allTournaments.size();
+        allTournaments = new List<TournamentWrapper>();
+        for (Tournament__c t : tournaments) {
+            TournamentWrapper tW = new TournamentWrapper();
+            tW.tournament = t;
+            tW.isShowed = false;
+            allTournaments.add(tW);
+        }
+        System.debug(allTournaments);
+    }
+    
+    public class TournamentWrapper {
+        public Tournament__c tournament {get; set;}
+        public Boolean isShowed {get; set;}
     }
    
 }
