@@ -6,29 +6,17 @@ public with sharing class TournamentController {
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
     
-    public String currentPlayerId {get; set;}
     public Player__c currentPlayer {get; set;}
-    
-    public String url {get; set;}
     
     public TournamentController() {
         searchTournament = new Tournament__c();
-        url = ApexPages.currentPage().getUrl();
+        currentTournament = new Tournament__c();
         findAll();
-        if (url.containsIgnoreCase('Player')) {
-            currentPlayerId = ApexPages.currentPage().getParameters().get('playerId');
-            if (currentPlayerId != null) {
-                List<Player__c> players = [SELECT Id FROM Player__c WHERE Id = :currentPlayerId];
-                if (players.size() > 0) {
-                    currentPlayer = players[0];
-                    findAll();
-                }
-            }
-        }
     }
     
     public PageReference save() {
         try {
+            currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
             return Page.Tournaments;
         } catch (System.DmlException e) {
@@ -37,12 +25,20 @@ public with sharing class TournamentController {
         return null;
     }
     
+    public PageReference cancel() {
+        return Page.Tournaments;
+    }
+    
     public void view() {
         for (TournamentWrapper tW : allTournaments) {
             if (tW.tournament.Id == currentTournamentId) {
                 tW.isShowed = tW.isShowed ? false : true;
             }
         }
+    }
+    
+    public void apply() {
+        
     }
     
     public PageReference editUpcoming() {
@@ -88,7 +84,6 @@ public with sharing class TournamentController {
                 return null;
             }
         }
-        // better to replace tournaments page with some error page
         return Page.Tournaments;
     }
     
@@ -111,21 +106,15 @@ public with sharing class TournamentController {
             FROM Tournament__c
             WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
             AND Status__c LIKE :tStatus];
-        if (url.containsIgnoreCase('Player') && !url.containsIgnoreCase('Tournaments') && currentPlayerId != null && currentPlayer != null) {
-            // find all the tournamnets the current player is applied to
-            List<PlayerTournament__c> playerTournamnets = [SELECT Tournament__c 
-                FROM PlayerTournament__c WHERE Player__c = :currentPlayerId];
-            List<Team__c> teams = [SELECT Tournament__c 
-                FROM Team__c 
-                WHERE IsComplete__c = true AND Id IN 
-                (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerId)];
-            List<String> tournamentIds = new List<String>();
-            for (PlayerTournament__c pt : playerTournamnets) {
-                tournamentIds.add(pt.Tournament__c);
-            }
-            for (Team__c t : teams) {
-                tournamentIds.add(t.Tournament__c);
-            }
+        
+        allTournaments = new List<TournamentWrapper>();
+        
+        List<String> tournamentIds;
+        if (currentPlayer == null) {
+            currentPlayer = new Player__c();//new Player__c(Id = 'a000Y00000E88dq');//currentPlayer = CookiePlayer;
+            tournamentIds = getAllAppliedTournamentIds();
+        } else {
+            tournamentIds = getAllAppliedTournamentIds();
             List<Tournament__c> appliedTournaments = new List<Tournament__c>();
             for (String id : tournamentIds) {
                 for (Tournament__c t : tournaments) {
@@ -137,19 +126,47 @@ public with sharing class TournamentController {
             }
             tournaments = appliedTournaments;
         }
-        allTournaments = new List<TournamentWrapper>();
+        
         for (Tournament__c t : tournaments) {
             TournamentWrapper tW = new TournamentWrapper();
             tW.tournament = t;
             tW.isShowed = false;
+            tW.isApplied = false;
+            for (String id : tournamentIds) {
+                if (t.Id == id) {
+                    tW.isApplied = true;
+                    break;
+                }
+            }
             allTournaments.add(tW);
         }
         System.debug(allTournaments);
     }
     
+    private List<String> getAllAppliedTournamentIds() {
+        List<PlayerTournament__c> playerTournamnets = [SELECT Tournament__c 
+                FROM PlayerTournament__c WHERE Player__c = :currentPlayer.Id];
+        List<Team__c> teams = [SELECT Tournament__c 
+            FROM Team__c 
+            WHERE IsComplete__c = true AND Id IN 
+            (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayer.Id)];
+        
+        List<String> tournamentIds = new List<String>();
+        
+        for (PlayerTournament__c pt : playerTournamnets) {
+            tournamentIds.add(pt.Tournament__c);
+        }
+        for (Team__c t : teams) {
+            tournamentIds.add(t.Tournament__c);
+        }
+        
+        return tournamentIds;
+    }
+    
     public class TournamentWrapper {
         public Tournament__c tournament {get; set;}
         public Boolean isShowed {get; set;}
+        public Boolean isApplied {get; set;}
     }
    
 }

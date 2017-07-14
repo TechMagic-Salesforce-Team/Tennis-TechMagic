@@ -1,4 +1,5 @@
 <apex:component controller="TournamentController" allowDML="true">
+    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" required="false" description="Value to pass into the controller"/>
     <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
@@ -26,7 +27,13 @@
                     <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
-                </apex:column>        
+                </apex:column>
+                <apex:column headerValue="Apply">
+                    <apex:outputText value="Applied" rendered="{!t.isApplied}"/>
+                    <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied}" rerender="allTournamentsTable">
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>           
                 <apex:column headerValue="Edit">
                     <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
@@ -37,7 +44,7 @@
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
-                <apex:column breakBefore="true" colspan="8" rendered="{!t.isShowed}">
+                <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}">
                     <apex:pageBlock>
                         <c:TournamentInformation tournament="{!t.tournament}"/>
                     </apex:pageBlock>
