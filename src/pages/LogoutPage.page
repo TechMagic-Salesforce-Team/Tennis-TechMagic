@@ -1,2 +1,2 @@
-<apex:page controller = "PlayerController" action="{!logout}">
+<apex:page controller="PlayerController" action="{!logout}">
 </apex:page>
