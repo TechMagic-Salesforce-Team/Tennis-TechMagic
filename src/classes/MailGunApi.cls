@@ -4,28 +4,28 @@ global with sharing class MailGunApi {
         boolean bAttachments = false;
         string sReturn = '';
         
-        HttpRequest req = new HttpRequest();
-        HttpResponse res = new HttpResponse();
+        HttpRequest request = new HttpRequest();
+        HttpResponse response = new HttpResponse();
         Http http = new Http();
         Blob headerValue = Blob.valueOf('api:key-cf1ff666c0bd5e832e83fef46b3c4bc5');
         String authorizationHeader = 'BASIC ' + EncodingUtil.base64Encode(headerValue);
-        req.setHeader('Authorization', authorizationHeader);
-        req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.setHeader('Authorization', authorizationHeader);
+        request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
         
-        req.setHeader('Accept', 'application/json, application/xml, text/json, text/x-json, text/javascript, text/xml, application/json');
-        req.setHeader('Host', 'postmaster@sandbox7bafa6dd6bc54cd290850ab5371007d7.mailgun.org');
+        request.setHeader('Accept', 'application/json, application/xml, text/json, text/x-json, text/javascript, text/xml, application/json');
+        request.setHeader('Host', 'postmaster@sandbox7bafa6dd6bc54cd290850ab5371007d7.mailgun.org');
 
-        req.setEndPoint('https://api.mailgun.net/v3/sandbox7bafa6dd6bc54cd290850ab5371007d7.mailgun.org/messages');  
-        req.setMethod('POST'); 
+        request.setEndPoint('https://api.mailgun.net/v3/sandbox7bafa6dd6bc54cd290850ab5371007d7.mailgun.org/messages');  
+        request.setMethod('POST'); 
         sBody = 'from=SalesForceTeam<postmaster@sandbox7bafa6dd6bc54cd290850ab5371007d7.mailgun.org>&to='+to +'&subject='+subject+'&text='+text;
         
         
-        System.debug('REQUEST: '+req);
+        System.debug('REQUEST: '+request);
 
-        req.setBody(sBody); 
-        res = http.send(req);
-        system.debug(res.getBody());
-        req.setHeader('Content-Length', string.valueOf(sBody.length()));
-        system.debug(res.getStatusCode());
+        request.setBody(sBody); 
+        response = http.send(request);
+        system.debug(response.getBody());
+        request.setHeader('Content-Length', string.valueOf(sBody.length()));
+        system.debug(response.getStatusCode());
     }
 }
