@@ -7,11 +7,17 @@ public with sharing class TournamentController {
     public Tournament__c currentTournament {get; set;}
     
     public Player__c currentPlayer {get; set;}
+    public Player__c testPlayer {get; set;}
     
     public TournamentController() {
         searchTournament = new Tournament__c();
         currentTournament = new Tournament__c();
-        findAll();
+        testPlayer = [SELECT Id FROM Player__c LIMIT 1];
+        //findAll();
+    }
+    
+    public Player__c getPlayer() {
+        return currentPlayer;
     }
     
     public PageReference save() {
@@ -110,8 +116,9 @@ public with sharing class TournamentController {
         allTournaments = new List<TournamentWrapper>();
         
         List<String> tournamentIds;
+        System.debug(currentPlayer);
         if (currentPlayer == null) {
-            currentPlayer = new Player__c();//new Player__c(Id = 'a000Y00000E88dq');//currentPlayer = CookiePlayer;
+            currentPlayer = PlayerCookie.getCurrentPlayer();//new Player__c(Id = 'a000Y00000E88dq');//currentPlayer = CookiePlayer;
             tournamentIds = getAllAppliedTournamentIds();
         } else {
             tournamentIds = getAllAppliedTournamentIds();

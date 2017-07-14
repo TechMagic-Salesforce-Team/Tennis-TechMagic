@@ -1,5 +1,5 @@
 <apex:component controller="TournamentController" allowDML="true">
-    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" required="false" description="Value to pass into the controller"/>
+    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" description="Value to pass into the controller"/>
     <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
@@ -17,7 +17,7 @@
             <apex:pageBlockSection rendered="{!allTournaments.size == 0}">
                 <p>No tournaments found</p>
             </apex:pageBlockSection>
-            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments.size != 0}">         
+            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments != null && allTournaments.size > 0}">         
                 <apex:column value="{!t.tournament.Name}"/>
                 <apex:column value="{!t.tournament.Type__c}"/>
                 <apex:column value="{!t.tournament.Format__c}"/>
