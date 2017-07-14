@@ -1,0 +1,4 @@
+<apex:page controller="TournamentController" action="{!checkTournamentExistance}">
+        <h1>Edit tournament</h1>
+        <c:TournamentForm tournament="{!currentTournament}"/>
+</apex:page>
