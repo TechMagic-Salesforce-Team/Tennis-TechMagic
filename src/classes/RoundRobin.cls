@@ -29,6 +29,7 @@ public with sharing class RoundRobin {
     }
      public List<List<String>> RoundRobinGrid() {
         Map<String, String> idNameMap = new Map<String,String>();
+        //idNameMap.put();
         List<List<String>> result = new List<List<String>>();
 	List<String> Ids = new List<String>(idNameMap.keySet());
 	List<String> firstRow = new List<String>();
@@ -68,16 +69,25 @@ public with sharing class RoundRobin {
     return result;
     }
     public String getNameById(String getCurrentNameByThisId){
-        Player__c player = [select name
-                            from Player__c
-                            where id=:getCurrentNameByThisId];
-        if(player != null){
+        try{
+            Player__c player = [select name
+                                from Player__c
+                                where id=:getCurrentNameByThisId];
             return player.name;
-        }else{
+        }catch(QueryException e){
             Team__c team = [select name
-                      from Team__c
-                      where id=:getCurrentNameByThisId];
+                            from Team__c
+                            where id=:getCurrentNameByThisId];
             return team.name;
-        } 
+        }
+    }
+    
+    public Map<ID , String> getIdAndNameMap(){
+        Map<ID,String> allNameAndId = new Map<ID,String>();
+        List<Game__c> allnames = [Select FirstCompetitor__c,SecondCompetitor__c
+                                  from Game__c
+                                  where Tournament__c =: tournament.id];
+        
+        return allNameAndId;
     }
 }
