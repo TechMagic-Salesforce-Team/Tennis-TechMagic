@@ -23,6 +23,7 @@
         <members>Player__c</members>
         <members>Team__c</members>
         <members>Tournament__c</members>
+        <members>PlayerStatistics__c</members>
         <name>CustomObject</name>
     </types>
     <types>

@@ -1,0 +1,20 @@
+<apex:page id="Players" controller="PlayerController" action="{!findAllPlayers}" cache="false">
+        <head>
+        <c:Header />
+        </head>
+        
+        <body>
+        <apex:pageBlock rendered="true">
+             <apex:pageBlockTable value="{!players}" var="player">
+                <apex:column value="{!player.Name}" onClick="player('{!player.Id}')" headerValue="Name"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        </body>
+        
+        <script>
+            function player(id){
+                location.href = 'player?playerId='+id;
+            }   
+        </script>
+        
+</apex:page>
