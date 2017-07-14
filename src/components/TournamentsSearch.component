@@ -1,6 +1,6 @@
 <apex:component controller="TournamentController" allowDML="true">
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" required="false" description="Value to pass into the controller"/>
-    <apex:form >
+    <apex:form>
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
                 <apex:inputField value="{!searchTournament.Name}" required="false"/>

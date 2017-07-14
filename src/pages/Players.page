@@ -3,6 +3,7 @@
         <c:Header />
         </head>
         
+        
         <body>
         <apex:pageBlock rendered="true">
              <apex:pageBlockTable value="{!players}" var="player">

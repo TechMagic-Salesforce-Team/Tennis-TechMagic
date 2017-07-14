@@ -3,12 +3,14 @@
        <a href = "LoginRegister?pageType=registration">Registration</a>
        <a href = "LoginRegister?pageType=login">Login</a>
        <a href = "/">Home</a>
-        <a href = "/Players">Players</a>
+       <a href = "/Players">Players</a>
+       <a href = "/Tournaments">Tournaments</a>
     </apex:pageBlock> 
   
     <apex:pageBlock rendered="{!isLoggedIn}">
         <a href = "LogoutPage">Logout</a>
         <a href = "/">Home</a>
         <a href = "/Players">Players</a>
+        <a href = "/Tournaments">Tournaments</a>
     </apex:pageBlock>
 </apex:component>
