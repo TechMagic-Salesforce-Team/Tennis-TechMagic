@@ -18,7 +18,7 @@
             <apex:actionFunction name="setFirstOptionSelected" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected"/>    
         </apex:form>        
         
-        <apex:form>
+        <apex:form >
             <apex:pageMessages />
                 <apex:pageBlock title="Select current tournament" rendered="true">
                     <apex:selectList value="{!currentTournamentId}" size="1" style="margin-left:18%;" required="true">
