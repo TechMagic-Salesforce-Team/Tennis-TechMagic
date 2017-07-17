@@ -1,7 +1,8 @@
 public with sharing class SomeHomePageController extends PlayerCookie{
     public String accessToken = 'ya29.GluKBHllg-lggwIADtjbFrWHlTmvgyUBzAK1s8wcQYegmvQWMaj69rblwLmyi8LI81EwAlKrwoc29bURP30x25x2FDxOapxb514Q8ubgt8u34qElYfWfUK38yi2y';
+    public Url siteUrl {get;set;}
     public SomeHomePageController(){
-       
+       siteUrl = URL.getSalesforceBaseUrl();
     }
     
    public void httpGetGmailPlayerByAccessToken(){

@@ -6,9 +6,17 @@ public String accessToken {get;set;}
 
 //Settings needed on the google cloud console.One can store this securely in custom settings or an object.
 
-public static final string CLIENT_SECRET='SC7TfzRMa7j-thVao7qttwt5';//Fill as per your registered app settings in google console
-public static final string CLIENT_ID='60522812757-lkbn4amj4epn71vnimk09hs6lh7lp7fs.apps.googleusercontent.com';//Fill as per your registered app settings in google console
-public static final string REDIRECT_URL='https://ap1.salesforce.com/apex/GoogleAuthPage';
+public static final String CLIENT_SECRET='SC7TfzRMa7j-thVao7qttwt5';//Fill as per your registered app settings in google console
+public static final String CLIENT_ID='60522812757-lkbn4amj4epn71vnimk09hs6lh7lp7fs.apps.googleusercontent.com';//Fill as per your registered app settings in google console
+//public static string REDIRECT_URL='https://ap1.salesforce.com/apex/GoogleAuthPage';
+//public static final string REDIRECT_URL =  'https://techmagic-table-tennis-developer-edition.eu11.force.com/GoogleAuthPage';
+public static String REDIRECT_URL {get{
+        REDIRECT_URL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/GoogleAuthPage';
+        return REDIRECT_URL;
+    }
+    set;}
+
+           
 
 public static final string OAUTH_TOKEN_URL='https://accounts.google.com/o/oauth2/token';
 public static final string OAUTH_CODE_END_POINT_URL='https://accounts.google.com/o/oauth2/auth';
@@ -43,6 +51,9 @@ private class PlayerAccessToken {
     public String token_type {get;set;}
 }
     
+    public GoogleAuthClass(){}
+    
+    
 
    public pagereference connect(){
      String x=OAUTH_CODE_END_POINT_URL+'?scope='+EncodingUtil.urlEncode(SCOPE,'UTF-8')+'&state='+EncodingUtil.urlEncode(STATE,'UTF-8')+'&redirect_uri='+EncodingUtil.urlEncode(REDIRECT_URL,'UTF-8')+'&response_type=code&client_id='+CLIENT_ID+'&approval_prompt='+APPROVAL_PROMPT;
@@ -53,7 +64,8 @@ private class PlayerAccessToken {
         
    public pagereference showtoken(){
    string codeparam=apexpages.currentpage().getparameters().get('code');
-      
+   if (codeparam==null) return null;
+         
     // Instantiate a new http object
     Http h = new Http();
     
@@ -78,7 +90,9 @@ private class PlayerAccessToken {
     
     playerFromGoogleByToken = 
         (PlayerFromGoogleApiAccessToken) JSON.deserialize(signInGmailPlayer(accessToken),PlayerFromGoogleApiAccessToken.class);
-    return null;
+        
+    insertPlayerFromGoogleAccountIfNotExists(playerFromGoogleByToken);    
+    return Page.Test;
    }
    
    
@@ -94,6 +108,28 @@ private class PlayerAccessToken {
         response = http.send(request);
         //System.debug('My response: '+response.getBody());
         return response.getBody();
+    }
+    
+    public void insertPlayerFromGoogleAccountIfNotExists(PlayerFromGoogleApiAccessToken playerFromGoogleApiJSON){
+        System.debug('PAGE LARGE LOOKUP: '+URL.getSalesforceBaseUrl());
+        try {
+             Player__c player = [select Id from Player__c where Email__c =: playerFromGoogleApiJSON.email];
+             Cookie playerFromCookie = new Cookie('PlayerFromCookie', player.Id, null, 1440, false);
+             ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
+        } catch(QueryException queryException){
+            Player__c player = new Player__c();
+            player.Name = playerFromGoogleApiJSON.name;
+            player.Email__c = playerFromGoogleApiJSON.email;
+            player.Password__c = '12345678';
+            player.Status__c = 'Not Active';
+            try {
+                insert player;
+                Cookie playerFromCookie = new Cookie('PlayerFromCookie', player.Id, null, 1440, false);
+                ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
+            } catch (DmlException dmlException){
+                System.debug('En error occured while inserting player');
+            }
+        }
     }
 }
 

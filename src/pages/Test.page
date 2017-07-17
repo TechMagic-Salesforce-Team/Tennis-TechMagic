@@ -1,4 +1,5 @@
 <apex:page id="Test" controller="SomeHomePageController" cache="false">
     <c:Header/>
     <a href = 'PostPage'>PostPage</a>
+    <p>{!siteUrl}</p>
 </apex:page>
