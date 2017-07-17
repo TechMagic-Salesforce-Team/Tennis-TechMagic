@@ -48,5 +48,3 @@ public with sharing class PlayersStatisticsGenerator {
         insert playerStatisticList;
     }
 }
-
-

@@ -14,5 +14,5 @@
                 <apex:commandButton value="Cancel" action="{!cancel}" immediate="true"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
-    </apex:form >
+    </apex:form>
 </apex:component>

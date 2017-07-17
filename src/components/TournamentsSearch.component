@@ -1,6 +1,6 @@
 <apex:component controller="TournamentController" allowDML="true">
-    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" required="false" description="Value to pass into the controller"/>
-    <apex:form>
+    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" description="Value to pass into the controller"/>
+    <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
                 <apex:inputField value="{!searchTournament.Name}" required="false"/>
@@ -9,15 +9,15 @@
                 <apex:inputField value="{!searchTournament.Status__c}" required="false"/>
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Search" action="{!findAll}" rerender="allTournamentsTable"/>
+                <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
             <apex:pageMessages />
-            <apex:pageBlockSection rendered="{!allTournaments.size == 0}">
-                <p>No tournaments found</p>
+            <apex:pageBlockSection rendered="{!allTournaments == null}">
+                <p>Search for the tournaments you are interested in...</p>
             </apex:pageBlockSection>
-            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments.size != 0}">         
+            <apex:pageBlockTable value="{!allTournaments}" var="t" rendered="{!allTournaments != null && allTournaments.size > 0}">         
                 <apex:column value="{!t.tournament.Name}"/>
                 <apex:column value="{!t.tournament.Type__c}"/>
                 <apex:column value="{!t.tournament.Format__c}"/>
@@ -45,11 +45,14 @@
                     </apex:commandButton>
                 </apex:column>
                 <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}">
-                    <apex:pageBlock>
+                    <apex:pageBlock >
                         <c:TournamentInformation tournament="{!t.tournament}"/>
                     </apex:pageBlock>
                 </apex:column>
             </apex:pageBlockTable>
+            <apex:pageBlockSection rendered="{!allTournaments != null && allTournaments.size == 0}">
+                <p>No tournaments found</p>
+            </apex:pageBlockSection>
         </apex:pageBlock>
     </apex:form>
 </apex:component>

@@ -92,5 +92,3 @@ public with sharing class RegisterLogin_Test {
         new PlayerController();
     }
 }
-
-

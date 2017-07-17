@@ -1,17 +1,17 @@
 public with sharing class TournamentController {
     
-    public Tournament__c searchTournament {get; set;}
-    public List<TournamentWrapper> allTournaments {get; private set;}
-    
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
     
     public Player__c currentPlayer {get; set;}
+    public Player__c currentPlayerTmp {get; set;}
+    
+    public Tournament__c searchTournament {get; set;}
+    public List<TournamentWrapper> allTournaments {get; private set;}
     
     public TournamentController() {
         searchTournament = new Tournament__c();
         currentTournament = new Tournament__c();
-        findAll();
     }
     
     public PageReference save() {
@@ -97,35 +97,39 @@ public with sharing class TournamentController {
         return null;
     }
     
-    public void findAll() {
+    public void search() {
+        allTournaments = findAll();
+    }
+    
+    public List<TournamentWrapper> findAll() {
         String tName = searchTournament.Name == null ? '%' : '%' + searchTournament.Name + '%';
         String tType = searchTournament.Type__c == null ? '%' : searchTournament.Type__c;
         String tFormat = searchTournament.Format__c == null ? '%' : searchTournament.Format__c;
         String tStatus = searchTournament.Status__c == null ? '%' : searchTournament.Status__c;
-        List<Tournament__c> tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
-            FROM Tournament__c
-            WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
-            AND Status__c LIKE :tStatus];
+
+        List<TournamentWrapper> result = new List<TournamentWrapper>();
         
-        allTournaments = new List<TournamentWrapper>();
-        
+        List<Tournament__c> tournaments;
         List<String> tournamentIds;
+
         if (currentPlayer == null) {
-            currentPlayer = new Player__c();//new Player__c(Id = 'a000Y00000E88dq');//currentPlayer = CookiePlayer;
+            currentPlayerTmp = PlayerCookie.getCurrentPlayer();
             tournamentIds = getAllAppliedTournamentIds();
+            tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
+                FROM Tournament__c
+                WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
+                AND Status__c LIKE :tStatus];
         } else {
+            currentPlayerTmp = currentPlayer;
             tournamentIds = getAllAppliedTournamentIds();
-            List<Tournament__c> appliedTournaments = new List<Tournament__c>();
-            for (String id : tournamentIds) {
-                for (Tournament__c t : tournaments) {
-                    if (t.Id == id) {
-                        appliedTournaments.add(t);
-                        break;
-                    }
-                }
-            }
-            tournaments = appliedTournaments;
+            tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
+                FROM Tournament__c
+                WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
+                AND Status__c LIKE :tStatus AND Id IN :tournamentIds];
         }
+        
+        System.debug(currentPlayer);
+        System.debug(tournaments.size());
         
         for (Tournament__c t : tournaments) {
             TournamentWrapper tW = new TournamentWrapper();
@@ -138,18 +142,18 @@ public with sharing class TournamentController {
                     break;
                 }
             }
-            allTournaments.add(tW);
+            result.add(tW);
         }
-        System.debug(allTournaments);
+        return result;
     }
     
     private List<String> getAllAppliedTournamentIds() {
         List<PlayerTournament__c> playerTournamnets = [SELECT Tournament__c 
-                FROM PlayerTournament__c WHERE Player__c = :currentPlayer.Id];
+                FROM PlayerTournament__c WHERE Player__c = :currentPlayerTmp.Id];
         List<Team__c> teams = [SELECT Tournament__c 
             FROM Team__c 
             WHERE IsComplete__c = true AND Id IN 
-            (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayer.Id)];
+            (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerTmp.Id)];
         
         List<String> tournamentIds = new List<String>();
         
@@ -159,7 +163,6 @@ public with sharing class TournamentController {
         for (Team__c t : teams) {
             tournamentIds.add(t.Tournament__c);
         }
-        
         return tournamentIds;
     }
     
