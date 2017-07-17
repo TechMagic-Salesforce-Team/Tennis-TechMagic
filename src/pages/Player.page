@@ -1,9 +1,10 @@
-<apex:page id="Player" controller="PlayerController" cache="false" action="{!getPlayerTournaments}">
+<apex:page id="Player" controller="PlayerController" cache="false">
     <head>
        <c:Header />
     </head>
         
     <body>
+        <!--
         <apex:pageBlock rendered="true" title="All tournaments of current player">
                 <apex:pageBlockTable value="{!tournamentsOfPlayer}" var="tournament">
                     <apex:column value="{!tournament.Name}"/>
@@ -13,6 +14,9 @@
                     <apex:column value="{!tournament.Type__c}"/>
                 </apex:pageBlockTable>
         </apex:pageBlock>
+        -->
+        
+        <c:TournamentsSearch player="{!player}"/>
         
         <apex:form >
             <apex:actionFunction name="setFirstOptionSelected" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected"/>    
