@@ -44,9 +44,7 @@ public with sharing class PlayersStatisticsGenerator {
                     ));
                 }
         }
-        
         System.debug('size of player statistic list: '+playerStatisticList.size());
-        
         insert playerStatisticList;
     }
 }
