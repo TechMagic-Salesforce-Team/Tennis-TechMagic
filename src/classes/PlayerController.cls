@@ -1,6 +1,9 @@
 public with sharing class PlayerController extends PlayerCookie{
     public List<Player__c> players {get;set;}
-    public Player__c player {get;set;}
+    public Player__c player {get{
+          return player;
+        }
+        set;}
     public String confirmPassword {get;set;}
     public Boolean registrationPage {get;set;} 
     public List<Tournament__c> tournamentsOfPlayer {get;set;}
@@ -10,23 +13,8 @@ public with sharing class PlayerController extends PlayerCookie{
     public String currentTournamentId {get;set;}
     
     
-    public PlayerController (){
-        Map<String,String> apexPageParams = new Map<String,String>();
-        apexPageParams.put('pageType',ApexPages.currentPage().getParameters().get('pageType'));
-        apexPageParams.put('playerId',ApexPages.currentPage().getParameters().get('playerId'));
-        
-        if (apexPageParams.get('pageType')!=null){
-            String pageType = apexPageParams.get('pageType');
-            player = new Player__c();
-        if (pageType=='registration'){
-            registrationPage = true;
-        } else if (pageType=='login'){
-            registrationPage = false;
-          }
-       } else if (apexPageParams.get('playerId')!=null){
-            String idPlayer = apexPageParams.get('playerId');
-            player = [select Id,Name,Email__c,Password__c from Player__c where Id=:idPlayer limit 1];
-       } 
+    public PlayerController(){
+        findPlayer();
     }
     
     
@@ -142,5 +130,25 @@ public with sharing class PlayerController extends PlayerCookie{
         from Game__c where Tournament__c =: currentTournament.Id and (FirstCompetitor__c =: player.Id or 
         SecondCompetitor__c =: player.Id)
         ];
+    }
+    
+    public void findPlayer(){
+        Map<String,String> apexPageParams = new Map<String,String>();
+        apexPageParams.put('pageType',ApexPages.currentPage().getParameters().get('pageType'));
+        apexPageParams.put('playerId',ApexPages.currentPage().getParameters().get('playerId'));
+        
+        if (apexPageParams.get('pageType')!=null){
+            String pageType = apexPageParams.get('pageType');
+            player = new Player__c();
+        if (pageType=='registration'){
+            registrationPage = true;
+        } else if (pageType=='login'){
+            registrationPage = false;
+          }
+       } else if (apexPageParams.get('playerId')!=null){
+            String idPlayer = apexPageParams.get('playerId');
+            player = [select Id,Name,Email__c,Password__c from Player__c where Id=:idPlayer limit 1];
+            getPlayerTournaments();
+       } 
     }
 }
