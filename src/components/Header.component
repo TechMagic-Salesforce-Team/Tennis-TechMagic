@@ -5,6 +5,7 @@
        <a href = "/">Home</a>
        <a href = "/Players">Players</a>
        <a href = "/Tournaments">Tournaments</a>
+       <a href = "/GoogleAuthPage">Google auth</a>
     </apex:pageBlock> 
   
     <apex:pageBlock rendered="{!isLoggedIn}">
@@ -12,5 +13,6 @@
         <a href = "/">Home</a>
         <a href = "/Players">Players</a>
         <a href = "/Tournaments">Tournaments</a>
+        <a href = "/GoogleAuthPage">Googe auth</a>
     </apex:pageBlock>
 </apex:component>
