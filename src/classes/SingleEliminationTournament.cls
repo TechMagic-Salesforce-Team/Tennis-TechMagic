@@ -1,6 +1,7 @@
 public with sharing class SingleEliminationTournament{
     public Integer ijz{get{return 1;}set;}
-
+    public Tournament__c oneTournament{get;set;}
+    
     public List<List<Game__c>> representSingleEliminationGrid{
         get{
             if(representSingleEliminationGrid == null) representSingleEliminationGrid = new List<List<Game__c>>();
@@ -10,6 +11,17 @@ public with sharing class SingleEliminationTournament{
     }
     
     public SingleEliminationTournament(){
+        List<String> myList = new List<String>();
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        myList.add('vitalya');
+        representSingleEliminationGrid = generateSingleEliminationStageGrid(myList ,
+        [Select Id, Type__c From Tournament__c Where Name = 'MyTournament3']);
     } 
    
     public void StartSingleEliminationTournament(List<String> CompetitorsIds, Tournament__c currentTournament){
@@ -56,7 +68,7 @@ public with sharing class SingleEliminationTournament{
         } 
     }
     public List<List<Game__c>> generateSingleEliminationStageGrid(List<String> CompetitorsIds, Tournament__c currentTournament){
-        if(currentTournament.Type__c !=null && currentTournament.Type__c =='Single Elimination'){
+        if(currentTournament.id != null && currentTournament.Type__c !=null && currentTournament.Type__c =='Single Elimination'){
             Integer i = 0; //Stage count
             List<List<Game__c>> thisGames = new List<List<Game__c>>();
             if(CompetitorsIds.size() >0 && CompetitorsIds.size() !=null){

@@ -70,7 +70,7 @@
              <apex:outputField value="{!tournamentBySelectOption.Format__c}"/>
              <apex:outputField value="{!tournamentBySelectOption.Status__c}"/>  
          </apex:pageBlockSection> 
-         <c:SingleElimination /> 
+         <c:SingleElimination Tournament="{!tournamentBySelectOption}"/> 
      </apex:pageblock>
    
      </apex:pageBlock>

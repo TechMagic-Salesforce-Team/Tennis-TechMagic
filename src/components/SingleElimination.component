@@ -1,4 +1,5 @@
-<apex:component controller="SingleEliminationTournament">
+<apex:component controller="SingleEliminationTournament" >
+     <apex:attribute name="Tournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
      <style>
         .thisLinks:link, thisLinks:visited{ 
             background-color: white;
