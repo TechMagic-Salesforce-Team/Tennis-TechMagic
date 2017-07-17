@@ -1,33 +1,16 @@
 <apex:page controller="HomeController" cache="false">
 
      <apex:pageBlock title="" rendered="{!tournamentsInProgressSize > 0}">
-     <apex:pageblock mode="maindetail" id="DetalInformationForSelectedTournament" title="{!tournamentBySelectOption.Name}">
-         <apex:pageBlockSection columns="1">
-             <apex:outputField value="{!tournamentBySelectOption.Name}"/>
-             <apex:outputField value="{!tournamentBySelectOption.StartDate__c}" label="Start Date : "/>
-             <apex:outputField value="{!tournamentBySelectOption.Type__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Format__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Status__c}"/>  
-         </apex:pageBlockSection>  
-     </apex:pageblock>
-     <apex:form >
+          <apex:form >
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
          <script>
               function rerenderCurrentTournament()
               {
                   rerenderPageBlockForSelectedTournamentFunc();
               }
-              function rerenderCurrentTournamentsName()
-              {
-                  rerenderPageBlockForSelectedTournamentNameFunc();
-              }
               function rerenderCurrentTournamentsType()
               {
                   rerenderPageBlockForSelectedTournamentTypeFunc();
-              }
-              function rerenderCurrentTournamentsFormat()
-              {
-                  rerenderPageBlockForSelectedTournamentFormatFunc();
               }
               $j = jQuery.noConflict();
               function clickElem(elem){
@@ -36,9 +19,7 @@
               }
          </script>
          <apex:actionFunction name="rerenderPageBlockForSelectedTournamentFunc" action="{!rerenderPageBlockForSelectedTournament}" reRender="DetalInformationForSelectedTournament"/>
-         <apex:actionFunction name="rerenderPageBlockForSelectedTournamentNameFunc" action="{!rerenderPageBlockForSelectedTournamentsName}" reRender="allTournamentsInProgressId"/>
          <apex:actionFunction name="rerenderPageBlockForSelectedTournamentTypeFunc" action="{!rerenderPageBlockForSelectedTournamentsType}" reRender="allTournamentsInProgressId"/>
-         <apex:actionFunction name="rerenderPageBlockForSelectedTournamentFormatFunc" action="{!rerenderPageBlockForSelectedTournamentsFormat}" reRender="allTournamentsInProgressId"/>
          <!-- <apex:pageBlock mode="maindetail">
              <apex:pageBlockSection columns="1" id="search">
                  <apex:selectList label="Tournament" onchange="rerenderCurrentTournament()" value="{!selectedTournament}" size="1" >
@@ -49,23 +30,19 @@
          
          <apex:pageBlock title="All Current Tournament" mode="maindetail" >
              <apex:pageBlockSection columns="1">   
-                 <apex:inputText value="{!selectedTournamentInputName}" label="Name : " onchange="rerenderCurrentTournamentsName()"/>                          
                  <apex:selectList label="Type : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1">
                      <apex:selectOptions value="{!tournamentTypeOptions}"></apex:selectOptions>
                  </apex:selectList>
-                 <apex:selectList label="Format : " onchange="rerenderCurrentTournamentsFormat()" value="{!selectedTournamentFormat}" size="1">
+                 <apex:selectList label="Format : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentFormat}" size="1">
                      <apex:selectOptions value="{!tournamentFormatOptions}"></apex:selectOptions>
                  </apex:selectList>
-                 <!--<apex:pageBlock mode="maindetail">
-                     <apex:pageBlockButtons location="bottom">
-                         <apex:commandButton value="Search"/>
-                     </apex:pageBlockButtons>
-                 </apex:pageBlock>-->
             </apex:pageBlockSection>
             <apex:pageBlockTable value="{!tournamentsInProgress}" var="tournament" id="allTournamentsInProgressId">
                 <apex:column headerValue="Name">
                     <apex:commandButton style="
                                                background:none!important;
+                                               width : 100%;
+                                               height: 100%;
                                                color:inherit;
                                                border:none; 
                                                padding:0!important;
@@ -84,7 +61,18 @@
                 <apex:column value="{!tournament.Status__c}"/>
             </apex:pageBlockTable>
         </apex:pageBlock>      
-     </apex:form>   
+     </apex:form>
+     <apex:pageblock mode="maindetail" id="DetalInformationForSelectedTournament" title="{!tournamentBySelectOption.Name}">
+         <apex:pageBlockSection columns="1">
+             <apex:outputField value="{!tournamentBySelectOption.Name}"/>
+             <apex:outputField value="{!tournamentBySelectOption.StartDate__c}" label="Start Date : "/>
+             <apex:outputField value="{!tournamentBySelectOption.Type__c}"/>
+             <apex:outputField value="{!tournamentBySelectOption.Format__c}"/>
+             <apex:outputField value="{!tournamentBySelectOption.Status__c}"/>  
+         </apex:pageBlockSection> 
+         <c:SingleElimination /> 
+     </apex:pageblock>
+   
      </apex:pageBlock>
      <apex:pageBlock title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      <apex:pageBlock title="Helpfull links">
