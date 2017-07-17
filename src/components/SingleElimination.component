@@ -1,0 +1,55 @@
+<apex:component controller="SingleEliminationTournament" >
+     <apex:attribute name="Tournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
+     <style>
+        .thisLinks:link, thisLinks:visited{ 
+            background-color: white;
+            color: black;
+            border: 2px solid #a3f1ff;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;        
+        }
+        .thisLinks:hover{
+            background-color: #a3f1ff;
+            color: white;
+         }
+        .bPageBlock .pbTitle {
+            width: 100%;    
+            text-align: center;
+        }
+    </style>
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlockTable value="{!ijz}" var="thisStageGames">
+            <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
+                <apex:column width="{!100/representSingleEliminationGrid.size}%">
+                    <apex:repeat value="{!thisRows}" var="thisGame">
+                        <apex:pageBlock rendered="{!thisGame.WinningGroup__c = true}"><center>
+                            <apex:outputField value="{!thisGame.FirstCompetitor__c}"/>(<apex:outputField value="{!thisGame.FirstCompetitorScore__c}"/>) <br/><br/>
+                            <apex:outputLink styleClass="thisLinks" value="Game?id={!thisGame.Id}">VS</apex:outputLink><br/><br/> 
+                            <apex:outputField value="{!thisGame.SecondCompetitor__c}"/>(<apex:outputField value="{!thisGame.SecondCompetitorScore__c}"/>) 
+                            </center>
+                        </apex:pageBlock>   
+                    </apex:repeat>
+                </apex:column>
+            </apex:repeat>
+        </apex:pageBlockTable>
+        
+        <apex:pageBlockTable value="{!ijz}" var="thisStageGames">
+            <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
+                <apex:column width="{!100/representSingleEliminationGrid.size}%">
+                    <apex:repeat value="{!thisRows}" var="thisGame">
+                        <apex:pageBlock tabStyle="Game__c" title="3rd Place Match" rendered="{!thisGame.WinningGroup__c = false}"><center>
+                            <apex:outputField rendered="{!thisGame.WinningGroup__c = false}" value="{!thisGame.FirstCompetitor__c}"/>(<apex:outputField rendered="{!thisGame.WinningGroup__c == false}" value="{!thisGame.FirstCompetitorScore__c}"/>) <br/><br/>
+                            <apex:outputLink rendered="{!thisGame.WinningGroup__c = false}" styleClass="thisLinks" value="Game?id={!thisGame.Id}">VS</apex:outputLink><br/><br/> 
+                            <apex:outputField rendered="{!thisGame.WinningGroup__c = false}" value="{!thisGame.SecondCompetitor__c}"/>(<apex:outputField rendered="{!thisGame.WinningGroup__c == false}" value="{!thisGame.SecondCompetitorScore__c}"/>) 
+                            </center>
+                        </apex:pageBlock>   
+                    </apex:repeat>
+                </apex:column>
+            </apex:repeat>
+        </apex:pageBlockTable>
+        
+    </apex:pageBlock>
+    
+</apex:component>
