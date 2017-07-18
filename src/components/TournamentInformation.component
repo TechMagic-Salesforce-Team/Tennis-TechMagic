@@ -6,4 +6,5 @@
     <p>{!currentTournament.Format__c}</p>
     <p>{!currentTournament.Status__c}</p>
     <p>{!currentTournament.StartDate__c}</p>
+    <c:SingleElimination componentTournament="{!currentTournament}"/>
 </apex:component>
