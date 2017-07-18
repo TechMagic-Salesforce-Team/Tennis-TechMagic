@@ -1,0 +1,57 @@
+<apex:page id="Player" controller="PlayerController" cache="false">
+    <head>
+       <c:Header />
+    </head>
+        
+    <body>
+        <!--
+        <apex:pageBlock rendered="true" title="All tournaments of current player">
+                <apex:pageBlockTable value="{!tournamentsOfPlayer}" var="tournament">
+                    <apex:column value="{!tournament.Name}"/>
+                    <apex:column value="{!tournament.StartDate__c}"/>
+                    <apex:column value="{!tournament.Status__c}"/>
+                    <apex:column value="{!tournament.Format__c}"/>
+                    <apex:column value="{!tournament.Type__c}"/>
+                </apex:pageBlockTable>
+        </apex:pageBlock>
+        -->
+        
+        <c:TournamentsSearch player="{!player}"/>
+        
+        <apex:form >
+            <apex:actionFunction name="setFirstOptionSelected" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected"/>    
+        </apex:form>        
+        
+        <apex:form >
+            <apex:pageMessages />
+                <apex:pageBlock title="Select current tournament" rendered="true">
+                    <apex:selectList value="{!currentTournamentId}" size="1" style="margin-left:18%;" required="true">
+                        <apex:actionSupport event="onchange" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected" />    
+                        <apex:selectOptions value="{!currentTournamentsOptions}"/>
+                </apex:selectList>
+                </apex:pageBlock>
+        </apex:form>
+        
+        
+        <apex:pageBlock id="currentTournamentSelected" title="Selected tournament">
+            <apex:pageBlockSection title="Opportunity Information">
+                <apex:outputField value="{!currentTournament.Name}"/>
+                <apex:outputField value="{!currentTournament.Status__c}"/>
+                <apex:outputField value="{!currentTournament.Format__c}"/>
+                <apex:outputField value="{!currentTournament.Type__c}"/>
+                <p style = "clear:left;"/>
+               
+               <apex:pageBlockSection title="Inner page block section">
+                
+               </apex:pageBlockSection>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+        <script>
+                function firstOptionSelected(){
+                    setFirstOptionSelected();
+                }
+            firstOptionSelected();
+        </script>
+    </body>        
+</apex:page>

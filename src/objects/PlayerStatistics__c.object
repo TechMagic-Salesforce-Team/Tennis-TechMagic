@@ -44,7 +44,7 @@
         <actionName>View</actionName>
         <type>Default</type>
     </actionOverrides>
-    <allowInChatterGroups>false</allowInChatterGroups>
+    <allowInChatterGroups>true</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <enableActivities>true</enableActivities>
@@ -56,19 +56,10 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>FirstCompetitorAccept__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>FirstCompetitorAccept</label>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>FirstCompetitorScore__c</fullName>
+        <fullName>CountLostGames__c</fullName>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
-        <label>First Competitor Score</label>
+        <label>CountLostGames</label>
         <precision>3</precision>
         <required>true</required>
         <scale>0</scale>
@@ -78,30 +69,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>FirstCompetitor__c</fullName>
-        <externalId>false</externalId>
-        <label>FirstCompetitor</label>
-        <length>255</length>
-        <required>true</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>SecondCompetitorAccept__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>SecondCompetitorAccept</label>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>SecondCompetitorScore__c</fullName>
+        <fullName>CountWonGames__c</fullName>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
-        <label>Second Competitor Score</label>
+        <label>CountWonGames</label>
         <precision>3</precision>
         <required>true</required>
         <scale>0</scale>
@@ -111,36 +82,12 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>SecondCompetitor__c</fullName>
+        <fullName>Player__c</fullName>
         <externalId>false</externalId>
-        <label>SecondCompetitor</label>
-        <length>255</length>
-        <required>true</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Stage__c</fullName>
-        <defaultValue>1</defaultValue>
-        <externalId>false</externalId>
-        <label>Stage</label>
-        <precision>3</precision>
-        <required>true</required>
-        <scale>0</scale>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Tournament__c</fullName>
-        <externalId>false</externalId>
-        <label>Tournament</label>
-        <referenceTo>Tournament__c</referenceTo>
-        <relationshipLabel>Games</relationshipLabel>
-        <relationshipName>Games</relationshipName>
+        <label>Player</label>
+        <referenceTo>Player__c</referenceTo>
+        <relationshipLabel>PlayersStatistics</relationshipLabel>
+        <relationshipName>PlayersStatistics</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackHistory>false</trackHistory>
@@ -149,27 +96,31 @@
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <fields>
-        <fullName>WinningGroup__c</fullName>
-        <defaultValue>true</defaultValue>
+        <fullName>Tournament__c</fullName>
         <externalId>false</externalId>
-        <label>WinningGroup</label>
+        <label>Tournament</label>
+        <referenceTo>Tournament__c</referenceTo>
+        <relationshipLabel>PlayersStatistics</relationshipLabel>
+        <relationshipName>PlayersStatistics</relationshipName>
+        <relationshipOrder>1</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
-    <label>Game</label>
+    <label>PlayerStatistic</label>
     <listViews>
         <fullName>All</fullName>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
     <nameField>
-        <displayFormat>{0000000000}</displayFormat>
-        <label>Game Name</label>
+        <label>PlayerStatistics Name</label>
         <trackHistory>false</trackHistory>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
-    <pluralLabel>Games</pluralLabel>
+    <pluralLabel>PlayersStatistics</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>
