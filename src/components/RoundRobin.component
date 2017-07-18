@@ -1,0 +1,11 @@
+<apex:component controller = 'RoundRobin'>
+       <table align="center" style="width: 950px;">
+    	<apex:repeat value="{!roundRobinMatrix}" var="row"> 
+    		<tr>
+    			<apex:repeat value="{!row}" var="column">
+                                        <td><a href='/game'>{!column}</a></td> 
+    			</apex:repeat>
+    		</tr>
+    	</apex:repeat>
+    </table> 
+</apex:component>
