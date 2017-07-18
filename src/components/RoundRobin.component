@@ -1,4 +1,4 @@
-<apex:component controller = 'RoundRobin'>
+<apex:component controller="RoundRobin">
        <table align="center" style="width: 950px;">
     	<apex:repeat value="{!roundRobinMatrix}" var="row"> 
     		<tr>

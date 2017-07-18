@@ -22,5 +22,3 @@ public static Map<String , String> getIdAndNameMap(Tournament__c tournament){
         }   
     }
 }
-
-

@@ -20,5 +20,3 @@ public with sharing class Helper_Test {
         System.assertEquals(1, Helper.getIdAndNameMap(tournament).size()); 
     }
 }
-
-
