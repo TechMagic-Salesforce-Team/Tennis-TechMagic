@@ -88,16 +88,14 @@ public with sharing class SingleEliminationTournament{
         if(currentTournament !=null && gamesByPreviousRound !=null &&
            currentTournament.Type__c != null && currentTournament.Type__c =='Single Elimination'){
             
-            Decimal thisGameStage = gamesByPreviousRound.get(0).Stage__c;
-            List<Game__c> thisGames = [Select Id,FirstCompetitor__c,SecondCompetitor__c,FirstCompetitorScore__c,SecondCompetitorScore__c From Game__c Where Tournament__c = :currentTournament.Id And Stage__c = :thisGameStage];
             List<Game__c> nextRoundGames = new List<Game__c>();
             List<Id> playersWinnersId = new List<Id>();
-            for(Game__c x : thisGames){
+            for(Game__c x : gamesByPreviousRound){
                 if(x.FirstCompetitorScore__c> x.SecondCompetitorScore__c) {playersWinnersId.add(x.FirstCompetitor__c);}
                 else{playersWinnersId.add(x.SecondCompetitor__c);}
             
                 List<Player__c> playerWinners = [Select Id, Name, Email__c From Player__c Where Id = :playersWinnersId];
-                thisGameStage++;
+                Decimal thisGameStage = ++gamesByPreviousRound.get(0).Stage__c;
                 Id freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
                 for(Integer round=0; round<=playerWinners.size()-1;round +=2){
                     Integer match=round+1;
