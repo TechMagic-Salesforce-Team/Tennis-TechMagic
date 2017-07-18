@@ -26,7 +26,7 @@ public with sharing class DoubleEliminationTournament {
                 }
             }
             if(gamesForCurrentTournament != null){
-                for(Integer j = 0; j < i; j++){
+                for(Integer j = 0; j <= i; j++){
                     List<Game__c> stageLists = new List<Game__c>();
                     for(Game__c x : gamesForCurrentTournament){
                         if(j !=null && j == x.Stage__c.intValue()){

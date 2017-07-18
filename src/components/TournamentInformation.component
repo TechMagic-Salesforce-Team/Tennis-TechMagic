@@ -6,4 +6,6 @@
     <p>{!currentTournament.Format__c}</p>
     <p>{!currentTournament.Status__c}</p>
     <p>{!currentTournament.StartDate__c}</p>
+    
+    <c:DoubleEliminationTournament componentTournament="{!currentTournament}"/>
 </apex:component>
