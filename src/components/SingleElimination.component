@@ -1,5 +1,5 @@
-<apex:component controller="SingleEliminationTournament" >
-     <apex:attribute name="Tournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
+<apex:component controller="SingleEliminationTournament">
+     <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
      <style>
         .thisLinks:link, thisLinks:visited{ 
             background-color: white;
@@ -19,7 +19,7 @@
             text-align: center;
         }
     </style>
-    <apex:pageBlock mode="maindetail">
+    <apex:pageBlock mode="maindetail" id="cGrid2">
         <apex:pageBlockTable value="{!ijz}" var="thisStageGames">
             <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representSingleEliminationGrid.size}%">
