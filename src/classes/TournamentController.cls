@@ -41,6 +41,17 @@ public with sharing class TournamentController {
         
     }
     
+    public static void finish(Tournament__c t) {
+        if (t.Status__c != 'Complete') {
+            t.Status__c = 'Complete';
+            try {
+                update (t);
+            } catch (System.DmlException e) {
+                System.debug(e);
+            }
+        }
+    }
+    
     public PageReference editUpcoming() {
         currentTournament = findById();
         if (currentTournament != null) {

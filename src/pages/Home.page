@@ -1,5 +1,11 @@
 <apex:page controller="HomeController" cache="false">
-     <c:Header/>
+    <style>
+    .bPageBlock .pbTitle {
+            width: 100%;    
+            text-align: center;
+    }
+    </style>
+    <c:Header />
      <apex:pageBlock title="" rendered="{!tournamentsInProgressSize > 0}">
           <apex:form >
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -18,7 +24,6 @@
                   window.open(url,"_top");
               }
          </script>
-         <apex:actionFunction name="rerenderPageBlockForSelectedTournamentFunc" action="{!rerenderPageBlockForSelectedTournament}" reRender="DetalInformationForSelectedTournament"/>
          <apex:actionFunction name="rerenderPageBlockForSelectedTournamentTypeFunc" action="{!rerenderPageBlockForSelectedTournamentsType}" reRender="allTournamentsInProgressId"/>
          <!-- <apex:pageBlock mode="maindetail">
              <apex:pageBlockSection columns="1" id="search">
@@ -48,7 +53,7 @@
                                                padding:0!important;
                                                font: inherit; 
                                                cursor: pointer;" 
-                                               action="{!rerenderPageBlockForSelectedTournament}" value="{!tournament.Name}" reRender="DetalInformationForSelectedTournament">
+                                               action="{!rerenderPageBlockForSelectedTournament}" value="{!tournament.Name}" reRender="cGrid8, cGrid, cGrid2, cGrid3, DetalInformationForSelectedTournament">
                         <apex:param name="currentTournamentId" value="{!tournament.Id}" assignTo="{!selectedTournament}"/>
                     </apex:commandButton> 
                 </apex:column>
@@ -62,23 +67,15 @@
             </apex:pageBlockTable>
         </apex:pageBlock>      
      </apex:form>
-     <apex:pageblock mode="maindetail" id="DetalInformationForSelectedTournament" title="{!tournamentBySelectOption.Name}">
-         <apex:pageBlockSection columns="1">
-             <apex:outputField value="{!tournamentBySelectOption.Name}"/>
-             <apex:outputField value="{!tournamentBySelectOption.StartDate__c}" label="Start Date : "/>
-             <apex:outputField value="{!tournamentBySelectOption.Type__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Format__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Status__c}"/>  
-         </apex:pageBlockSection> 
-         <c:SingleElimination Tournament="{!tournamentBySelectOption}"/> 
-     </apex:pageblock>
-   
+     
+         <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>     
+     
      </apex:pageBlock>
      <apex:pageBlock title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      <apex:pageBlock title="Helpfull links">
          See all active Users : <apex:outputLink value="PlayerList" id="UsersListLink">Look For Your Team</apex:outputLink><br/>
          My team : <apex:outputLink value="MyTeam" id="theRegisterLink">Check your team</apex:outputLink><br/>
-         See all torunaments : <apex:outputLink value="RepresentTableTennisTournament" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
+         See all torunaments : <apex:outputLink value="Tournaments" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
      </apex:pageBlock>    
      
 
