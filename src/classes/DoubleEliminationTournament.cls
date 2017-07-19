@@ -60,6 +60,13 @@ public with sharing class DoubleEliminationTournament {
         }
 
         Double numCurGames = newSize/2;
+        
+        if (numCurGames < 1) {
+            // finish tournament
+            Tournament__c t = [SELECT Id, Status__c FROM Tournament__c WHERE Id =:tournamentId];
+            TournamentController.finish(t);
+            return;
+        }
 
         while(numCurGames >= 1) {
             winners.add(numCurGames);
