@@ -42,6 +42,8 @@ public with sharing class PlayerController extends PlayerCookie{
                         System.debug('Dml exception while registration new player');
                     } catch (NullPointerException nullPointerException){
                          System.debug('Null pointer exception while registration new player');
+                    } catch (QueryException queryException){
+                         System.debug('Query exception while registration new player');
                     }
                     
                 } catch(DmlException ex){
