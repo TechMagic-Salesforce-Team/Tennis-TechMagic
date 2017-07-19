@@ -7,5 +7,3 @@ global class MockHttpSignInWithGoogle implements HttpCalloutMock{
         return response;
     }
 }
-
-

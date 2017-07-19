@@ -21,7 +21,7 @@
           <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
         </apex:pageBlockSectionItem>
  
-        <apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
           <apex:outputLabel value="Description" for="description"/>
           <apex:inputTextarea value="{!document.description}" id="description"/>
         </apex:pageBlockSectionItem>
@@ -46,4 +46,4 @@
  
     <!--<img src="data:{!imageURL};base64,{!imageURL}" width="200" height="100"/>-->
     <img src="{!imageURL}"/>
-</apex:page>  
+</apex:page>

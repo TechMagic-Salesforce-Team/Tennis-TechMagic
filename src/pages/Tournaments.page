@@ -1,7 +1,7 @@
 <apex:page standardStylesheets="true" controller="TournamentController" showHeader="true" cache="false">
-    <c:Header/>  
+    <c:Header />  
     <h1>Tournaments page</h1>
-    <apex:pageBlock >
+    <apex:pageBlock rendered="{!isManager}">
         <apex:outputLink value="apex/CreateTournament" id="theLink">New tournament</apex:outputLink>
     </apex:pageBlock>
     <c:TournamentsSearch />
