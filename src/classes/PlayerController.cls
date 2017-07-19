@@ -33,10 +33,17 @@ public with sharing class PlayerController extends PlayerCookie{
             if (player.Password__c==confirmPassword){
                 try{
                     insert player;
+                    try {
                     Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
                     document.FolderId = folder.Id;
                     document.AuthorId = UserInfo.getUserId();
-                    insert document;
+                    insert document;    
+                    } catch (DmlException dmlException){
+                        System.debug('Dml exception while registration new player');
+                    } catch (NullPointerException nullPointerException){
+                         System.debug('Null pointer exception while registration new player');
+                    }
+                    
                 } catch(DmlException ex){
                     errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,ex.getDmlMessage(0)));
                 }
