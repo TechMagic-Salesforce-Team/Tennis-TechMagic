@@ -1,6 +1,4 @@
-public with sharing class AfterUpdateGameTriggerHelper {
-<<<<<<< HEAD
-    
+public with sharing class AfterUpdateGameTriggerHelper {  
     public static void generateGamesOrFinishTournament(List<Game__c> oldGames, List<Game__c> newGames) {
         Map<Id, List<Game__c>> oldGamesTournaments = groupByTournament(oldGames);
         Map<Id, List<Game__c>> newGamesTournaments = groupByTournament(newGames);
@@ -120,9 +118,3 @@ public with sharing class AfterUpdateGameTriggerHelper {
     }
     
 }
-=======
-
-}
-
-
->>>>>>> origin/tournaments_page
