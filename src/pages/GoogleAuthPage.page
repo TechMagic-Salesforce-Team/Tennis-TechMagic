@@ -1,4 +1,5 @@
 <apex:page controller="GoogleAuthClass" action="{!showtoken}">
+ <c:Header/>
  <apex:form >
  <apex:commandButton value="Sign In with Google" action="{!connect}"/>
  <!--<apex:commandButton value="Fetch Auth Token" action="{!showtoken}"/>-->

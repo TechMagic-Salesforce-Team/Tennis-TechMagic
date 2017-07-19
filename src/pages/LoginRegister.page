@@ -1,5 +1,5 @@
 <apex:page id="LoginRegister" controller="PlayerController" cache="false">
-    <c:Header />  
+    <c:Header/>  
     <apex:sectionHeader title="Visualforce Example" subtitle="Player"/>
     <div style = 'float:left; height:100%; width:100%;'>
     <!------------------------------------REGISTRATION-------------------------------------------->
@@ -32,6 +32,14 @@
                 <apex:outputLabel value="Confirm password"/>
                 <apex:inputSecret value="{!confirmPassword}"/>
                 </apex:pageBlockSectionItem>
+                
+                
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="File" for="file"/>
+                <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
+                </apex:pageBlockSectionItem>
+                
+                
             </apex:pageBlockSection>
         </apex:pageBlock>
     </apex:form>
