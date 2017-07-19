@@ -147,5 +147,3 @@ public with sharing class DoubleEliminationTournament {
     }
     
 }
-
-
