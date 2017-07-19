@@ -14,10 +14,6 @@
             background-color: #a3f1ff;
             color: white;
          }
-        .bPageBlock .pbTitle {
-            width: 100%;    
-            text-align: center;
-        }
     </style>
     <apex:pageBlock mode="maindetail" id="cGrid2">
         <apex:pageBlockTable value="{!ijz}" var="thisStageGames">

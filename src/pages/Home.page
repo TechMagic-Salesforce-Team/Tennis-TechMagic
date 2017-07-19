@@ -1,5 +1,10 @@
 <apex:page controller="HomeController" cache="false">
-    
+    <style>
+    .bPageBlock .pbTitle {
+            width: 100%;    
+            text-align: center;
+    }
+    </style>
     <c:Header />
 
      <apex:pageBlock title="" rendered="{!tournamentsInProgressSize > 0}">
@@ -63,23 +68,15 @@
             </apex:pageBlockTable>
         </apex:pageBlock>      
      </apex:form>
-     <apex:pageblock mode="maindetail" id="DetalInformationForSelectedTournament" title="{!tournamentBySelectOption.Name}">
-         <apex:pageBlockSection columns="1">
-             <apex:outputField value="{!tournamentBySelectOption.Name}"/>
-             <apex:outputField value="{!tournamentBySelectOption.StartDate__c}" label="Start Date : "/>
-             <apex:outputField value="{!tournamentBySelectOption.Type__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Format__c}"/>
-             <apex:outputField value="{!tournamentBySelectOption.Status__c}"/>  
-         </apex:pageBlockSection>
-             <c:SingleElimination id="cGrid8" componentTournament="{!tournamentBySelectOption}"/>
-     </apex:pageblock>
-   
+     
+         <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>     
+     
      </apex:pageBlock>
      <apex:pageBlock title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      <apex:pageBlock title="Helpfull links">
          See all active Users : <apex:outputLink value="PlayerList" id="UsersListLink">Look For Your Team</apex:outputLink><br/>
          My team : <apex:outputLink value="MyTeam" id="theRegisterLink">Check your team</apex:outputLink><br/>
-         See all torunaments : <apex:outputLink value="RepresentTableTennisTournament" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
+         See all torunaments : <apex:outputLink value="Tournaments" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
      </apex:pageBlock>    
      
 
