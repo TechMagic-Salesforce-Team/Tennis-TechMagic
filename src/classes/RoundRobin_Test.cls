@@ -1,9 +1,9 @@
 @isTest
 public with sharing class RoundRobin_Test {  
     @isTest private static void roundRobinCreateGames(){
-        Player__c newPlayer3 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
-        Player__c newPlayer1 = new Player__c(name = 'newPlayer2',email__c = 'dd@dd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
-        Player__c newPlayer2 = new Player__c(name = 'newPlayer3',email__c = 'dd@dddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
+        Player__c newPlayer3 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '6666666666666666',Status__c = 'Active');
+        Player__c newPlayer1 = new Player__c(name = 'newPlayer2',email__c = 'dd@dd.dd',IsManager__c=false,Password__c = '6666666666666',Status__c = 'Active');
+        Player__c newPlayer2 = new Player__c(name = 'newPlayer3',email__c = 'dd@dddd.dd',IsManager__c=false,Password__c = '666666666666',Status__c = 'Active');
         insert newPlayer2;
         insert newPlayer3;
         insert newPlayer1;
@@ -31,11 +31,11 @@ public with sharing class RoundRobin_Test {
         RoundRobin roundRobin = new RoundRobin();  
         Tournament__C tournament = new Tournament__c(name='ddd',format__c = '1 x 1',StartDate__c = Datetime.now(),Status__c='Current',type__c= 'Round Robin');  
         insert tournament;
-        Player__c newPlayer1 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
+        Player__c newPlayer1 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '666666666',Status__c = 'Active');
         insert newPlayer1;
-        Player__c newPlayer2 = new Player__c(name = 'newPlayer2',email__c = 'ddd@ddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
+        Player__c newPlayer2 = new Player__c(name = 'newPlayer2',email__c = 'ddd@ddd.dd',IsManager__c=false,Password__c = '666666666',Status__c = 'Active');
         insert newPlayer2;
-        Player__c newPlayer3 = new Player__c(name = 'newPlayer3',email__c = 'ddddd@ddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
+        Player__c newPlayer3 = new Player__c(name = 'newPlayer3',email__c = 'ddddd@ddd.dd',IsManager__c=false,Password__c = '666666666',Status__c = 'Active');
         insert newPlayer3;
         PlayerTournament__c playerTournament1 = new PlayerTournament__c();
         playerTournament1.Player__c = newPlayer1.Id;
