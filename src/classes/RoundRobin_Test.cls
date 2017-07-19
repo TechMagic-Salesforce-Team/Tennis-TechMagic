@@ -19,6 +19,7 @@ public with sharing class RoundRobin_Test {
         games = [Select id from Game__c where Tournament__c =:tournament1.id];
         System.assertEquals(3, games.size()); 
     }
+      
     
     @isTest private static void gridTest(){
         RoundRobin roundRobin = new RoundRobin();  

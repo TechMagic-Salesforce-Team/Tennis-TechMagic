@@ -1,5 +1,6 @@
 @isTest
 public with sharing class Helper_Test {
+    
  @isTest private static void getIdAndNameMapbyPlayerTest(){
         Player__c newPlayer3 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '666',Status__c = 'Active');
         insert newPlayer3;

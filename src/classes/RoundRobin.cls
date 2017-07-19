@@ -9,7 +9,8 @@ public with sharing class RoundRobin {
         set;
     }
     public RoundRobin(){
-  
+   
+        
     }
     public void RoundRobinTournament(Tournament__c myTournament,List<String> allIds){        
         List<Game__c> currentTournamentGames = new List<Game__c>();
