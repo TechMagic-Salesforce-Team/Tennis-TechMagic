@@ -13,7 +13,7 @@ public with sharing class AfterUpdateGameTriggerHelper {
     }
     
     private static void genGamesOrFinTour(Game__c game) {
-        List<Tournament__c> ts = [SELECT Id, Type__c, Status__c FROM Tournament__c WHERE Id = :game.Tournament__c];
+        List<Tournament__c> ts = [SELECT Id, Type__c, Status__c, Format__c FROM Tournament__c WHERE Id = :game.Tournament__c];
         if (ts.size() > 0) {
             Tournament__c t = ts[0];
             if (t.Type__c == 'Round Robin'){
@@ -26,12 +26,12 @@ public with sharing class AfterUpdateGameTriggerHelper {
                     FROM Game__c WHERE Tournament__c = :t.Id AND Stage__c = :game.Stage__c];
                 if (checkOneAccept(games)) {
                     if (games.size() > 2) {
-                        // generate next round
+                        SingleEliminationTournament.createNextSingleEliminationStage(games, t);
                     } else {
                         List<Game__c> previousGames = [SELECT Id, FirstCompetitorAccept__c, SecondCompetitorAccept__c 
                             FROM Game__c WHERE Tournament__c = :t.Id AND Stage__c = :(game.Stage__c - 1.0)];
                         if (previousGames.size() > 2 || previousGames.size() == 0 && games.size() == 2) {
-                            // generate next round
+                            SingleEliminationTournament.createNextSingleEliminationStage(games, t);
                         } else {
                             TournamentController.finish(t);
                         }

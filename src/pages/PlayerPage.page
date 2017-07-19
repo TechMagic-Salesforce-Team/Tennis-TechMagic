@@ -1,4 +1,4 @@
 <apex:page id="PlayerPage" controller="PlayerController">
-       <c:Header/>  
+       <c:Header />  
  
 </apex:page>

@@ -61,5 +61,3 @@ private class GoogleAuth_Test {
         googleAuth.insertPlayerFromGoogleAccountIfNotExists(googleAuth.playerFromGoogleByToken);
     }
 }
-
-
