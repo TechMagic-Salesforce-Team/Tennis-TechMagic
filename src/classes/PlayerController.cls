@@ -11,7 +11,7 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<Game__c> gamesOfCurrentPlayerInSelectedTournament {get;set;}
     public Tournament__c currentTournament {get;set;}
     public String currentTournamentId {get;set;}
-    
+    public Document document {get;set;}
     
     public PlayerController(){
         findPlayer();
@@ -26,10 +26,17 @@ public with sharing class PlayerController extends PlayerCookie{
             errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,'Name can not be number'));
         } catch (TypeException ex){}
         
+         
+         
+        
         if (errorMessages.size()==0){
             if (player.Password__c==confirmPassword){
                 try{
                     insert player;
+                    Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
+                    document.FolderId = folder.Id;
+                    document.AuthorId = UserInfo.getUserId();
+                    insert document;
                 } catch(DmlException ex){
                     errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,ex.getDmlMessage(0)));
                 }
@@ -140,6 +147,7 @@ public with sharing class PlayerController extends PlayerCookie{
         if (apexPageParams.get('pageType')!=null){
             String pageType = apexPageParams.get('pageType');
             player = new Player__c();
+            document = new Document();
         if (pageType=='registration'){
             registrationPage = true;
         } else if (pageType=='login'){

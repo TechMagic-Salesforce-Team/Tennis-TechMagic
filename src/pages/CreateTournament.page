@@ -1,4 +1,5 @@
 <apex:page controller="TournamentController">
+        <c:Header/>
         <h1>New Tournament</h1>
         <c:TournamentForm tournament="{!currentTournament}"/>
 </apex:page>

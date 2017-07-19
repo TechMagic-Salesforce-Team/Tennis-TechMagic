@@ -10,11 +10,13 @@ public static final String CLIENT_SECRET='SC7TfzRMa7j-thVao7qttwt5';//Fill as pe
 public static final String CLIENT_ID='60522812757-lkbn4amj4epn71vnimk09hs6lh7lp7fs.apps.googleusercontent.com';//Fill as per your registered app settings in google console
 //public static string REDIRECT_URL='https://ap1.salesforce.com/apex/GoogleAuthPage';
 //public static final string REDIRECT_URL =  'https://techmagic-table-tennis-developer-edition.eu11.force.com/GoogleAuthPage';
+
+          
 public static String REDIRECT_URL {get{
         REDIRECT_URL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/GoogleAuthPage';
         return REDIRECT_URL;
     }
-    set;}
+set;}
 
            
 
@@ -30,8 +32,9 @@ public static final string STATE='/profile';
 //Approval Prompt Constant
 public static final string APPROVAL_PROMPT='force';
 public PlayerFromGoogleApiAccessToken playerFromGoogleByToken {get;set;}
+public PlayerAccessToken playerToken {get;set;}    
 
-private class PlayerFromGoogleApiAccessToken {
+public class PlayerFromGoogleApiAccessToken {
      public String id {get;set;}
      public String email {get;set;}
      public Boolean verified_email {get;set;}
@@ -44,7 +47,7 @@ private class PlayerFromGoogleApiAccessToken {
      public String locale {get;set;}  
 }
     
-private class PlayerAccessToken {
+public class PlayerAccessToken {
     public String access_token {get;set;}
     public String expires_in {get;set;}
     public String id_token {get;set;}
@@ -66,10 +69,26 @@ private class PlayerAccessToken {
    string codeparam=apexpages.currentpage().getparameters().get('code');
    if (codeparam==null) return null;
          
-    // Instantiate a new http object
+    
+    HttpResponse res = signInRequest(codeparam);
+    system.debug('body'+res.getbody());
+    playerToken = (PlayerAccessToken)JSON.deserialize(res.getbody(), PlayerAccessToken.class);
+    accessToken = playerToken.access_token;
+    bodyprint=res.getbody()+'\r\naccessToken: '+accessToken;
+    
+    playerFromGoogleByToken = 
+        (PlayerFromGoogleApiAccessToken) JSON.deserialize(signInGmailPlayer(accessToken),PlayerFromGoogleApiAccessToken.class);
+        
+    insertPlayerFromGoogleAccountIfNotExists(playerFromGoogleByToken);    
+    return Page.Test;
+   }
+    
+   public HttpResponse signInRequest(String codeparam){
+        // Instantiate a new http object
     Http h = new Http();
     
     String body='code='+codeparam+'&client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&redirect_uri='+REDIRECT_URL+'&'+GRANT_TYPE;
+    System.debug('CODEPARAM: '+codeparam);     
     
     // Instantiate a new HTTP request, specify the method (GET) as well as the endpoint
     HttpRequest req = new HttpRequest();
@@ -82,17 +101,7 @@ private class PlayerAccessToken {
 
     // Send the request, and return a response
     HttpResponse res = h.send(req);
-    
-    system.debug('body'+res.getbody());
-    PlayerAccessToken playerToken = (PlayerAccessToken)JSON.deserialize(res.getbody(), PlayerAccessToken.class);
-    accessToken = playerToken.access_token;
-    bodyprint=res.getbody()+'\r\naccessToken: '+accessToken;
-    
-    playerFromGoogleByToken = 
-        (PlayerFromGoogleApiAccessToken) JSON.deserialize(signInGmailPlayer(accessToken),PlayerFromGoogleApiAccessToken.class);
-        
-    insertPlayerFromGoogleAccountIfNotExists(playerFromGoogleByToken);    
-    return Page.Test;
+    return res;    
    }
    
    
@@ -129,6 +138,8 @@ private class PlayerAccessToken {
             } catch (DmlException dmlException){
                 System.debug('En error occured while inserting player');
             }
+        } catch (NullPointerException nullPointerException){
+            System.debug('NullPointerException occurred');
         }
     }
 }
