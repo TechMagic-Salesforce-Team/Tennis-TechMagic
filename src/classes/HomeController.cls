@@ -41,7 +41,7 @@ public with sharing class HomeController {
             }
             Schema.DescribeFieldResult fieldTypeResult = Tournament__c.Type__c.getDescribe();
             List<Schema.PicklistEntry> pleType = fieldTypeResult.getPicklistValues();
-            tournamentTypeOptions.add(new SelectOption('AnyType', 'AnyType'));
+            tournamentTypeOptions.add(new SelectOption('AnyType', '--None--'));
             for( Schema.PicklistEntry pickListVal : pleType){
                 tournamentTypeOptions.add(new SelectOption(pickListVal.getLabel(),pickListVal.getLabel()));
             }    
@@ -54,7 +54,7 @@ public with sharing class HomeController {
             if (tournamentFormatOptions== null) {
                 tournamentFormatOptions= new List<SelectOption>();
             }
-            tournamentFormatOptions.add(new SelectOption('AnyFormat','Any Format'));
+            tournamentFormatOptions.add(new SelectOption('AnyFormat','--None--'));
             tournamentFormatOptions.add(new SelectOption('1 x 1','1 x 1'));
             tournamentFormatOptions.add(new SelectOption('2 x 2','2 x 2'));
             return tournamentFormatOptions;
