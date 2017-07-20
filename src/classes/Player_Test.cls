@@ -34,10 +34,11 @@ public with sharing class Player_Test {
         
         //all data is valid
         playerController.confirmPassword = 'password';
+        
         dmlSuccessful = playerController.registration()==null;
-        if (!dmlSuccessful) {
-            System.debug('All data is valid - inserted new player');
-        }
+        //if (!dmlSuccessful) {
+            //System.debug('All data is valid - inserted new player');
+        //}
         
         //expect null,because of registering new player with email that is already exists in the db
         try {
