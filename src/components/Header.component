@@ -1,18 +1,36 @@
 <apex:component controller="PlayerController">
-    <apex:pageBlock rendered="{!!isLoggedIn}">
-       <a href = "LoginRegister?pageType=registration">Registration</a>
-       <a href = "LoginRegister?pageType=login">Login</a>
-       <a href = "/Home">Home</a>
-       <a href = "/Players">Players</a>
-       <a href = "/Tournaments">Tournaments</a>
-       <a href = "/GoogleAuthPage">Google auth</a>
-    </apex:pageBlock> 
-  
-    <apex:pageBlock rendered="{!isLoggedIn}">
-        <a href = "LogoutPage">Logout</a>
-        <a href = "/Home">Home</a>
-        <a href = "/Players">Players</a>
-        <a href = "/Tournaments">Tournaments</a>
-        <a href = "/GoogleAuthPage">Googe auth</a>
-    </apex:pageBlock>
+        
+<script src="jquery-3.2.1.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerCSS.css')}"/>
+
+
+
+<ul id = "ul_option">
+            <li><a href="/Home" style="color: white; text-decoration: none;">Home</a></li>
+            <li><a href="/Players" style="color: white; text-decoration: none;">Players</a></li>
+            <li><a href = "/Tournaments" style="color: white; text-decoration: none;">Tournaments</a></li>
+            <li> <a href = "/GoogleAuthEmptyRedirect" style="color: white; text-decoration: none;">Google auth</a></li>
+</ul>
+
+    
+    
+    <script>
+        $('#ul_option li').click(function() {
+            $(this).css('background-color','red');
+        });
+        
+        function showAdditionOptions(){
+            if ({!!isLoggedIn}){
+                $("#ul_option").append
+                ("<li><a href='LoginRegister?pageType=registration' style='color: white; text-decoration: none;'>Registration</a></li>");
+                $("#ul_option").append
+                ("<li><a href = 'LoginRegister?pageType=login' style='color: white; text-decoration: none;'>Login</a></li>");
+            } else {
+                $("#ul_option").append
+                ("<li><a href='LogoutPage' style='color: white; text-decoration: none;'>Logout</a></li>");
+            }
+        }
+        showAdditionOptions();
+    </script>   
 </apex:component>
