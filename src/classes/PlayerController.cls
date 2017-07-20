@@ -4,7 +4,7 @@ public with sharing class PlayerController extends PlayerCookie{
           return player;
         }
         set;}
-    public String confirmPassword {get;set;}
+    public String confirmPassword {get;set;} 
     public Boolean registrationPage {get;set;} 
     public List<Tournament__c> tournamentsOfPlayer {get;set;}
     public List<Tournament__c> currentTournamentsOfPlayer {get;set;}
