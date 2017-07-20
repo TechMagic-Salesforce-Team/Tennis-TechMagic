@@ -57,8 +57,8 @@ public with sharing class TournamentController_TEST {
     }
     
     public static testMethod void testCheckTourExistance(){
-        tC.currentTournament = t;
-        tC.save();
+        t.Status__c = 'Upcoming';
+        insert t;
         Test.setCurrentPageReference(new PageReference('Page.EditTournament')); 
         System.currentPageReference().getParameters().put('tournamentId', t.Id);
         Player__c p = new Player__c(Email__c = 'vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
@@ -67,13 +67,13 @@ public with sharing class TournamentController_TEST {
         System.debug(players);
         Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
         System.currentPageReference().setCookies(new Cookie[]{playerFromCookie});
-        tC.currentTournament = null;
+        TournamentController tC1 =  new TournamentController();
         
         Test.startTest();
         
-        tC.checkTournamentExistance();
+        tC1.checkTournamentExistance();
         
-        System.assertEquals(null, tC.currentTournament);
+        System.assertEquals(t.Id, tC1.currentTournament.Id);
         
         Test.stopTest();
     }
