@@ -43,6 +43,3 @@ public Document document {
     return null;
   }
 }
-
-
-

@@ -1,4 +1,4 @@
-public with sharing class TournamentController {
+public with sharing class TournamentController extends PlayerCookie{
     
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
@@ -87,13 +87,15 @@ public with sharing class TournamentController {
     }
     
     public PageReference checkTournamentExistance() {
-        // NEED to check if user is logged in and manager
+        System.debug(isManager);
+        if (isManager) {
         currentTournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
         if (currentTournamentId != null) {
             currentTournament = findById();
             if (currentTournament != null) {
                 return null;
             }
+        }
         }
         return Page.Tournaments;
     }
@@ -124,7 +126,7 @@ public with sharing class TournamentController {
         List<String> tournamentIds;
 
         if (currentPlayer == null) {
-            currentPlayerTmp = PlayerCookie.getCurrentPlayer();
+            currentPlayerTmp = getCurrentPlayer();
             tournamentIds = getAllAppliedTournamentIds();
             tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
                 FROM Tournament__c

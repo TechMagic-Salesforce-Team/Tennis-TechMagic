@@ -1,4 +1,5 @@
 <apex:component controller="RoundRobin">
+        <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!tournament}" description="need to give this tournament for good work" required="true"/>
        <table align="center" style="width: 950px;">
     	<apex:repeat value="{!roundRobinMatrix}" var="row"> 
     		<tr>

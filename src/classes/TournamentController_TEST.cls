@@ -61,13 +61,19 @@ public with sharing class TournamentController_TEST {
         tC.save();
         Test.setCurrentPageReference(new PageReference('Page.EditTournament')); 
         System.currentPageReference().getParameters().put('tournamentId', t.Id);
+        Player__c p = new Player__c(Email__c = 'vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
+        insert (p);
+        List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: p.Email__c limit 1];
+        System.debug(players);
+        Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
+        System.currentPageReference().setCookies(new Cookie[]{playerFromCookie});
         tC.currentTournament = null;
         
         Test.startTest();
         
         tC.checkTournamentExistance();
         
-        System.assertEquals(t.Id, tC.currentTournament.Id);
+        System.assertEquals(null, tC.currentTournament);
         
         Test.stopTest();
     }

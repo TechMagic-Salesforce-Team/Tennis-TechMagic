@@ -30,17 +30,17 @@
                 </apex:column>
                 <apex:column headerValue="Apply">
                     <apex:outputText value="Applied" rendered="{!t.isApplied}"/>
-                    <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied}" rerender="allTournamentsTable">
+                    <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied && isLoggedIn}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>           
                 <apex:column headerValue="Edit">
-                    <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable">
+                    <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable" rendered="{!isManager}">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
                 <apex:column headerValue="Delete">
-                    <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
+                    <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable"  rendered="{!isManager}">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
