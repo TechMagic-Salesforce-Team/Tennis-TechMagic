@@ -98,17 +98,13 @@ public with sharing class DoubleEliminationTournament {
         }
 
         System.debug('losers: ' + losers);
-        
-        createRound(competitorsIds, tournamentId, winners[0], 0);
-        
         List<Game__c> otherGames = new List<Game__c>();
         
-        for(integer i = 1; i < winners.size(); i++) {
+        for(integer i = 0; i < winners.size(); i++) {
             double currentStageGames = winners[i];
             for(integer j = 0; j < currentStageGames; j++) {
                 Game__c game = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c = 0,
                     SecondCompetitorScore__c = 0, Stage__c = i, Tournament__c = tournamentId);
-                System.debug('WGame: '+game);
                 otherGames.add(game);
             }
         }
@@ -119,30 +115,55 @@ public with sharing class DoubleEliminationTournament {
                 Game__c game = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c = 0,
                     SecondCompetitorScore__c = 0, Stage__c = i, Tournament__c = tournamentId, WinningGroup__c = false);
                 otherGames.add(game);
-            System.debug('LGame: '+game);
             }
         }
         
         System.debug('otherGames: '+otherGames);
+        
         try {
             insert(otherGames);
         } catch(System.DmlException e) {
             System.debug(e);
         }
-    }
-    
-    private static void createRound(List<String> competitorsIds, String tournamentId, Double gamesNumber, Integer stage) {
-        List<Game__c> result = new List<Game__c>();
-        for (Integer i = 0; i < gamesNumber; i++) {
-            Game__c game = new Game__c(FirstCompetitor__c = competitorsIds[i], SecondCompetitor__c = competitorsIds[competitorsIds.size()-1-i],
-                FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = stage, Tournament__c = tournamentId);
-            result.add(game);
+        
+        List<Game__c> gamesToUpdate = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
+                    SecondCompetitorScore__c, Stage__c, Tournament__c, Type__c 
+                    From Game__c Where Tournament__C = :tournamentId AND WinningGroup__c = true ORDER BY Stage__c ASC LIMIT :(competitorsIds.size()/2 + 1)];
+        integer cnt = 0;
+        for (Game__c g : gamesToUpdate) {
+            g.FirstCompetitor__c = cnt >= competitorsIds.size() ? '?' : competitorsIds[cnt];
+            g.SecondCompetitor__c = (cnt + 1) >= competitorsIds.size() ? '?' : competitorsIds[cnt + 1];
+            cnt = cnt + 2;
         }
-        System.debug('games: '+result);
+        
         try {
-            insert(result);
+            update(gamesToUpdate);
         } catch(System.DmlException e) {
             System.debug(e);
+        }
+        
+        gamesToUpdate = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
+                    SecondCompetitorScore__c, Stage__c, Tournament__c, Type__c 
+                    From Game__c Where Tournament__C = :tournamentId AND WinningGroup__c = true ORDER BY Stage__c DESC LIMIT :1];
+        if (gamesToUpdate.size() > 0) {
+            gamesToUpdate[0].Type__c = 'Final';
+            try {
+                update(gamesToUpdate[0]);
+            } catch(System.DmlException e) {
+                System.debug(e);
+            }
+        }
+        
+        gamesToUpdate = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
+                    SecondCompetitorScore__c, Stage__c, Tournament__c, Type__c 
+                    From Game__c Where Tournament__C = :tournamentId AND WinningGroup__c = false ORDER BY Stage__c DESC LIMIT :1];
+        if (gamesToUpdate.size() > 0) {
+            gamesToUpdate[0].Type__c = 'Final';
+            try {
+                update(gamesToUpdate[0]);
+            } catch(System.DmlException e) {
+                System.debug(e);
+            }
         }
     }
     
