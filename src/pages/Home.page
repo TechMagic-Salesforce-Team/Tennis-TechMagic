@@ -4,8 +4,57 @@
             width: 100%;    
             text-align: center;
     }
+    
+    .styled-select {
+        background: white;
+        font-size: 17px;
+        height: 29px;
+        padding: 5px;
+        width: 268px;
+    }
+    
     </style>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+     <!--<img src="{!URLFOR($Resource.SiteSamples,
+                  'img/slider001.jpg')}"/>-->
+             <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerBanner.css')}"/>
+             <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerCSS.css')}"/>
     <c:Header />
+    <!--<apex:stylesheet value="{!URLFOR($Resource.style_resources, 'animation.css')}"/>-->
+    <!--<apex:image url="{!URLFOR($Resource.SiteSamples,
+                  'img/slider.jpg')}"/>-->
+    
+   
+        <div class="w3-content w3-section" style="max-width:100%; padding:0px; margin:0px;">
+            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
+                  'img/slider001.jpg')}" width="100%"/>
+            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
+                  'img/slider002.jpg')}" width="100%"/>
+            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
+                  'img/slider003.jpg')}" width="100%"/>
+            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
+                  'img/slider004.jpg')}" width="100%"/>
+        </div>
+<script>
+var myIndex = 0;
+carousel();
+
+function carousel(){
+    var elements = $('.mySlides');
+    myIndex++;
+    myIndex%=elements.length;
+    
+    for (var i=0; i < elements.length; i++){
+        if (i==myIndex){
+            elements[i].style="display:block";
+        } else elements[i].style="display:none";
+    }
+    setTimeout(carousel, 2000);
+}    
+</script>
+    
+    
      <apex:pageBlock title="" rendered="{!tournamentsInProgressSize > 0}">
           <apex:form >
          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -25,7 +74,12 @@
               }
          </script>
          <apex:actionFunction name="rerenderPageBlockForSelectedTournamentTypeFunc" action="{!rerenderPageBlockForSelectedTournamentsType}" reRender="allTournamentsInProgressId"/>
-         <!-- <apex:pageBlock mode="maindetail">
+         
+         <apex:inputHidden value="{!selectedTournament}" id="deletePersonBlock"/>
+         <apex:actionFunction name="rerenderPageBlockForSelectedTournament" action="{!rerenderPageBlockForSelectedTournament}" reRender="cGrid8, cGrid, cGrid2, cGrid3, DetalInformationForSelectedTournament"/>
+         
+
+        <!-- <apex:pageBlock mode="maindetail">
              <apex:pageBlockSection columns="1" id="search">
                  <apex:selectList label="Tournament" onchange="rerenderCurrentTournament()" value="{!selectedTournament}" size="1" >
                      <apex:selectOptions  value="{!tournamentOptions}"></apex:selectOptions>
@@ -34,36 +88,23 @@
          </apex:pageBlock> -->
          
          <apex:pageBlock title="All Current Tournament" mode="maindetail" >
-             <apex:pageBlockSection columns="1">   
-                 <apex:selectList label="Type : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1">
+             <apex:pageBlockSection columns="2">   
+                 <apex:selectList label="Type : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1" styleClass="styled-select">
                      <apex:selectOptions value="{!tournamentTypeOptions}"></apex:selectOptions>
                  </apex:selectList>
-                 <apex:selectList label="Format : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentFormat}" size="1">
+                 <apex:selectList label="Format : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentFormat}" size="1" styleClass="styled-select">
                      <apex:selectOptions value="{!tournamentFormatOptions}"></apex:selectOptions>
                  </apex:selectList>
             </apex:pageBlockSection>
             <apex:pageBlockTable value="{!tournamentsInProgress}" var="tournament" id="allTournamentsInProgressId">
-                <apex:column headerValue="Name">
-                    <apex:commandButton style="
-                                               background:none!important;
-                                               width : 100%;
-                                               height: 100%;
-                                               color:inherit;
-                                               border:none; 
-                                               padding:0!important;
-                                               font: inherit; 
-                                               cursor: pointer;" 
-                                               action="{!rerenderPageBlockForSelectedTournament}" value="{!tournament.Name}" reRender="cGrid8, cGrid, cGrid2, cGrid3, DetalInformationForSelectedTournament">
-                        <apex:param name="currentTournamentId" value="{!tournament.Id}" assignTo="{!selectedTournament}"/>
-                    </apex:commandButton> 
-                </apex:column>
-                <apex:column value="{!tournament.StartDate__c}"/>             
-                <apex:column >
+                <apex:column  value="{!tournament.Name}" style="height: 50px;" onclick="rerenderTournament('{!tournament.Id}')"/>
+                <apex:column value="{!tournament.StartDate__c}" onclick="rerenderTournament('{!tournament.Id}')"/>        
+                <apex:column onclick="rerenderTournament('{!tournament.Id}')">
                     <apex:facet name="header">Type</apex:facet>
                     <apex:outputField value="{!tournament.Type__c}"/>
                 </apex:column>
-                <apex:column value="{!tournament.Format__c}"/>
-                <apex:column value="{!tournament.Status__c}"/>
+                <apex:column value="{!tournament.Format__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
+                <apex:column value="{!tournament.Status__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
             </apex:pageBlockTable>
         </apex:pageBlock>      
      </apex:form>
@@ -78,5 +119,10 @@
          See all torunaments : <apex:outputLink value="Tournaments" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
      </apex:pageBlock>    
      
-
+        <script>
+            function rerenderTournament(id){
+                $('[id$=deletePersonBlock]').val(id);
+                rerenderPageBlockForSelectedTournament();
+            }
+        </script>
 </apex:page>
