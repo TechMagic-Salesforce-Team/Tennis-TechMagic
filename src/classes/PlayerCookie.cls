@@ -9,15 +9,8 @@ public with sharing abstract class PlayerCookie {
        if (isLoggedIn) {
             Id playerId = ApexPages.currentPage().getCookies().get('PlayerFromCookie').getValue();
             currentPlayer = [select Id,Name,Email__c,Password__c,IsManager__c from Player__c where Id = :playerId];
+            isManager = currentPlayer.isManager__c;
         } 
-    }
-    
-    public Boolean isManager(){
-        try {
-            return currentPlayer.isManager__c;
-        } catch (Exception ex){
-            return false;
-        }
     }
     
     public Player__c getCurrentPlayer(){
