@@ -13,7 +13,7 @@ public with sharing abstract class PlayerCookie {
     }
     
     public static Boolean isManager(){
-        try {
+        try {   
             return currentPlayer.isManager__c;
         } catch (Exception ex){
             return false;
