@@ -68,7 +68,7 @@ public class PlayerAccessToken {
    public pagereference showtoken(){
    string codeparam=apexpages.currentpage().getparameters().get('code');
    if (codeparam==null) return null;
-         
+    System.debug('codeparam: '+codeparam);     
     
     HttpResponse res = signInRequest(codeparam);
     system.debug('body'+res.getbody());
