@@ -80,7 +80,7 @@ public class PlayerAccessToken {
         (PlayerFromGoogleApiAccessToken) JSON.deserialize(signInGmailPlayer(accessToken),PlayerFromGoogleApiAccessToken.class);
         
     insertPlayerFromGoogleAccountIfNotExists(playerFromGoogleByToken);    
-    return Page.Test;
+    return Page.Home;
    }
     
    public HttpResponse signInRequest(String codeparam){

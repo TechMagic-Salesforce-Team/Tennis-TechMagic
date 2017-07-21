@@ -61,9 +61,13 @@ public with sharing class SingleEliminationTournament{
                 Id freeSlot;
                 If(currentTournament.Format__c == '1 x 1'){ 
                     freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
+                    PlayerTournament__c insertFakePlayer = new PlayerTournament__c(Player__c = freeSlot, Tournament__c = currentTournament.Id);
+                    upsert insertFakePlayer;
                 }
                 else{ 
                     freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
+                    Team__c insertFakeTeam = new Team__c(isComplete__c = true, Tournament__c = currentTournament.Id);
+                    upsert insertFakeTeam;
                 }
                 for(Integer nextRound = CompetitorsIds.size()-1; k>0; nextRound--){
                     Game__c currentGame = new Game__c();

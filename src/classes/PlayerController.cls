@@ -59,7 +59,7 @@ public with sharing class PlayerController extends PlayerCookie{
             }
             return null;
         }
-        return Page.Test;
+        return Page.Home;
     }
     
     public PageReference login(){
@@ -68,7 +68,7 @@ public with sharing class PlayerController extends PlayerCookie{
             if (players.get(0).Password__c==player.Password__c) {
                 Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
                 ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
-                return Page.Test;
+                return Page.Home;
             } else {
                  ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'Wrong password'));
                  return null; 
@@ -77,14 +77,14 @@ public with sharing class PlayerController extends PlayerCookie{
              ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'No users found with the same email'));
              return null;
            }
-        return Page.Test;
+        return Page.Home;
     }
     
     
     public PageReference logout(){
         Cookie playerFromCookie = new Cookie('PlayerFromCookie', '', null, 0, false);
         ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
-        return Page.Test;
+        return Page.Home;
     }
     
     
