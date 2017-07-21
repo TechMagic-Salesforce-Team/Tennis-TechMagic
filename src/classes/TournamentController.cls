@@ -38,21 +38,66 @@ public with sharing class TournamentController extends PlayerCookie{
         }
     }
     
-    public void apply() {
-        System.debug(getCurrentPlayer().Id);
-        System.debug(currentTournamentId);
-        PlayerTournament__c pT = new PlayerTournament__c(Player__c = getCurrentPlayer().Id, Tournament__c = currentTournamentId);
-        try {
-            insert (pT);
-        } catch (System.DmlException e) {
-            System.debug(e);
-            ApexPages.addMessages(e);
+    public PageReference apply() {
+        Tournament__c thisTournament = findById();
+        if (thisTournament != null) {
+            if (thisTournament.Format__c == '2 x 2') {
+                Pagereference pageRef = Page.PlayerTeamCreate;
+                pageRef.getParameters().put('tournamentId', currentTournamentId);
+                return pageRef;
+            } else {
+                PlayerTournament__c pT = new PlayerTournament__c(Player__c = getCurrentPlayer().Id, Tournament__c = currentTournamentId);
+                try {
+                    insert (pT);
+                    for (TournamentWrapper tW : allTournaments) {
+                        if (tW.tournament.Id == currentTournamentId) {
+                            tW.isApplied = true;
+                            break;
+                        }
+                    }
+                } catch (System.DmlException e) {
+                    System.debug(e);
+                    ApexPages.addMessages(e);
+                }
+            }
         }
-        //return null;
+        return null;
     }
     
     public void disapply() {
-        
+        Tournament__c thisTournament = findById();
+        if (thisTournament != null) {
+            if (thisTournament.Format__c == '2 x 2') {
+                List<Team__c> teamsToDelete = [SELECT Id FROM Team__c WHERE Tournament__c = :currentTournamentId AND 
+                    Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :getCurrentPlayer().Id)];
+                try {
+                    delete (teamsToDelete);
+                    for (TournamentWrapper tW : allTournaments) {
+                        if (tW.tournament.Id == currentTournamentId) {
+                            tW.isApplied = false;
+                            break;
+                        }
+                    }
+                } catch (System.DmlException e) {
+                    System.debug(e);
+                    ApexPages.addMessages(e);
+                }
+            } else {
+                PlayerTournament__c pT = [SELECT Id FROM PlayerTournament__c WHERE Player__c = :getCurrentPlayer().Id AND Tournament__c = :currentTournamentId];
+                try {
+                    delete (pT);
+                    for (TournamentWrapper tW : allTournaments) {
+                        if (tW.tournament.Id == currentTournamentId) {
+                            tW.isApplied = false;
+                            break;
+                        }
+                    }
+                } catch (System.DmlException e) {
+                    System.debug(e);
+                    ApexPages.addMessages(e);
+                }
+            }
+        }
     }
     
     public static void finish(Tournament__c t) {
