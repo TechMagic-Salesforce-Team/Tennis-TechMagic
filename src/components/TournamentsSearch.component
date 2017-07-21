@@ -24,23 +24,30 @@
                 <apex:column value="{!t.tournament.StartDate__c}"/>
                 <apex:column value="{!t.tournament.Status__c}"/>
                 <apex:column headerValue="View">
-                    <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable">
+                    <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable" rendered="{!!t.isShowed}">
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Hide" action="{!view}" rerender="allTournamentsTable" rendered="{!t.isShowed}">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
-                <apex:column headerValue="Apply">
-                    <apex:outputText value="Applied" rendered="{!t.isApplied}"/>
-                    <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied && isLoggedIn}" rerender="allTournamentsTable">
+                <apex:column headerValue="Apply" rendered="{!isLoggedIn}">
+                    <apex:outputText value="Applied" rendered="{!t.isApplied && t.tournament.Status__c != 'Upcoming'}"/>
+                    <apex:outputText value="Not applied" rendered="{!!t.isApplied && t.tournament.Status__c != 'Upcoming'}"/>
+                    <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Apply" action="{!disapply}" rendered="{!t.isApplied && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>           
-                <apex:column headerValue="Edit">
-                    <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable" rendered="{!isManager}">
+                <apex:column headerValue="Edit" rendered="{!isManager}">
+                    <apex:commandButton value="Edit" action="{!editUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
-                <apex:column headerValue="Delete">
-                    <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable"  rendered="{!isManager}">
+                <apex:column headerValue="Delete" rendered="{!isManager}">
+                    <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>
