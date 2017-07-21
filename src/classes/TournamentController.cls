@@ -33,11 +33,25 @@ public with sharing class TournamentController extends PlayerCookie{
         for (TournamentWrapper tW : allTournaments) {
             if (tW.tournament.Id == currentTournamentId) {
                 tW.isShowed = tW.isShowed ? false : true;
+                break;
             }
         }
     }
     
     public void apply() {
+        System.debug(getCurrentPlayer().Id);
+        System.debug(currentTournamentId);
+        PlayerTournament__c pT = new PlayerTournament__c(Player__c = getCurrentPlayer().Id, Tournament__c = currentTournamentId);
+        try {
+            insert (pT);
+        } catch (System.DmlException e) {
+            System.debug(e);
+            ApexPages.addMessages(e);
+        }
+        //return null;
+    }
+    
+    public void disapply() {
         
     }
     
