@@ -42,8 +42,8 @@ public with sharing class TournamentController extends PlayerCookie{
     }
     
     public static void finish(Tournament__c t) {
-        if (t.Status__c != 'Complete') {
-            t.Status__c = 'Complete';
+        if (t.Status__c != 'Completed') {
+            t.Status__c = 'Completed';
             try {
                 update (t);
             } catch (System.DmlException e) {
