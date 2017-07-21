@@ -149,9 +149,7 @@ function carousel(){
     
     id = setInterval(slideShow,5000);
 </script>
-    
-    
-    
+
      <apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
           
          <script>

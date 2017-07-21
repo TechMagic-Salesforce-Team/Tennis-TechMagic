@@ -1,4 +1,20 @@
 <apex:component controller="TournamentController">
+    <style>
+        .thisLinks:link, thisLinks:visited{ 
+            background-color: white;
+            color: black;
+            border: 2px solid #cc1e1e;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius : 20%;        
+        }
+        .thisLinks:hover{
+            background-color: #cc1e1e;
+            color: white;
+         }
+    </style>
     <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" required="true" description="Value to pass into the controller"/>
     <h1>Tournament information</h1>
     <p>{!currentTournament.Name}</p>

@@ -1,15 +1,40 @@
 public with sharing class SingleEliminationTournament{
     public Integer ijz{get{return 1;}set;}
     public Tournament__c oneTournament{get;set;}
-    
+    public Map<String, String> competitorsName{
+        get{
+            if(oneTournament !=null && oneTournament.Type__c !=null && oneTournament.Type__c=='Single Elimination'){
+                if(competitorsName== null) competitorsName = Helper.getIdAndNameMap(oneTournament);
+                return competitorsName;
+            }else{return new Map<String, String>();}
+        }
+        set;
+    }
+    public Integer countOfStageOneTournament{get;set;}
     public List<List<Game__c>> representSingleEliminationGrid{
         get{
-            if(representSingleEliminationGrid == null) return generateSingleEliminationStageGrid(oneTournament);
+            if(representSingleEliminationGrid == null) representSingleEliminationGrid = generateSingleEliminationStageGrid(oneTournament);
+            if(representSingleEliminationGrid.size() < 3 && representSingleEliminationGrid.size()>1)countOfStageOneTournament = 2;
+            else if(representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
+            else{countOfStageOneTournament = 1;}
             return representSingleEliminationGrid;
         }
         set;
     }
-   
+    
+    public boolean isLoserGroupGame{
+        get{
+            if(representSingleEliminationGrid !=null){
+                for(List<Game__c> x : representSingleEliminationGrid){
+                    for(Game__c thisGame : x){
+                        if(!thisGame.WinningGroup__c) return true;
+                    }
+                }     
+            }return false;
+        }
+        set;
+    }
+    
     public static void StartSingleEliminationTournament(List<String> CompetitorsIds, Tournament__c currentTournament){
         if(currentTournament.Type__c !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Format__c !=null){
             List<Game__c> thisGames = new List<Game__c>();
@@ -36,9 +61,13 @@ public with sharing class SingleEliminationTournament{
                 Id freeSlot;
                 If(currentTournament.Format__c == '1 x 1'){ 
                     freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
+                    PlayerTournament__c insertFakePlayer = new PlayerTournament__c(Player__c = freeSlot, Tournament__c = currentTournament.Id);
+                    upsert insertFakePlayer;
                 }
                 else{ 
                     freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
+                    Team__c insertFakeTeam = new Team__c(isComplete__c = true, Tournament__c = currentTournament.Id);
+                    upsert insertFakeTeam;
                 }
                 for(Integer nextRound = CompetitorsIds.size()-1; k>0; nextRound--){
                     Game__c currentGame = new Game__c();
@@ -85,7 +114,10 @@ public with sharing class SingleEliminationTournament{
                 }
             }
             return thisGames;
-        }else{return new List<List<Game__c>>();}    
+        }else{
+            competitorsName = new Map<String, String>();
+            return new List<List<Game__c>>();
+        }    
     }
     
     public static void createNextSingleEliminationStage(List<Game__c> gamesByPreviousRound, Tournament__c currentTournament){
