@@ -13,7 +13,7 @@
                     <apex:column value="{!tournament.Format__c}"/>
                     <apex:column value="{!tournament.Type__c}"/>
                 </apex:pageBlockTable>
-        </apex:pageBlock>
+        </apex:pageBlock>...
         -->
        
         

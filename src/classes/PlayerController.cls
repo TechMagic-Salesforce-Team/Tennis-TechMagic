@@ -189,7 +189,7 @@ public with sharing class PlayerController extends PlayerCookie{
         update player;
         String thisUrl = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/player?playerId='+player.Id;
         
-        System.debug('this url: '+thisUrl);
+        System.debug('this url:'+thisUrl);
         PageReference retURL = new PageReference(thisUrl);
         retURL.setRedirect(true);
         return retURL;
