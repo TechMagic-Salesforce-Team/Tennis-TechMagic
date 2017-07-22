@@ -1,5 +1,7 @@
 public with sharing class PlayerTeamController extends PlayerCookie{
     
+    public String tournamentId { get; set; }
+    
     public PlayerTeam__c playerTeam { get; set; }
     public Team__c team { get; set; }
     
@@ -8,37 +10,41 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     public String selectedPlayer { get; set; }
     
     public LIst<SelectOption> playersOptions {get {
-		if (playersOptions == null) {
-			playersOptions = new List<SelectOption>();
-			String tournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
-			List<Team__c> teams = [SELECT Name, (SELECT Player__c FROM PlayerTeams__r)
+        if (playersOptions == null) {
+            playersOptions = new List<SelectOption>();
+            List<Team__c> teams = [SELECT Name, (SELECT Player__c FROM PlayerTeams__r)
                             FROM Team__c WHERE Tournament__c = :tournamentId];
-			for (Player__c p : players) {
-				SelectOption selectOption;
-				for (Team__c t : teams) {
-					for (PlayerTeam__c pT : t.PlayerTeams__r) {
-						if (pT.Player__c == p.Id) {
-							selectOption = new SelectOption(p.Id, p.Name + '(' + t.Name + ')');
-							SelectOption.setDisabled(true);
-							break;
-						}
-					}
-					if (selectOption != null) {
-						break;
-					}
-				}
-				if (selectOption == null) {
-					selectOption = new SelectOption(p.Id, p.Name);
-				}
-				playersOptions.add(selectOption);
-			}
-		}
-		return playersOptions;
-	} set;}
+            for (Player__c p : players) {
+                SelectOption selectOption;
+                for (Team__c t : teams) {
+                    for (PlayerTeam__c pT : t.PlayerTeams__r) {
+                        if (pT.Player__c == p.Id) {
+                            selectOption = new SelectOption(p.Id, p.Name + '(' + t.Name + ')');
+                            SelectOption.setDisabled(true);
+                            break;
+                        }
+                    }
+                    if (selectOption != null) {
+                        break;
+                    }
+                }
+                if (selectOption == null) {
+                    selectOption = new SelectOption(p.Id, p.Name);
+                }
+                playersOptions.add(selectOption);
+            }
+        }
+        return playersOptions;
+    } set;}
     
     public PlayerTeamController() {
+        tournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
         currentPlayerId = getCurrentPlayer().Id;
         players = [SELECT Id, Name FROM Player__c WHERE Id != :currentPlayerId AND Status__c = 'Active'];
+        team = new Team__c();
+        playerTeam = new PlayerTeam__c();
     }
+    
+    
     
 }
