@@ -37,7 +37,7 @@
                     <apex:commandButton value="Apply" action="{!apply}" rendered="{!!t.isApplied && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
-                    <apex:commandButton value="Apply" action="{!disapply}" rendered="{!t.isApplied && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
+                    <apex:commandButton value="Disapply" action="{!disapply}" rendered="{!t.isApplied && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>           
