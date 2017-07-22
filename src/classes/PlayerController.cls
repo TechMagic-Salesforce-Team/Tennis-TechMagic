@@ -188,10 +188,9 @@ public with sharing class PlayerController extends PlayerCookie{
         player.Image__c = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/servlet/servlet.FileDownload?file='+document.Id;
         update player;
         String thisUrl = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/player?playerId='+player.Id;
-        
         System.debug('this url:'+thisUrl);
         PageReference retURL = new PageReference(thisUrl);
         retURL.setRedirect(true);
-        return retURL;
+        return retURL; 
     }
 }
