@@ -92,4 +92,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         return Page.Home;
     }
     
+    private void sendInvitation(String playerId, String teamId) {
+        
+    }
 }
