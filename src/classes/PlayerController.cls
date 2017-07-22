@@ -14,6 +14,10 @@ public with sharing class PlayerController extends PlayerCookie{
     public Document document {get;set;}
     public String imageUrl {get;set;}
     public Boolean playerCookieIsCurrentPlayer{get;set;}
+    public Boolean hasCurrentTournaments {get;set;}
+    public List<PlayerStatistics__c> playerStatisticList {get;set;}
+    public Integer countWonGames {get;set;}
+    public Integer countLostGames {get;set;}
     public PlayerController(){
         playerCookieIsCurrentPlayer = false;
         findPlayer();
@@ -120,6 +124,7 @@ public with sharing class PlayerController extends PlayerCookie{
                 currentTournamentsOfPlayer.add(tournament);
             }
         }
+        hasCurrentTournaments = (currentTournamentsOfPlayer != null && currentTournamentsOfPlayer.size()>0);
     }
     
     public List<SelectOption> getCurrentTournamentsOptions() {
@@ -175,6 +180,12 @@ public with sharing class PlayerController extends PlayerCookie{
             if (isLoggedIn){
                     playerCookieIsCurrentPlayer = currentPlayer.Id==player.Id;
             } else playerCookieIsCurrentPlayer = false;
+            countWonGames = 0; countLostGames = 0;
+            playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id];
+            
+            //AggregateResult[] aggregateResultTotal  = 
+                //[select Tournament__c, sum(CountWonGames__c) sumCwg, sum(CountLostGames__c) sumClg from PlayerStatistics__c where Player__c='a000Y00000DqZlu' group by Tournament__c];
+            
             
             getPlayerTournaments();
        } 

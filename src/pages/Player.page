@@ -17,22 +17,35 @@
         -->
        
         
-        <div id = "imageUrlDiv">
-         <img src="{!imageUrl}"/>
-        </div>      
+         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left;">
+            <img src="{!imageUrl}"/>
+        </div>    
+
+                <div style = "float:left; width:40%; height:200px; border: 3px solid yellow; margin-top: 20px;" id = 'statistics-div'>
+                        <p style="font-size:20px;">Name: {!player.Name}</p>
+                        <script>
+                            var hasTournaments = '{!hasCurrentTournaments}';
+                            if (hasTournaments=='true'){
+                                $('#statistics-div').append("<p style='font-size:20px'>Statistics</p>");
+                            }
+                        </script>
+                       
+                </div>
         
-        <apex:pageBlock rendered='{!playerCookieIsCurrentPlayer}'>
-                         <apex:form enctype="multipart/form-data">
+                         <apex:form enctype="multipart/form-data" rendered='{!playerCookieIsCurrentPlayer}'>
                             <apex:pageMessages />
-                             <apex:commandButton action="{!uploadNewImage}" value="Save"/>
+                             <apex:pageBlock>
+                                <apex:pageBlockButtons location="bottom">       
+                             <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
+                            </apex:pageBlockButtons>
                             <apex:pageBlockSection>
                             <apex:pageBlockSectionItem >
-                                <apex:outputLabel value="File" for="file"/>
+                                <apex:outputLabel value="Upload image" for="file" style="font-size:15px;"/>
                                 <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
                             </apex:pageBlockSectionItem>
                             </apex:pageBlockSection>
+                            </apex:pageBlock>
                             </apex:form>
-        </apex:pageBlock>        
                 
         <c:TournamentsSearch player="{!player}"/>
         
