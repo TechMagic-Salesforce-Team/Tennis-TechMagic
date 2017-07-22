@@ -1,4 +1,4 @@
-<apex:page id="Player" controller="PlayerController" cache="false">
+<apex:page id="Player" controller="PlayerController" cache="false" showHeader="false">
     <head>
        <c:Header />
     </head>
@@ -19,10 +19,6 @@
         
         <div id = "imageUrlDiv">
          <img src="{!imageUrl}"/>
-         <apex:pageBlock>
-            <p>{!currentPlayer.Id}</p>
-            <p>{!player.Id}</p>
-         </apex:pageBlock>  
         </div>      
         
         <apex:pageBlock rendered='{!playerCookieIsCurrentPlayer}'>
@@ -75,5 +71,6 @@
                 }
             firstOptionSelected();
         </script>
-    </body>        
+    </body> 
+<c:Footer/>         
 </apex:page>
