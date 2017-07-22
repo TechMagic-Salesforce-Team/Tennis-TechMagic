@@ -43,6 +43,33 @@
 .circle:hover{
     background-color:orange;
 }
+.categoryImg {
+    cursor: hand;
+    position: relative;
+    float: left;
+}
+.categoryImg:hover{
+    opacity: 0.8;
+}
+
+#text {
+  z-index: 100;
+  color: black;
+  font-size: 17px;
+  margin-top: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.category-inside-block{
+    display:none;
+    width:100%;
+    height: 100%;
+}
+
+.category-inside-block:hover{
+    display: block;
+}
     </style>
             <script>var id;</script>
     
@@ -52,7 +79,7 @@
     
     <c:Header />
     <div style="float:left; width:100%;">
-        <div class="w3-content w3-section" style="max-width:100%; padding:0px; margin:0px; position:related;" id = "mainDiv">
+        <div class="w3-content w3-section" style="padding:0px; margin:0px; position:related;" id = "mainDiv">
         <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
                           'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;"/>
           <img class="mySlides" id = "aab" src="{!URLFOR($Resource.SiteSamples,
@@ -74,14 +101,51 @@
                                                     }
                                                 </script>
                     </ul>   
-                </div>
+                </div> 
                 <div style="float:left; width:500px; height:1px;" id = "divHTML">
                 </div>
             </div>
-        </div>    
+             
+        </div>  
     </div>
     
-    
+     <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px; position:relative;">
+                <div style="width:30%; height:30%; float:left; margin-left: 1%;">
+                <a href='Tournaments'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/all-tournaments.jpg')}" width="100%" height="80%;"  class="categoryImg">
+                </img>
+                </a>
+                <p id="text" >ALL TOURNAMENTS</p>
+                </div>
+                
+                <div style="width:30%; height:30%; float:left; margin-left: 3%;">
+                <a href='Players'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/all-players.jpg')}" width="100%" height="80%;" class="categoryImg">
+                </img>
+                </a>
+                <p id = "text">ALL PLAYERS</p>
+                </div>
+                
+                <div style="width:30%; height:30%; float:left; visibility: hidden; margin-left: 3%;" id='profile-id'>
+                        <script>
+                            var isLoggedIn = {!isLoggedIn};
+                            if (isLoggedIn) {
+                                $("#profile-id").css('visibility','visible');
+                            }
+                            
+                        </script>
+                <a href='player?playerId={!currentPlayer.Id}'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/profile-icon.jpg')}" width="100%" height="80%;" class="categoryImg">
+                </img>
+                </a>
+                
+                <p id = "text">YOUR PROFILE</p>
+                </div>
+                
+     </div>   
     <script>
 var id1 = 1;
 var elements = $('.mySlides');
@@ -127,6 +191,7 @@ function carousel(){
     
     $( window ).resize(function() {
         marginTogResize();
+        clearInterval(id);
     });
     
     
@@ -159,7 +224,7 @@ function carousel(){
         count = 0;
     }
    
-    
+     /*
      function circle_selected(index){
                 clearInterval(id);
                 clearInterval(id1);
@@ -175,7 +240,7 @@ function carousel(){
                     if (i==index)circles[i].style = 'background-color:orange;';
                     else circles[i].style = 'background-color:white;';
                 }
-    }
+    }*/
     
     function orangeFill(){
         id1%=(circles.length);
@@ -259,9 +324,12 @@ function carousel(){
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      
      <apex:pageBlock tabStyle="Tournament__c" title="Helpfull links">
-         See all active Users : <apex:outputLink value="PlayerList" id="UsersListLink">Look For Your Team</apex:outputLink><br/>
-         My team : <apex:outputLink value="MyTeam" id="theRegisterLink">Check your team</apex:outputLink><br/>
-         See all torunaments : <apex:outputLink value="Tournaments" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
+        <div style = 'width:100%; height:200px; background-color:#333'>
+            <a href='GoogleAuthEmptyRedirect'>
+            <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/google.png')}" width="10%"/>
+            </a>
+        </div>
      </apex:pageBlock>    
      
         <script>
