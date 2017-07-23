@@ -3,7 +3,7 @@ public with sharing class TournamentController extends PlayerCookie{
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
     
-    public Player__c currentPlayer {get; set;}
+    public Player__c currentPlayer2 {get; set;}
     public Player__c currentPlayerTmp {get; set;}
     
     public Tournament__c searchTournament {get; set;}
@@ -18,6 +18,16 @@ public with sharing class TournamentController extends PlayerCookie{
         try {
             currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
+            try{
+        	System.schedule('Start tournament', '0 1 * * * ?', new TournamentStarter());
+            } catch(Exception ex) {
+                System.debug('An exception occured while creating new schedule(if it exists)');  
+            }
+            try{
+        	System.schedule('Notify players about games to play', '0 1 8 * * ?', new GamesToPLayNotifier());
+            } catch(Exception ex) {
+                System.debug('An exception occured while creating new schedule(if it exists)');  
+            }
             return Page.Tournaments;
         } catch (System.DmlException e) {
             ApexPages.addMessages(e);
@@ -33,7 +43,6 @@ public with sharing class TournamentController extends PlayerCookie{
         for (TournamentWrapper tW : allTournaments) {
             if (tW.tournament.Id == currentTournamentId) {
                 tW.isShowed = tW.isShowed ? false : true;
-                break;
             }
         }
     }
@@ -117,6 +126,7 @@ public with sharing class TournamentController extends PlayerCookie{
             if (currentTournament.Status__c == 'Upcoming') {
                 Pagereference pageRef = Page.EditTournament;
                 pageRef.getParameters().put('tournamentId', currentTournament.Id);
+                pageRef.setRedirect(true);
                 return pageRef;
             } else {
                 ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING, 
@@ -132,7 +142,7 @@ public with sharing class TournamentController extends PlayerCookie{
             if (currentTournament.Status__c == 'Upcoming') {
                 try {
                     delete(currentTournament);
-                    findAll();
+                    allTournaments = findAll();
                     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO, 
                         'You have just deleted the tournament!'));
                 } catch(System.DmlException e) {
@@ -184,7 +194,7 @@ public with sharing class TournamentController extends PlayerCookie{
         List<Tournament__c> tournaments;
         List<String> tournamentIds;
 
-        if (currentPlayer == null) {
+        if (currentPlayer2 == null) {
             currentPlayerTmp = getCurrentPlayer();
             tournamentIds = getAllAppliedTournamentIds();
             tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
@@ -192,7 +202,7 @@ public with sharing class TournamentController extends PlayerCookie{
                 WHERE Name LIKE :tName AND Type__c LIKE :tType AND Format__c LIKE :tFormat 
                 AND Status__c LIKE :tStatus];
         } else {
-            currentPlayerTmp = currentPlayer;
+            currentPlayerTmp = currentPlayer2;
             tournamentIds = getAllAppliedTournamentIds();
             tournaments = [SELECT Id, Name, Type__c, Format__c, Status__c, StartDate__c 
                 FROM Tournament__c
@@ -200,7 +210,7 @@ public with sharing class TournamentController extends PlayerCookie{
                 AND Status__c LIKE :tStatus AND Id IN :tournamentIds];
         }
         
-        System.debug(currentPlayer);
+        System.debug(currentPlayer2);
         System.debug(tournaments.size());
         
         for (Tournament__c t : tournaments) {

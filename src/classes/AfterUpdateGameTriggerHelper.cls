@@ -2,6 +2,7 @@ public with sharing class AfterUpdateGameTriggerHelper {
     public static void generateGamesOrFinishTournament(List<Game__c> oldGames, List<Game__c> newGames) {
         for (integer i = 0; i < newGames.size(); i++) {
             if (!(oldGames[i].FirstCompetitorAccept__c && oldGames[i].SecondCompetitorAccept__c) && newGames[i].FirstCompetitorAccept__c && newGames[i].SecondCompetitorAccept__c) {
+                // update player statistics
                 genGamesOrFinTour(newGames[i]);
             }
         }

@@ -10,6 +10,7 @@
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Save" action="{!create}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" immediate="true"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>

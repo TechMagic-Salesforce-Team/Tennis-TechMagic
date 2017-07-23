@@ -14,8 +14,7 @@ public with sharing class RoundRobin_Test {
         allnames.add(newPlayer2.id+'');
         allnames.add(newPlayer3.id+'');
         List<Game__c> games = new List<Game__c>();
-        RoundRobin roundRobin = new RoundRobin();  
-        roundRobin.RoundRobinTournament(tournament1,allnames);
+        RoundRobin.RoundRobinTournament(tournament1, allnames);
         games = [Select id from Game__c where Tournament__c =:tournament1.id];
         System.assertEquals(3, games.size()); 
     }
