@@ -16,7 +16,12 @@
                 </apex:pageBlockTable>
         </apex:pageBlock>...
         -->
-       
+        
+                <script>
+                var count = 0;
+                </script>
+      
+       <apex:pageBlock  id = 'mainBlock'>
          <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left; height: 220px;">
                         <img src="{!imageUrl}" id='playerAvatar' alt="Image" style="width:auto; height: 100%; background-size: contain; float: left;"/>
                         <script>
@@ -28,13 +33,13 @@
                         
        
     
-
-                <div style = "float:left; width:40%; height:300px; margin-top: 20px;" id = 'statistics-div'>
+                <!--<apex:pageBlock id="pIdd" title="Selected tournament">-->
+                <div style = "float:left; width:40%; height:300px; margin-top: 20px;">
                         <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
                         <p style="font-size:15px; margin-left: 3%;">Name: {!player.Name}</p>
                         </div>
                         <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
-                        <p style="font-size:15px; margin-left: 3%;">Won statistics</p>
+                        <p style="font-size:15px; margin-left: 3%;">Won statistics of {!nameTournamentForWonStatistics}</p>
                         <script>
                             var hasTournaments = '{!hasCurrentTournaments}';
                             //if (hasTournaments=='true'){
@@ -50,9 +55,10 @@
                                         <script>
                                             var countWonGames = '{!countWonGames}';
                                             var countLoseGames = '{!countLostGames}';
-                                            var percentWon = 0;                                        
-                                            if (countWonGames==0 && countLoseGames==0) percentWon = 50;
-                                            else percentWon = countWonGames/(countWonGames+countLoseGames);
+                                            var percentWon = 0.0;                                        
+                                            if (countWonGames==0 && countLoseGames==0) percentWon = 50.0;
+                                            else if (countLoseGames!=0)percentWon = countWonGames*100.0/(parseFloat(parseFloat(countWonGames)+parseFloat(countLoseGames)));
+                                            else percentWon = 100.0;
                                             $("#myBar").css('width',percentWon+'%');
                                             $("#myBar").html(''+percentWon);
                                         </script>
@@ -61,16 +67,19 @@
                          
                          <div style = 'width:100%; height: 20px;'></div>
                          
+                         
                           <apex:form >
                             <apex:pageMessages />
-                                <apex:selectList value="{!currentTournamentId}" size="1" style="margin-left:18%;" required="true">
-                                <!--<apex:actionSupport event="onchange" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected" /> -->   
-                                <apex:selectOptions value="{!completedAndCurrentTournamentsOfPlayerOptions}"/>
+                                <apex:selectList value="{!currentOrCompletedTournamentId}" size="1" style="margin-left:18%;">
+                                    <apex:actionSupport event="onchange" action="{!getCurrentOrCompletedTournament}" rerender="mainBlock" />    
+                                    <apex:selectOptions value="{!completedAndCurrentTournamentsOfPlayerOptions}"/>
                                 </apex:selectList>
                           </apex:form>
-                </div>
                 </div>        
-                    
+                    </div>
+                     </apex:pageBlock>
+            
+                   
                  <p style="clear:left;"/>
                          <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
@@ -119,7 +128,11 @@
             </apex:pageBlockSection>
         </apex:pageBlock>
         
+        
+     
+        
         <script>
+            
                 function firstOptionSelected(){
                     setFirstOptionSelected();
                 }
