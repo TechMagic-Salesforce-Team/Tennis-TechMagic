@@ -69,5 +69,5 @@
     </apex:form>        
     </div>
     
-    <c:Footer/>  
+    <c:Footer />  
 </apex:page>
