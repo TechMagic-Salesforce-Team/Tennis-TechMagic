@@ -130,7 +130,11 @@ public class SingleEliminationTournamentTest{
                  countGamesByOneGames ++;
              }
          }
-         System.assertEquals(1, countGamesByOneGames ); 
+         System.assertEquals(1, countGamesByOneGames );
+         //two game
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         ListByOneGame = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);
+         System.assertEquals(1, ListByOneGame.size());
      }
      
      public static testmethod void createNextSingleEliminationStageTest(){
