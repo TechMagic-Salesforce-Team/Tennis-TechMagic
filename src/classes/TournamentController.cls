@@ -19,7 +19,7 @@ public with sharing class TournamentController extends PlayerCookie{
             currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
             try{
-        	System.schedule('Start tournament', '0 1 * * * ?', new TournamentStarter());
+        	System.schedule('Start tournament', '0 13 * * * ?', new TournamentStarter());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
