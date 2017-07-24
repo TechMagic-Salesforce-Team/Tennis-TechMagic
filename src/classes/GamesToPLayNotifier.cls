@@ -54,5 +54,3 @@ global class GamesToPLayNotifier implements Schedulable {
     }
     
 }
-
-

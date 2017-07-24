@@ -2,5 +2,5 @@
         <c:Header />
         <h1>Edit tournament</h1>
         <c:TournamentForm tournament="{!currentTournament}"/>
-        <c:Footer/>  
+        <c:Footer />  
 </apex:page>

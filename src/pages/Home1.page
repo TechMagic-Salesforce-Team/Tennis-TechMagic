@@ -20,7 +20,7 @@ html {
             <li> <a href = "/GoogleAuthPage" style="color: white; text-decoration: none;">Google auth</a></li>
     </ul>
 </div>--> 
-<c:Header/>
+<c:Header />
 <div class="w3-content w3-section" style="max-width:100%; padding:0px; margin:0px; position:related;" id = "mainDiv">
 <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
                   'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;"/>

@@ -23,11 +23,11 @@
     <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" required="true" description="Value to pass into the controller"/>
     
     <apex:pageBlockSection title="Tournament Information" showHeader="false">
-                <apex:outputLabel value="Name {!currentTournament.Name}" styleClass='tournamentFields' />
-                <apex:outputLabel value="Status {!currentTournament.Status__c}" styleClass='tournamentFields' />
-                <apex:outputLabel value="Format {!currentTournament.Format__c}" styleClass='tournamentFields' />
-                <apex:outputLabel value="Type {!currentTournament.Type__c}" styleClass='tournamentFields' />
-                <apex:outputLabel value="Date {!currentTournament.StartDate__c}" styleClass='tournamentFields' />
+                <apex:outputLabel value="Name {!currentTournament.Name}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Status {!currentTournament.Status__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Format {!currentTournament.Format__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Type {!currentTournament.Type__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Date {!currentTournament.StartDate__c}" styleClass="tournamentFields" />
                 
                 <!-- <apex:outputField  value="{!currentTournament.Name}"/>
                 <apex:outputField value="{!currentTournament.Status__c}"/>
