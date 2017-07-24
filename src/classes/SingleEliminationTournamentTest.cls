@@ -113,6 +113,25 @@ public class SingleEliminationTournamentTest{
              System.assertEquals(0,wrongTestListFormat.size());
          }
          catch(DMLException e){}
+         
+         //One Game             
+         Tournament__c tOneParameter = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'MyTournament');
+         insert tOneParameter;
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz1', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         SingleEliminationTournament thisSETOneParameter = new SingleEliminationTournament();
+         System.assertEquals(null,thisSETOneParameter.oneTournament);
+         thisSETOneParameter.oneTournament = tOneParameter;
+         System.assertEquals(tOneParameter.id,thisSETOneParameter.oneTournament.id);
+         List<List<Game__c>> ListByOneGame = new List<List<Game__c>>();
+         ListByOneGame = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);
+         System.assertEquals(1, ListByOneGame.size());
+         Integer countGamesByOneGames = 0;
+         for(List<Game__c> eachListGame : thisSETOneParameter.representSingleEliminationGrid){
+             for(Game__c ecahGame : eachListGame){
+                 countGamesByOneGames ++;
+             }
+         }
+         System.assertEquals(1, countGamesByOneGames ); 
      }
      
      public static testmethod void createNextSingleEliminationStageTest(){

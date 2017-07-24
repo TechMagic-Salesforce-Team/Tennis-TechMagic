@@ -4,26 +4,30 @@ public with sharing class SingleEliminationTournament{
     public Map<String, String> competitorsName{
         get{
             if(oneTournament !=null && oneTournament.Type__c !=null && oneTournament.Type__c=='Single Elimination'){
-                if(competitorsName== null) competitorsName = Helper.getIdAndNameMap(oneTournament);
+                if(competitorsName == null) return Helper.getIdAndNameMap(oneTournament);
                 return competitorsName;
             }else{return new Map<String, String>();}
         }
         set;
     }
-    
-    public Integer countOfStageOneTournament{get;set;}
+
+
     public List<List<Game__c>> representSingleEliminationGrid{
         get{
-            if(representSingleEliminationGrid == null) representSingleEliminationGrid = generateSingleEliminationStageGrid(oneTournament);
-            if(representSingleEliminationGrid.size() < 3 && representSingleEliminationGrid.size()>1)countOfStageOneTournament = 2;
-            else if(representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
-            else{countOfStageOneTournament = 1;}
-            System.debug(representSingleEliminationGrid);
+            if(representSingleEliminationGrid == null) return generateSingleEliminationStageGrid(oneTournament);
             return representSingleEliminationGrid;
         }
         set;
     }
-    
+    public Integer countOfStageOneTournament{
+        get{
+            if(representSingleEliminationGrid.size() < 3 && representSingleEliminationGrid.size()>1)countOfStageOneTournament = 2;
+            else if(representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
+            else{countOfStageOneTournament = 1;}
+            return countOfStageOneTournament;
+        }
+        set;
+    }
     public boolean isLoserGroupGame{
         get{
             if(representSingleEliminationGrid !=null){

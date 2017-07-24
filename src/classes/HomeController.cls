@@ -5,7 +5,6 @@ public with sharing class HomeController extends PlayerCookie{
     public Integer tournamentsInProgressSize{get;set;}
     public String selectedTournamentType{get;set;}
     public String selectedTournamentFormat{get;set;}
-    public Boolean rerenderPageBlockByType{get;set;}
     
     
     
@@ -70,7 +69,6 @@ public with sharing class HomeController extends PlayerCookie{
          tournamentsInProgress = getAllTournamentsInProgress();
          tournamentBySelectOption = tournamentsInProgress.get(0);
          tournamentsInProgressSize = tournamentsInProgress.size();
-         rerenderPageBlockByType = true;
     }
     
     
@@ -112,11 +110,8 @@ public with sharing class HomeController extends PlayerCookie{
         
         if(thisTournament.size() !=null && thisTournament.size()>0){
             tournamentsInProgress = thisTournament;
-            rerenderPageBlockByType = true;
         }else{
-              rerenderPageBlockByType = false; 
               tournamentsInProgress  = new List<Tournament__c>();
-              System.debug('hello');
              }    
     }   
 }
