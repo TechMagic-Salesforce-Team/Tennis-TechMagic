@@ -48,7 +48,7 @@ public class SingleEliminationTournamentTest{
          System.assertEquals(44,gamesCount);
      
          //Wrong Parameters, and method get DMLException
-         Tournament__c t2 = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'MyTournament3'); 
+         Tournament__c t2 = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Double Elimination', Status__c = 'Current', Name = 'MyTournament3');
          SingleEliminationTournament.StartSingleEliminationTournament(myIds, t2);
          gamesCount = [Select COUNT() From Game__c];
          System.assertEquals(44,gamesCount);

@@ -36,7 +36,7 @@ public with sharing class SingleEliminationTournament{
     }
     
     public static void StartSingleEliminationTournament(List<String> CompetitorsIds, Tournament__c currentTournament){
-        if(currentTournament.Type__c !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Format__c !=null){
+        if(currentTournament !=null && currentTournament.Type__c !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Format__c !=null){
             List<Game__c> thisGames = new List<Game__c>();
             Integer i = 0;
             for(Integer j = 1; j<=CompetitorsIds.size(); j *=2){
@@ -59,15 +59,27 @@ public with sharing class SingleEliminationTournament{
             if(i != CompetitorsIds.size()){    
                 Integer k = 2*i-CompetitorsIds.size();
                 Id freeSlot;
-                If(currentTournament.Format__c == '1 x 1'){ 
-                    freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
+                If(currentTournament.Format__c == '1 x 1'){
+                    List<Player__c> freeSlotPlayer = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'];
+                    if(freeSlotPlayer.size() == 0){
+                        Player__c upsertPlayer = new Player__c(Name ='-', Email__c = 'www@gmail.com', Password__c = 'superuserlviv', Status__c = 'Active');
+                        upsert upsertPlayer; 
+                        freeSlot = upsertPlayer.Id;
+                    }else{ 
+                        freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
+                    }
                     PlayerTournament__c insertFakePlayer = new PlayerTournament__c(Player__c = freeSlot, Tournament__c = currentTournament.Id);
                     upsert insertFakePlayer;
                 }
-                else{ 
-                    freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
-                    Team__c insertFakeTeam = new Team__c(isComplete__c = true, Tournament__c = currentTournament.Id);
-                    upsert insertFakeTeam;
+                else{
+                    List<Team__c> myTestTeamList = [Select Id, Name From Team__c Where Name = '-'];
+                    if(myTestTeamList.size() == 0){
+                        Team__c upsertTeam = new Team__c(Name = '-', isComplete__c = true, Tournament__c = currentTournament.Id); 
+                        upsert upsertTeam;
+                        freeSlot = upsertTeam.Id;
+                    }else{ 
+                        freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
+                    }
                 }
                 for(Integer nextRound = CompetitorsIds.size()-1; k>0; nextRound--){
                     Game__c currentGame = new Game__c();
