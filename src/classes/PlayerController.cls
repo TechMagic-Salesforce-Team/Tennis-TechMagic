@@ -10,7 +10,9 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<Tournament__c> currentTournamentsOfPlayer {get;set;}
     public List<Game__c> gamesOfCurrentPlayerInSelectedTournament {get;set;}
     public Tournament__c currentTournament {get;set;}
+    public Tournament__c currentOrCompleteTournament {get;set;}
     public String currentTournamentId {get;set;}
+    public String currentOrCompletedTournamentId {get;set;}
     public Document document {get;set;}
     public String imageUrl {get;set;}
     public Boolean playerCookieIsCurrentPlayer{get;set;}
@@ -18,7 +20,9 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<PlayerStatistics__c> playerStatisticList {get;set;}
     public Integer countWonGames {get;set;}
     public Integer countLostGames {get;set;}
+    public String nameTournamentForWonStatistics {get;set;}
     public List<Tournament__c> completedAndCurrentTournamentsOfPlayer {get;set;}
+    
     public PlayerController(){
         playerCookieIsCurrentPlayer = false;
         findPlayer();
@@ -153,7 +157,30 @@ public with sharing class PlayerController extends PlayerCookie{
  	 return options;
     }
     
-    
+   
+    public PageReference getCurrentOrCompletedTournament(){
+        if (currentOrCompletedTournamentId==null || currentOrCompletedTournamentId == ''){
+            countWonGames = 0; countLostGames = 0;
+           for (PlayerStatistics__c ps: playerStatisticList){
+                countWonGames+=(Integer)ps.CountWonGames__c;
+                countLostGames+=(Integer)ps.CountLostGames__c;
+            }
+            nameTournamentForWonStatistics = 'all tournaments';
+        }
+        try{
+            currentOrCompleteTournament = [select Id,Name,Type__c,Status__c,Format__c,StartDate__c from Tournament__c where Id=:currentOrCompletedTournamentId limit 1];
+            System.debug('Current or compl tournament: '+currentOrCompleteTournament);
+            PlayerStatistics__c playerStatisticsInSelectedTournament = [select Id,Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id and Tournament__c =:currentOrCompleteTournament.Id];
+            countWonGames = (Integer)playerStatisticsInSelectedTournament.CountWonGames__c;
+            countLostGames = (Integer)playerStatisticsInSelectedTournament.CountLostGames__c;
+            nameTournamentForWonStatistics = currentOrCompleteTournament.Name;
+            } catch (Exception ex){
+            System.debug('Hello world');
+        }
+       
+        
+        return null;
+    }
     
     public List<SelectOption> getCompletedAndCurrentTournamentsOfPlayerOptions(){
         return formOptionsByTournament(completedAndCurrentTournamentsOfPlayer);
