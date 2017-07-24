@@ -1,0 +1,19 @@
+<apex:component controller="PlayerTeamController">
+    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
+    <apex:pageBlock rendered="{!teamInvitations == null || teamInvitations.size == 0}">
+        <p>You still have no team invitations.</p>
+    </apex:pageBlock>
+    <apex:pageBlock rendered="{!teamInvitations != null && teamInvitations.size > 0}">
+        <apex:pageBlockTable value="{!teamInvitations}" var="oneTeamInvitation">
+            <apex:column value="{!oneTeamInvitation.tournamentName}" headerValue="Tournament name"/>
+            <apex:column value="{!oneTeamInvitation.teamName}" headerValue="Team name"/>
+            <apex:column value="{!oneTeamInvitation.playerName}" headerValue="Invitation from"/>
+            <apex:column headerValue="Accept">
+                    
+            </apex:column>
+            <apex:column headerValue="Decline">
+                    
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:component>
