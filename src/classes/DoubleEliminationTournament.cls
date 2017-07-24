@@ -11,6 +11,21 @@ public with sharing class DoubleEliminationTournament {
         set;
     }
     
+    public Map<String, String> competitorsName{
+        get{
+            if(oneTournament !=null && representDoubleEliminationGrid !=null && oneTournament.Type__c=='Double Elimination'){
+                if(competitorsName== null) competitorsName = Helper.getIdAndNameMap(oneTournament);
+                competitorsName.put('?', '?');
+                return competitorsName;
+            } else {
+                competitorsName = new Map<String, String>();
+                competitorsName.put('?', '?');
+                return competitorsName;
+            }
+        }
+        set;
+    }
+    
     public List<List<Game__c>> generateDoubleEliminationGrid(Tournament__c currentTournament){
         if(currentTournament.id != null && currentTournament.Type__c !=null && currentTournament.Type__c =='Double Elimination'){
             Decimal i = 0; //Stage count
