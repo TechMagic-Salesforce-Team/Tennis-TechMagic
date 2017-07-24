@@ -12,7 +12,7 @@ public with sharing class RoundRobin {
    
         
     }
-    public void RoundRobinTournament(Tournament__c myTournament,List<String> allIds){        
+    public static void RoundRobinTournament(Tournament__c myTournament,List<String> allIds){        
         List<Game__c> currentTournamentGames = new List<Game__c>();
         for(Integer round=0; round<allIds.size();round++){
             for(Integer match=round+1;match<allIds.size();match++){

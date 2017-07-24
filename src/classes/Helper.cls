@@ -9,17 +9,15 @@ public static Map<String , String> getIdAndNameMap(Tournament__c tournament){
                                    Where Id IN (Select Player__c 
                                                 From PlayerTournament__c
                                                 Where Tournament__c =:tournament.id)]){
-                 result.put(player.id+'',player.name+'');
+                 result.put(player.id, player.name);
             }
-               
-            return result;
         }else{
             for(Team__c team: [Select Id,Name
                                From Team__c  
                                Where Tournament__c =:tournament.id]){
-                result.put(team.id+'',team.name+'');
+                result.put(team.id, team.name);
             }
-            return result;
-        }   
+        }
+        return result;
     }
 }
