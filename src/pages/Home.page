@@ -1,5 +1,10 @@
 <apex:page controller="HomeController" cache="false" tabStyle="Tournament__c" showHeader="false">
+    <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerBanner.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerCSS.css')}"/>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <style>
+    
     .bPageBlock .pbTitle {
             width: 100%;    
             text-align: center;
@@ -22,34 +27,139 @@
         font-size : 17px;
         text-align:center;
     }
+    .mySlides {display:none;}
+    html {
+        min-width: 500px;
+        overflow-x: hidden;
+    }
+    #menu ul {
+    width: 300px;
+    margin: 0 auto;
+    background-color: white;
+    color:black;
+    text-decoration: none;
+}
+.circle{
+    width:10px; height: 10px; border-radius: 50%; border: 2px solid orange; cursor: hand;
+}
+.circle:hover{
+    background-color:orange;
+}
+.categoryImg {
+    cursor: hand;
+    position: relative;
+    float: left;
+}
+.categoryImg:hover{
+    opacity: 0.8;
+}
 
+#text {
+  z-index: 100;
+  color: black;
+  font-size: 17px;
+  margin-top: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.category-inside-block{
+    display:none;
+    width:100%;
+    height: 100%;
+}
+
+.category-inside-block:hover{
+    display: block;
+}
     </style>
-    <script src="jquery-3.2.1.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-     <!--<img src="{!URLFOR($Resource.SiteSamples,
-                  'img/slider001.jpg')}"/>-->
-             <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerBanner.css')}"/>
-             <apex:stylesheet value="{!URLFOR($Resource.SiteSamples, 'css/headerCSS.css')}"/>
-    <c:Header />
-    <!--<apex:stylesheet value="{!URLFOR($Resource.style_resources, 'animation.css')}"/>-->
-    <!--<apex:image url="{!URLFOR($Resource.SiteSamples,
-                  'img/slider.jpg')}"/>-->
+            <script>var id;</script>
     
-   
-        <div class="w3-content w3-section" style="max-width:100%; padding:0px; margin:0px;">
-            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
-                  'img/slider001.jpg')}" width="100%"/>
-            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
-                  'img/slider002.jpg')}" width="100%"/>
-            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
-                  'img/slider003.jpg')}" width="100%"/>
-            <img class="mySlides" src="{!URLFOR($Resource.SiteSamples,
-                  'img/slider004.jpg')}" width="100%"/>
+    
+    
+    
+    
+    <c:Header />
+    <div style="float:left; width:100%;">
+        <div class="w3-content w3-section" style="padding:0px; margin:0px; position:related;" id = "mainDiv">
+        <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
+                          'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+          <img class="mySlides" id = "aab" src="{!URLFOR($Resource.SiteSamples,
+                          'img/slider002.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+          <img class="mySlides" id = "aac" src="{!URLFOR($Resource.SiteSamples,
+                          'img/slider003.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+          <img class="mySlides" id = "aad" src="{!URLFOR($Resource.SiteSamples,
+                          'img/slider004.jpg')}" width="100%;" style="display:block; position:absolute;"/>
         </div>
-<script>
+            
+        <div id = "anotherElements" style="position:inherit; width:100%; height:auto;">
+            <div style="height:10px; float:left; margin-top:0px;" id="divAllHTML">
+                                <div id="menu" style="margin-bottom: 10px;">
+                     <ul id = 'ulCircles'>
+                                                <script>
+                                                    var elements = $('.mySlides');
+                                                    for (var i = 0; i < elements.length; i++){
+                                                        $('#ulCircles').append("<li><div class='circle' onclick='circle_selected("+i+")'></div></li>");
+                                                    }
+                                                </script>
+                    </ul>   
+                </div> 
+                <div style="float:left; width:500px; height:1px;" id = "divHTML">
+                </div>
+            </div>
+             
+        </div>  
+    </div>
+    
+     <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px; position:relative;">
+                <div style="width:30%; height:30%; float:left; margin-left: 1%;">
+                <a href='Tournaments'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/all-tournaments.jpg')}" width="100%" height="80%;"  class="categoryImg">
+                </img>
+                </a>
+                <p id="text" >ALL TOURNAMENTS</p>
+                </div>
+                
+                <div style="width:30%; height:30%; float:left; margin-left: 3%;">
+                <a href='Players'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/all-players.jpg')}" width="100%" height="80%;" class="categoryImg">
+                </img>
+                </a>
+                <p id = "text">ALL PLAYERS</p>
+                </div>
+                
+                <div style="width:30%; height:30%; float:left; visibility: hidden; margin-left: 3%;" id='profile-id'>
+                        <script>
+                            var isLoggedIn = {!isLoggedIn};
+                            if (isLoggedIn) {
+                                $("#profile-id").css('visibility','visible');
+                            }
+                            
+                        </script>
+                <a href='player?playerId={!currentPlayer.Id}'>
+                <img src="{!URLFOR($Resource.SiteSamples,
+                          'img/profile-icon.jpg')}" width="100%" height="80%;" class="categoryImg">
+                </img>
+                </a>
+                
+                <p id = "text">YOUR PROFILE</p>
+                </div>
+                
+     </div>   
+    <script>
+var id1 = 1;
+var elements = $('.mySlides');
+var circles = $('.circle');
 var myIndex = 0;
 carousel();
+marginTogResize();
+myInterval = 1600;
+var count = 0;
 
+
+/*
 function carousel(){
     var elements = $('.mySlides');
     myIndex++;
@@ -61,10 +171,98 @@ function carousel(){
         } else elements[i].style="display:none";
     }
     setTimeout(carousel, 2000);
-}    
+}
+*/
+     
+ function carousel(){
+     var height = $(window).height();   
+     var height1 = $(document).height();
+     var width = $(window).width();  
+     var width1 = $(document).width(); 
+     circles[1].style = 'background-color:orange;';
+ }   
+    
+    function marginTogResize(){
+        var marginTop = parseFloat(elements[id1].height)+parseFloat(elements[id1].offsetTop);
+        document.getElementById("divAllHTML").style  = 'margin-top:'+marginTop+'px';
+    }
+    
+    $(document).ready(function() {  
+    slideShow();   
+});
+    
+    
+    $( window ).resize(function() {
+        marginTogResize();
+        clearInterval(id);
+    });
+    
+    
+    function slideShow(){
+    if (count==elements.length-1) {
+         console.log('less');
+         backSlideShow();
+    } else { 
+    count++;
+    var leftTo = ($(window).width());
+    $("#aaa").animate({left: "-="+leftTo}, 3000);
+    for (var i = 1; i < elements.length; i++){
+         var x = elements[i-1].offsetLeft+$(window).width(); 
+        elements[i].style.left =  x+'px';
+        $("#"+elements[i].id).animate({left: "-="+leftTo}, 3000);
+    }
+    }   
+    orangeFill(); 
+   }
+    
+    function backSlideShow(){
+        elements[elements.length-1].style.left = "0px";  
+        var leftTo = ($(window).width())*(elements.length-1);
+        $("#aaa").animate({left: "+="+leftTo}, 3000);
+        for (var i = 1; i < elements.length; i++){
+         var x = elements[i-1].offsetLeft+$(window).width(); 
+         elements[i].style.left =  x+'px';
+         $("#"+elements[i].id).animate({left: "+="+leftTo}, 3000);
+        }  
+        count = 0;
+    }
+   
+     
+     function circle_selected(index){
+                clearInterval(id);
+                clearInterval(id1);
+                for (var i = 0; i < elements.length; i++){
+                    $("#"+elements[i].id).stop( true, true ).fadeIn();
+                    if (i!=index) {
+                        elements[i].style = 'display:none';
+                    }
+                }
+                elements[index].style.left = "0px";
+                elements[index].style = "display:block; position:absolute;";
+                for (var i = 0; i < circles.length; i++){
+                    if (i==index)circles[i].style = 'background-color:orange;';
+                    else circles[i].style = 'background-color:white;';
+                }
+                id1 = index;
+    }
+    
+    function orangeFill(){
+        id1%=(circles.length);
+        for (var i = 0; i < circles.length; i++){
+        if (i==id1)circles[i].style = 'background-color:orange;';
+        else circles[i].style = 'background-color:white;';
+        console.log(id1+', '+circles.length);
+    }
+    if (id1<circles.length-1) id1++;
+    else id1 = 0;
+    }
+    
+    id = setInterval(slideShow,6000);
+    //id1 = setInterval(orangeFill,6000);
 </script>
+
      <apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
-         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+          
          <script>
               function rerenderCurrentTournament()
               {
@@ -101,12 +299,12 @@ function carousel(){
              
              <apex:pageBlock title="All Current Tournament" mode="maindetail">
                  <apex:pageBlockSection columns="2">   
-                     <apex:selectList label="Type : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1" styleClass="styled-select">
+                     <apex:outputLabel style="font-size : 22px;">Type  &nbsp; &nbsp;<apex:selectList onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1" styleClass="styled-select">
                          <apex:selectOptions value="{!tournamentTypeOptions}"></apex:selectOptions>
-                     </apex:selectList>
-                     <apex:selectList label="Format : " onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentFormat}" size="1" styleClass="styled-select">
+                     </apex:selectList></apex:outputLabel>
+                     <apex:outputLabel style="font-size : 22px;">Format &nbsp; &nbsp;<apex:selectList onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentFormat}" size="1" styleClass="styled-select">
                          <apex:selectOptions value="{!tournamentFormatOptions}"></apex:selectOptions>
-                     </apex:selectList>
+                     </apex:selectList></apex:outputLabel>
                 </apex:pageBlockSection>
                 <apex:pageBlockTable rows="10" headerClass="headerByTableTournamentInProgress" value="{!tournamentsInProgress}" var="tournament" id="allTournamentsInProgressId" rowClasses="rowByTableTournamentInProgress">
                     <apex:column value="{!tournament.Name}" onclick="rerenderTournament('{!tournament.Id}')"/>
@@ -129,11 +327,7 @@ function carousel(){
       
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      
-     <apex:pageBlock tabStyle="Tournament__c" title="Helpfull links">
-         See all active Users : <apex:outputLink value="PlayerList" id="UsersListLink">Look For Your Team</apex:outputLink><br/>
-         My team : <apex:outputLink value="MyTeam" id="theRegisterLink">Check your team</apex:outputLink><br/>
-         See all torunaments : <apex:outputLink value="Tournaments" id="theRepresentTableTournirTournamentLink">Watch all Tournaments</apex:outputLink><br/>
-     </apex:pageBlock>    
+     <c:Footer/>  
      
         <script>
             function rerenderTournament(id){

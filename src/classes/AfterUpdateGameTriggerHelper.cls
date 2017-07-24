@@ -1,13 +1,9 @@
 public with sharing class AfterUpdateGameTriggerHelper {  
     public static void generateGamesOrFinishTournament(List<Game__c> oldGames, List<Game__c> newGames) {
-        Map<Id, List<Game__c>> oldGamesTournaments = groupByTournament(oldGames);
-        Map<Id, List<Game__c>> newGamesTournaments = groupByTournament(newGames);
-        Map<Id, Boolean> oldGamesTournamentsAccept = checkAccept(oldGamesTournaments);
-        Map<Id, Boolean> newGamesTournamentsAccept = checkAccept(newGamesTournaments);
-        Set<Id> ids = newGamesTournamentsAccept.keySet();
-        for (Id i : ids) {
-            if (!oldGamesTournamentsAccept.get(i) && newGamesTournamentsAccept.get(i)) {
-                genGamesOrFinTour(newGamesTournaments.get(i)[0]);
+        for (integer i = 0; i < newGames.size(); i++) {
+            if (!(oldGames[i].FirstCompetitorAccept__c && oldGames[i].SecondCompetitorAccept__c) && newGames[i].FirstCompetitorAccept__c && newGames[i].SecondCompetitorAccept__c) {
+                // update player statistics
+                genGamesOrFinTour(newGames[i]);
             }
         }
     }

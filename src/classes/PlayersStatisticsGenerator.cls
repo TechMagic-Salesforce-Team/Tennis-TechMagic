@@ -7,15 +7,18 @@ public with sharing class PlayersStatisticsGenerator {
         Map<Id,Tournament__c> tournamentsChangedToCurrentStatusForSingleGames = new Map<Id,Tournament__c>();
         Map<Id,Tournament__c> tournamentsChangedToCurrentStatusForTeamGames = new Map<Id,Tournament__c>();
         
+        //fixed
         
+        //throw new DmlException(''+beforeUpdateTournaments.size());
         for (Integer i = 0; i < beforeUpdateTournaments.size(); i++){
-            if (beforeUpdateTournaments.get(i).Status__c != 'Current' && afterUpdateTournaments.get(i).Status__c == 'Current'){
+            if (beforeUpdateTournaments.get(i).Status__c != 'Upcoming') continue;
+            if (beforeUpdateTournaments.get(i).Status__c == 'Upcoming' && afterUpdateTournaments.get(i).Status__c == 'Current'){
                 if (afterUpdateTournaments.get(i).Format__c == '1 x 1'){
                     tournamentsChangedToCurrentStatusForSingleGames.put(afterUpdateTournaments.get(i).Id,afterUpdateTournaments.get(i));
-                } else {
+                } else if (afterUpdateTournaments.get(i).Format__c == '2 x 2'){
                     tournamentsChangedToCurrentStatusForTeamGames.put(afterUpdateTournaments.get(i).Id,afterUpdateTournaments.get(i));
                 }
-            }
+            } 
         }
         
         
@@ -33,7 +36,7 @@ public with sharing class PlayersStatisticsGenerator {
         ///////////////////////////////////////////////////////////////////////////////////
         
         
-        List<Team__c> teams = [select Tournament__c , (select Player__c,Team__c from PlayerTeams__r) from Team__c];
+        List<Team__c> teams = [select Tournament__c , (select Player__c,Team__c from PlayerTeams__r) from Team__c where Tournament__c in:tournamentsChangedToCurrentStatusForTeamGames.keySet()];
         for (Team__c team: teams){
             List<PlayerTeam__c> playersOfCurrentTeam = team.PlayerTeams__r;
                 for (PlayerTeam__c playerTeam: playersOfCurrentTeam){

@@ -1,4 +1,4 @@
-<apex:page id="LoginRegister" controller="PlayerController" cache="false">
+<apex:page id="LoginRegister" controller="PlayerController" cache="false" showHeader="false">
     <c:Header />  
     <apex:sectionHeader title="Visualforce Example" subtitle="Player"/>
     <div style = 'float:left; height:100%; width:100%;'>
@@ -68,4 +68,6 @@
              </apex:pageBlock>
     </apex:form>        
     </div>
+    
+    <c:Footer/>  
 </apex:page>

@@ -12,8 +12,14 @@ public with sharing class PlayerController extends PlayerCookie{
     public Tournament__c currentTournament {get;set;}
     public String currentTournamentId {get;set;}
     public Document document {get;set;}
-    
+    public String imageUrl {get;set;}
+    public Boolean playerCookieIsCurrentPlayer{get;set;}
+    public Boolean hasCurrentTournaments {get;set;}
+    public List<PlayerStatistics__c> playerStatisticList {get;set;}
+    public Integer countWonGames {get;set;}
+    public Integer countLostGames {get;set;}
     public PlayerController(){
+        playerCookieIsCurrentPlayer = false;
         findPlayer();
     }
     
@@ -34,10 +40,12 @@ public with sharing class PlayerController extends PlayerCookie{
                 try{
                     insert player;
                     try {
-                    Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
-                    document.FolderId = folder.Id;
-                    document.AuthorId = UserInfo.getUserId();
-                    insert document;    
+                        Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
+                        document.FolderId = folder.Id;
+                        document.AuthorId = UserInfo.getUserId();
+                        insert document;    
+                        player.Image__c = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/servlet/servlet.FileDownload?file='+document.Id;
+                        update player;
                     } catch (DmlException dmlException){
                         System.debug('Dml exception while registration new player');
                     } catch (NullPointerException nullPointerException){
@@ -116,6 +124,7 @@ public with sharing class PlayerController extends PlayerCookie{
                 currentTournamentsOfPlayer.add(tournament);
             }
         }
+        hasCurrentTournaments = (currentTournamentsOfPlayer != null && currentTournamentsOfPlayer.size()>0);
     }
     
     public List<SelectOption> getCurrentTournamentsOptions() {
@@ -163,9 +172,36 @@ public with sharing class PlayerController extends PlayerCookie{
             registrationPage = false;
           }
        } else if (apexPageParams.get('playerId')!=null){
+            document = new Document();
             String idPlayer = apexPageParams.get('playerId');
-            player = [select Id,Name,Email__c,Password__c from Player__c where Id=:idPlayer limit 1];
+            player = [select Id,Name,Email__c,Password__c,Image__c from Player__c where Id=:idPlayer limit 1];
+            imageUrl = ''+player.Image__c;
+            
+            if (isLoggedIn){
+                    playerCookieIsCurrentPlayer = currentPlayer.Id==player.Id;
+            } else playerCookieIsCurrentPlayer = false;
+            countWonGames = 0; countLostGames = 0;
+            playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id];
+            
+            //AggregateResult[] aggregateResultTotal  = 
+                //[select Tournament__c, sum(CountWonGames__c) sumCwg, sum(CountLostGames__c) sumClg from PlayerStatistics__c where Player__c='a000Y00000DqZlu' group by Tournament__c];
+            
+            
             getPlayerTournaments();
        } 
+    }
+    
+    public PageReference uploadNewImage(){
+        Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
+        document.FolderId = folder.Id;
+        document.AuthorId = UserInfo.getUserId();
+        insert document;    
+        player.Image__c = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/servlet/servlet.FileDownload?file='+document.Id;
+        update player;
+        String thisUrl = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/player?playerId='+player.Id;
+        System.debug('this url:'+thisUrl);
+        PageReference retURL = new PageReference(thisUrl);
+        retURL.setRedirect(true);
+        return retURL; 
     }
 }

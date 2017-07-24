@@ -1,0 +1,17 @@
+<apex:page controller="PlayerTeamController" action="{!validatePageVisitor}">
+    <apex:form >
+        <apex:pageBlock mode="edit">
+            <apex:pageMessages />
+            <apex:pageBlockSection >
+                <apex:inputField value="{!team.Name}" required="true"/>
+                <apex:selectList value="{!selectedPlayer}" size="1" required="true">
+                    <apex:selectOptions value="{!playersOptions}"></apex:selectOptions>
+                </apex:selectList>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!create}"/>
+                <apex:commandButton value="Cancel" action="{!cancel}" immediate="true"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

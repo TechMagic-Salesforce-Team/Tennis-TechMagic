@@ -1,4 +1,4 @@
-<apex:page id="Player" controller="PlayerController" cache="false">
+<apex:page id="Player" controller="PlayerController" cache="false" showHeader="false">
     <head>
        <c:Header />
     </head>
@@ -13,9 +13,40 @@
                     <apex:column value="{!tournament.Format__c}"/>
                     <apex:column value="{!tournament.Type__c}"/>
                 </apex:pageBlockTable>
-        </apex:pageBlock>
+        </apex:pageBlock>...
         -->
+       
         
+         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left;">
+            <img src="{!imageUrl}"/>
+        </div>    
+
+                <div style = "float:left; width:40%; height:200px; border: 3px solid yellow; margin-top: 20px;" id = 'statistics-div'>
+                        <p style="font-size:20px;">Name: {!player.Name}</p>
+                        <script>
+                            var hasTournaments = '{!hasCurrentTournaments}';
+                            if (hasTournaments=='true'){
+                                $('#statistics-div').append("<p style='font-size:20px'>Statistics</p>");
+                            }
+                        </script>
+                       
+                </div>
+        
+                         <apex:form enctype="multipart/form-data" rendered='{!playerCookieIsCurrentPlayer}'>
+                            <apex:pageMessages />
+                             <apex:pageBlock>
+                                <apex:pageBlockButtons location="bottom">       
+                             <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
+                            </apex:pageBlockButtons>
+                            <apex:pageBlockSection>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel value="Upload image" for="file" style="font-size:15px;"/>
+                                <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
+                            </apex:pageBlockSectionItem>
+                            </apex:pageBlockSection>
+                            </apex:pageBlock>
+                            </apex:form>
+                
         <c:TournamentsSearch player="{!player}"/>
         
         <apex:form >
@@ -53,5 +84,6 @@
                 }
             firstOptionSelected();
         </script>
-    </body>        
+    </body> 
+<c:Footer/>         
 </apex:page>

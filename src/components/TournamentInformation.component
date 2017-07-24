@@ -14,16 +14,31 @@
             background-color: #cc1e1e;
             color: white;
          }
+         
+         .tournamentFields {
+             font-size: 25px;
+         }
     </style>
-    <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" required="true" description="Value to pass into the controller"/>
-    <h1>Tournament information</h1>
-    <p>{!currentTournament.Name}</p>
-    <p>{!currentTournament.Type__c}</p>
-    <p>{!currentTournament.Format__c}</p>
-    <p>{!currentTournament.Status__c}</p>
-    <p>{!currentTournament.StartDate__c}</p>
     
-    <c:SingleElimination componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Single Elimination'}"/>
-    <c:DoubleEliminationTournament componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Double Elimination'}"/>
-    <c:RoundRobin componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Round Robin'}"/>
+    <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" required="true" description="Value to pass into the controller"/>
+    
+    <apex:pageBlockSection title="Tournament Information" showHeader="false">
+                <apex:outputLabel value="Name {!currentTournament.Name}" styleClass='tournamentFields' />
+                <apex:outputLabel value="Status {!currentTournament.Status__c}" styleClass='tournamentFields' />
+                <apex:outputLabel value="Format {!currentTournament.Format__c}" styleClass='tournamentFields' />
+                <apex:outputLabel value="Type {!currentTournament.Type__c}" styleClass='tournamentFields' />
+                <apex:outputLabel value="Date {!currentTournament.StartDate__c}" styleClass='tournamentFields' />
+                
+                <!-- <apex:outputField  value="{!currentTournament.Name}"/>
+                <apex:outputField value="{!currentTournament.Status__c}"/>
+                <apex:outputField value="{!currentTournament.Format__c}"/>
+                <apex:outputField value="{!currentTournament.Type__c}"/>
+                <apex:outputField value="{!currentTournament.StartDate__c}" />-->
+                <p style = "clear:left;"/>
+    </apex:pageBlockSection>    
+
+    <c:SingleElimination componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Single Elimination' && currentTournament.Status__c!='Upcoming'}"/>
+    <c:DoubleEliminationTournament componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Double Elimination' && currentTournament.Status__c!='Upcoming'}"/>
+    <c:RoundRobin componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Round Robin' && currentTournament.Status__c!='Upcoming'}"/>
+
 </apex:component>
