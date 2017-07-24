@@ -2,6 +2,7 @@ trigger PlayerUpdateTrigger on Player__c (after update) {
     List<Player__c> oldPlayers = new List<Player__c>(Trigger.old);
     List<Player__c> newPlayers = new List<Player__c>(Trigger.new);
     
+    
     List<String> docsMustBeDeletedIds = new List<String>();
     for (Integer i = 0; i < newPlayers.size(); i++){
         if (oldPlayers[i].Image__c != newPlayers[i].Image__c){
