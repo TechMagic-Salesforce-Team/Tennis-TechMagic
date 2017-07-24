@@ -29,7 +29,7 @@
        
     
 
-                <div style = "float:left; width:40%; height:200px; margin-top: 20px;" id = 'statistics-div'>
+                <div style = "float:left; width:40%; height:300px; margin-top: 20px;" id = 'statistics-div'>
                         <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
                         <p style="font-size:15px; margin-left: 3%;">Name: {!player.Name}</p>
                         </div>
@@ -37,9 +37,9 @@
                         <p style="font-size:15px; margin-left: 3%;">Won statistics</p>
                         <script>
                             var hasTournaments = '{!hasCurrentTournaments}';
-                            if (hasTournaments=='true'){
-                                $('#statistics-div').append("<p style='font-size:20px'>Statistics</p>");
-                            }
+                            //if (hasTournaments=='true'){
+                                //$('#statistics-div').append("<p style='font-size:20px'>Statistics</p>");
+                            //}
                         </script>
                         <p style="font-size:15px; margin-left: 3%;">Count won games {!countWonGames}</p>
                         <p style="font-size:15px; margin-left: 3%;">Count lost games {!countLostGames}</p>
@@ -59,10 +59,18 @@
                              </div>
                          </div>
                          
-                         <div style = 'width:100%; height: 20px;'/>
-                         </div>
-                       
+                         <div style = 'width:100%; height: 20px;'></div>
+                         
+                          <apex:form >
+                            <apex:pageMessages />
+                                <apex:selectList value="{!currentTournamentId}" size="1" style="margin-left:18%;" required="true">
+                                <!--<apex:actionSupport event="onchange" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected" /> -->   
+                                <apex:selectOptions value="{!completedAndCurrentTournamentsOfPlayerOptions}"/>
+                                </apex:selectList>
+                          </apex:form>
                 </div>
+                </div>        
+                    
                  <p style="clear:left;"/>
                          <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
