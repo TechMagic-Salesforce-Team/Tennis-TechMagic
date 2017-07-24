@@ -2,6 +2,10 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     
     public Player__c currentPlayer2 { get; set; }
     
+    public String invitationTournamentId { get; set; }
+    public String invitationTeamId { get; set; }
+    public String invitationPlayerId { get; set; }
+    
     public List<TeamInvitation> teamInvitations { get {
             if (teamInvitations == null) return getAllTeamInvitations();
             return teamInvitations;
@@ -150,6 +154,38 @@ public with sharing class PlayerTeamController extends PlayerCookie{
             }
         }
         return result;
+    }
+    public void acceptInvitation() {
+        Team__c team = new Team__c(Id = invitationTeamId, IsComplete__c = true);
+        try {
+            update (team);
+        } catch (System.DmlException e) {
+            System.debug(e);
+            return;
+        }
+        List<Team__c> teams = [SELECT Id, (SELECT Id FROM PlayerTeams__r WHERE Player__c = :invitationPlayerId OR Player__c = :currentPlayer2.Id)
+            FROM Team__c WHERE Tournament__c = :invitationTournamentId AND IsComplete__c = false];
+        List<Team__c> teamsToDelete = new List<Team__c>();
+        for (Team__c t : teams) {
+            List<PlayerTeam__c> list1 = t.PlayerTeams__r;
+            if (list1.size() > 0) {
+                teamsToDelete.add(t);
+            }
+        }
+        try {
+            delete (teamsToDelete);
+        } catch (System.DmlException e) {
+            System.debug(e);
+        }
+    }
+    
+    public void declineInvitation() {
+        Team__c team = new Team__c(Id = invitationTeamId, IsComplete__c = true);
+        try {
+            delete (team);
+        } catch (System.DmlException e) {
+            System.debug(e);
+        }
     }
     
     public class TeamInvitation {
