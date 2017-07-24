@@ -17,6 +17,7 @@ public with sharing class SingleEliminationTournament{
             if(representSingleEliminationGrid.size() < 3 && representSingleEliminationGrid.size()>1)countOfStageOneTournament = 2;
             else if(representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
             else{countOfStageOneTournament = 1;}
+            System.debug(representSingleEliminationGrid);
             return representSingleEliminationGrid;
         }
         set;
@@ -110,9 +111,9 @@ public with sharing class SingleEliminationTournament{
                     From Game__c Where Tournament__C = :currentTournament.Id];
             Integer countCompetitors = gamesForCurrentTournament.size(); 
             if(countCompetitors  >0 && countCompetitors  !=null){
-                for(Integer j =1; j<countCompetitors ;j*=2){
+                for(Integer j =1; j<=countCompetitors ;j*=2){
                     i++;
-                }
+                }                
             }
             if(gamesForCurrentTournament !=null){
                 for(Integer j = 1; j<=i;j++){

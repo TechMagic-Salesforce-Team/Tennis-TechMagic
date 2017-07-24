@@ -64,13 +64,13 @@
                        
                 </div>
                  <p style="clear:left;"/>
-                         <apex:form enctype="multipart/form-data" rendered='{!playerCookieIsCurrentPlayer}'>
+                         <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
-                             <apex:pageBlock>
+                             <apex:pageBlock >
                                 <apex:pageBlockButtons location="bottom">       
                              <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
                             </apex:pageBlockButtons>
-                            <apex:pageBlockSection>
+                            <apex:pageBlockSection >
                             <apex:pageBlockSectionItem >
                                 <apex:outputLabel value="Upload image" for="file" style="font-size:15px;"/>
                                 <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
@@ -118,5 +118,5 @@
             firstOptionSelected();
         </script>
     </body> 
-<c:Footer/>         
+<c:Footer />         
 </apex:page>

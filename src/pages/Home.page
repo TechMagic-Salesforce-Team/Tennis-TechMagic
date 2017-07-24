@@ -283,7 +283,7 @@ function carousel(){
          
      
          <apex:form >
-             <apex:actionFunction name="rerenderPageBlockForSelectedTournamentTypeFunc" action="{!rerenderPageBlockForSelectedTournamentsType}" reRender="allTournamentsInProgressId"/>
+             <apex:actionFunction name="rerenderPageBlockForSelectedTournamentTypeFunc" action="{!rerenderPageBlockForSelectedTournamentsType}" reRender="cGrid, allTournamentsInProgressId"/>
              
              <apex:inputHidden value="{!selectedTournament}" id="deletePersonBlock"/>
              <apex:actionFunction name="rerenderPageBlockForSelectedTournament" action="{!rerenderPageBlockForSelectedTournament}" reRender="cGrid8, cGrid, cGrid2, cGrid3, DetalInformationForSelectedTournament"/>
@@ -306,7 +306,7 @@ function carousel(){
                          <apex:selectOptions value="{!tournamentFormatOptions}"></apex:selectOptions>
                      </apex:selectList></apex:outputLabel>
                 </apex:pageBlockSection>
-                <apex:pageBlockTable rows="10" headerClass="headerByTableTournamentInProgress" value="{!tournamentsInProgress}" var="tournament" id="allTournamentsInProgressId" rowClasses="rowByTableTournamentInProgress">
+                <apex:pageBlockTable headerClass="headerByTableTournamentInProgress" value="{!tournamentsInProgress}" var="tournament" id="allTournamentsInProgressId" rowClasses="rowByTableTournamentInProgress">
                     <apex:column value="{!tournament.Name}" onclick="rerenderTournament('{!tournament.Id}')"/>
                     <apex:column value="{!tournament.StartDate__c}" onclick="rerenderTournament('{!tournament.Id}')"/>        
                     <apex:column onclick="rerenderTournament('{!tournament.Id}')">
@@ -321,13 +321,13 @@ function carousel(){
          </apex:pageBlock>     
      </apex:pageBlock>
      
-     <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgressSize > 0 && tournamentBySelectOption !=null}">     
+     <apex:pageBlock mode="maindetail" rendered="{!rerenderPageBlockByType  = true && tournamentsInProgressSize > 0 && tournamentsInProgress.size !=null && tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
           <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>
      </apex:pageBlock>    
       
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      
-     <c:Footer/>  
+     <c:Footer />  
      
         <script>
             function rerenderTournament(id){

@@ -61,5 +61,3 @@ global class TournamentStarter implements Schedulable {
     }
     
 }
-
-

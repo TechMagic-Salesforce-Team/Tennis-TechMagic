@@ -4,5 +4,5 @@
         <apex:outputLink value="apex/CreateTournament" id="theLink">New tournament</apex:outputLink>
     </apex:pageBlock>
     <c:TournamentsSearch />
-    <c:Footer/>  
+    <c:Footer />  
 </apex:page>
