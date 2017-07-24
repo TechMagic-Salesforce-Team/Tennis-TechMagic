@@ -1,4 +1,4 @@
-public with sharing class HomeController {
+public with sharing class HomeController extends PlayerCookie{
 
 
     public List<Tournament__c> tournamentsInProgress{get;set;}

@@ -66,6 +66,16 @@
         <unique>true</unique>
     </fields>
     <fields>
+        <fullName>Image__c</fullName>
+        <description>Url of player&apos;s Image</description>
+        <externalId>false</externalId>
+        <label>Image</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
+    </fields>
+    <fields>
         <fullName>IsManager__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>

@@ -1,4 +1,4 @@
-<apex:page id="Players" controller="PlayerController" action="{!findAllPlayers}" cache="false">
+<apex:page id="Players" controller="PlayerController" action="{!findAllPlayers}" cache="false" showHeader="false">
         <head>
         <c:Header />
         </head>
@@ -17,5 +17,5 @@
                 location.href = 'player?playerId='+id;
             }   
         </script>
-        
+        <c:Footer/>  
 </apex:page>
