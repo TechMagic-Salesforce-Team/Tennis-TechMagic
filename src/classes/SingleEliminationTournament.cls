@@ -10,6 +10,7 @@ public with sharing class SingleEliminationTournament{
         }
         set;
     }
+    
     public Integer countOfStageOneTournament{get;set;}
     public List<List<Game__c>> representSingleEliminationGrid{
         get{

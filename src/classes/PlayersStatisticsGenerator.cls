@@ -22,6 +22,7 @@ public with sharing class PlayersStatisticsGenerator {
         }
         
         
+        
         List<PlayerStatistics__c> playerStatisticList = new List<PlayerStatistics__c>();
         
         ///////////////////////////////////////////////////////////////////////////////////

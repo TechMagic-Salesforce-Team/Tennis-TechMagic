@@ -126,5 +126,6 @@
             firstOptionSelected();
         </script>
     </body> 
+    
 <c:Footer />         
 </apex:page>

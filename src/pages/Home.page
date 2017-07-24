@@ -335,4 +335,5 @@ function carousel(){
                 rerenderPageBlockForSelectedTournament();
             }
         </script>
+        
 </apex:page>

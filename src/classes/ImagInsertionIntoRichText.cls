@@ -8,6 +8,7 @@ public Document document {
     set;
   }
   
+    
   public String imageUrl {get;set;}   
     
   public ImagInsertionIntoRichText(){

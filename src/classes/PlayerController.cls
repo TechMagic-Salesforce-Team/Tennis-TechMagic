@@ -90,6 +90,7 @@ public with sharing class PlayerController extends PlayerCookie{
     }
     
     
+    
     public PageReference logout(){
         Cookie playerFromCookie = new Cookie('PlayerFromCookie', '', null, 0, false);
         ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});

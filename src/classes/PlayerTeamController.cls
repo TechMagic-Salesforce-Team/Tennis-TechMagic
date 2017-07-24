@@ -8,6 +8,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     public List<Player__c> players { get; set; }
     public String selectedPlayer { get; set; }
     
+    
     public LIst<SelectOption> playersOptions { get {
             if (playersOptions == null) {
                 playersOptions = new List<SelectOption>();

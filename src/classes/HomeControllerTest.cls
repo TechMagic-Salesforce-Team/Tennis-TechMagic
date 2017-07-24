@@ -1,6 +1,7 @@
 @isTest
 public with sharing class HomeControllerTest{
 
+    
     public static testMethod void getAllTournamentsInProgressTest(){
         HomeController firstController = new HomeController();
         Tournament__c thisTournament1 = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Round Robin', Status__c = 'Current');

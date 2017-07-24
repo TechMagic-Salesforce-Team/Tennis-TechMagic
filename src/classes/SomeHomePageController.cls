@@ -17,4 +17,5 @@ public with sharing class SomeHomePageController extends PlayerCookie{
         response = http.send(request);
         System.debug('My response: '+response);
     }
+    
 }

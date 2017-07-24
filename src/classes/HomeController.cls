@@ -7,6 +7,8 @@ public with sharing class HomeController extends PlayerCookie{
     public String selectedTournamentFormat{get;set;}
     public Boolean rerenderPageBlockByType{get;set;}
     
+    
+    
     public Tournament__c tournamentBySelectOption{
         get{
             if(tournamentBySelectOption == null) tournamentBySelectOption = new Tournament__c();

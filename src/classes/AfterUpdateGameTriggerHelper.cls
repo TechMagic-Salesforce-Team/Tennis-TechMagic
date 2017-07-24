@@ -8,6 +8,7 @@ public with sharing class AfterUpdateGameTriggerHelper {
         }
     }
     
+    
     private static void genGamesOrFinTour(Game__c game) {
         List<Tournament__c> ts = [SELECT Id, Type__c, Status__c, Format__c FROM Tournament__c WHERE Id = :game.Tournament__c];
         if (ts.size() > 0) {
