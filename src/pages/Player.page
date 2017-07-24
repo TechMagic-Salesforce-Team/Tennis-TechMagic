@@ -2,6 +2,7 @@
     <head>
        <c:Header />
     </head>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
         
     <body>
         <!--
@@ -16,22 +17,53 @@
         </apex:pageBlock>...
         -->
        
-        
-         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left;">
-            <img src="{!imageUrl}"/>
-        </div>    
+         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left; height: 220px;">
+                        <img src="{!imageUrl}" id='playerAvatar' alt="Image" style="width:auto; height: 100%; background-size: contain; float: left;"/>
+                        <script>
+                            if ($("#playerAvatar").attr('src')=='null'){
+                                $("#playerAvatar").attr('src', 'https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png');
+                            }
+                        </script>
+        </div>
+                        
+       
+    
 
-                <div style = "float:left; width:40%; height:200px; border: 3px solid yellow; margin-top: 20px;" id = 'statistics-div'>
-                        <p style="font-size:20px;">Name: {!player.Name}</p>
+                <div style = "float:left; width:40%; height:200px; margin-top: 20px;" id = 'statistics-div'>
+                        <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
+                        <p style="font-size:15px; margin-left: 3%;">Name: {!player.Name}</p>
+                        </div>
+                        <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
+                        <p style="font-size:15px; margin-left: 3%;">Won statistics</p>
                         <script>
                             var hasTournaments = '{!hasCurrentTournaments}';
                             if (hasTournaments=='true'){
                                 $('#statistics-div').append("<p style='font-size:20px'>Statistics</p>");
                             }
                         </script>
+                        <p style="font-size:15px; margin-left: 3%;">Count won games {!countWonGames}</p>
+                        <p style="font-size:15px; margin-left: 3%;">Count lost games {!countLostGames}</p>
+                        
+                        <div class="w3-container">                       
+                            <div class="w3-red" >
+                                    <div id="myBar" class="w3-container w3-green w3-center" style="width:50%; min-width: 0%;">20%</div>
+                                        <script>
+                                            var countWonGames = '{!countWonGames}';
+                                            var countLoseGames = '{!countLostGames}';
+                                            var percentWon = 0;                                        
+                                            if (countWonGames==0 && countLoseGames==0) percentWon = 50;
+                                            else percentWon = countWonGames/(countWonGames+countLoseGames);
+                                            $("#myBar").css('width',percentWon+'%');
+                                            $("#myBar").html(''+percentWon);
+                                        </script>
+                             </div>
+                         </div>
+                         
+                         <div style = 'width:100%; height: 20px;'/>
+                         </div>
                        
                 </div>
-        
+                 <p style="clear:left;"/>
                          <apex:form enctype="multipart/form-data" rendered='{!playerCookieIsCurrentPlayer}'>
                             <apex:pageMessages />
                              <apex:pageBlock>
@@ -46,7 +78,8 @@
                             </apex:pageBlockSection>
                             </apex:pageBlock>
                             </apex:form>
-                
+        
+        
         <c:TournamentsSearch player="{!player}"/>
         
         <apex:form >

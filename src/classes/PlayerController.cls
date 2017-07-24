@@ -18,6 +18,7 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<PlayerStatistics__c> playerStatisticList {get;set;}
     public Integer countWonGames {get;set;}
     public Integer countLostGames {get;set;}
+    public List<Tournament__c> completedAndCurrentTournamentsOfPlayer {get;set;}
     public PlayerController(){
         playerCookieIsCurrentPlayer = false;
         findPlayer();
@@ -102,6 +103,7 @@ public with sharing class PlayerController extends PlayerCookie{
     
     public void getPlayerTournaments(){
         currentTournamentsOfPlayer = new List<Tournament__c>();
+        completedAndCurrentTournamentsOfPlayer = new List<Tournament__c>();
         if (player==null) return;
         
         List<Team__c> teamsOfPlayer = [select Id from Team__c where Id in (select Team__c from PlayerTeam__c where Player__c =:player.Id)];
@@ -122,6 +124,10 @@ public with sharing class PlayerController extends PlayerCookie{
         for (Tournament__c tournament: tournamentsOfPlayer){
             if (tournament.Status__c=='Current'){
                 currentTournamentsOfPlayer.add(tournament);
+            }
+            
+            if (tournament.Status__c!='Upcoming'){
+                completedAndCurrentTournamentsOfPlayer.add(tournament);
             }
         }
         hasCurrentTournaments = (currentTournamentsOfPlayer != null && currentTournamentsOfPlayer.size()>0);
@@ -182,6 +188,10 @@ public with sharing class PlayerController extends PlayerCookie{
             } else playerCookieIsCurrentPlayer = false;
             countWonGames = 0; countLostGames = 0;
             playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id];
+            for (PlayerStatistics__c ps: playerStatisticList){
+                countWonGames+=(Integer)ps.CountWonGames__c;
+                countLostGames+=(Integer)ps.CountLostGames__c;
+            }
             
             //AggregateResult[] aggregateResultTotal  = 
                 //[select Tournament__c, sum(CountWonGames__c) sumCwg, sum(CountLostGames__c) sumClg from PlayerStatistics__c where Player__c='a000Y00000DqZlu' group by Tournament__c];
