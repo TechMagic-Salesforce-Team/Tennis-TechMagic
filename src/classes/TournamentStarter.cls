@@ -17,6 +17,7 @@ global class TournamentStarter implements Schedulable {
         }
     }
     
+    
     private void generateGames(Tournament__c tournament) {
         List<String> ids = getCompetitorsIds(tournament);
         if (tournament.Type__c == 'Single Elimination') {

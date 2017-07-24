@@ -11,6 +11,7 @@ public with sharing class DoubleEliminationTournament {
         set;
     }
     
+    
     public Map<String, String> competitorsName{
         get{
             if(oneTournament !=null && representDoubleEliminationGrid !=null && oneTournament.Type__c=='Double Elimination'){

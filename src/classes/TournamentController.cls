@@ -14,6 +14,7 @@ public with sharing class TournamentController extends PlayerCookie{
         currentTournament = new Tournament__c();
     }
     
+    
     public PageReference save() {
         try {
             currentTournament.Status__c = 'Upcoming';

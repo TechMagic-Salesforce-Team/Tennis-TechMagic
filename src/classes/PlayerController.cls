@@ -90,6 +90,7 @@ public with sharing class PlayerController extends PlayerCookie{
     }
     
     
+    
     public PageReference logout(){
         Cookie playerFromCookie = new Cookie('PlayerFromCookie', '', null, 0, false);
         ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
@@ -133,17 +134,29 @@ public with sharing class PlayerController extends PlayerCookie{
         hasCurrentTournaments = (currentTournamentsOfPlayer != null && currentTournamentsOfPlayer.size()>0);
     }
     
-    public List<SelectOption> getCurrentTournamentsOptions() {
- 	 List<SelectOption> options = new List<SelectOption>();
-         for (Tournament__c tournament: currentTournamentsOfPlayer){
+    public List<SelectOption> formOptionsByTournament(List<Tournament__c> tournaments){
+        List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('','---None---'));
+        for (Tournament__c tournament: tournaments){
             options.add(new SelectOption(tournament.Id,tournament.Name+' format: '+tournament.Format__c));
          }
+        return options;
+    }
+    
+    public List<SelectOption> getCurrentTournamentsOptions() {
+ 	 List<SelectOption> options = formOptionsByTournament(currentTournamentsOfPlayer);
         
          if (options.size()>0){
             currentTournamentId = options.get(0).getValue();
          }
         
  	 return options;
+    }
+    
+    
+    
+    public List<SelectOption> getCompletedAndCurrentTournamentsOfPlayerOptions(){
+        return formOptionsByTournament(completedAndCurrentTournamentsOfPlayer);
     }
     
     public PageReference getCurrentTournamentById(){

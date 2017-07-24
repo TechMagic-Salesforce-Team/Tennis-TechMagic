@@ -10,6 +10,8 @@ public with sharing class SingleEliminationTournament{
         }
         set;
     }
+
+
     public List<List<Game__c>> representSingleEliminationGrid{
         get{
             if(representSingleEliminationGrid == null) return generateSingleEliminationStageGrid(oneTournament);

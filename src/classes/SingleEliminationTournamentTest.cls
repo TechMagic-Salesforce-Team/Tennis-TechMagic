@@ -1,6 +1,7 @@
 @isTest
 public class SingleEliminationTournamentTest{
     
+    
      public static testMethod void propertiesTest(){
          
          //Right Parameters For players
