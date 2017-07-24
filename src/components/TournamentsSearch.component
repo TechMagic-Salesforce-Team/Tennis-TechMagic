@@ -1,5 +1,5 @@
 <apex:component controller="TournamentController" allowDML="true">
-    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer}" description="Value to pass into the controller"/>
+    <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
     <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageBlockSection >
