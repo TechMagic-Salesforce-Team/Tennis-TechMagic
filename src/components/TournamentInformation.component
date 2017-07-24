@@ -23,7 +23,7 @@
     <p>{!currentTournament.Status__c}</p>
     <p>{!currentTournament.StartDate__c}</p>
     
-    <c:SingleElimination componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Single Elimination'}"/>
-    <c:DoubleEliminationTournament componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Double Elimination'}"/>
-    <c:RoundRobin componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Round Robin'}"/>
+    <c:SingleElimination componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Single Elimination' && currentTournament.Status__c!='Upcoming'}"/>
+    <c:DoubleEliminationTournament componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Double Elimination' && currentTournament.Status__c!='Upcoming'}"/>
+    <c:RoundRobin componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Round Robin' && currentTournament.Status__c!='Upcoming'}"/>
 </apex:component>

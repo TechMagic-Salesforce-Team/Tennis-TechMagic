@@ -110,7 +110,7 @@ public with sharing class TournamentController_TEST {
         PlayerTournament__c pT = new PlayerTournament__c(Player__c = player.Id, Tournament__c = t.Id);
         insert(pT);
         
-        tC.currentPlayer = player;
+        tC.currentPlayer2 = player;
         tC.search();
         System.assertEquals(1, tC.allTournaments.size());
         System.assertEquals(true, tC.allTournaments[0].isApplied);
