@@ -1,4 +1,16 @@
 <apex:component controller="TournamentController" allowDML="true">
+
+        <style>
+        .styled-select {
+        background: white;
+        font-size: 17px;
+        height: 30px;
+        padding: 5px;
+        width: 268px;
+    }
+        </style>
+
+
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
     <apex:form >
         <apex:pageBlock mode="edit">

@@ -40,7 +40,7 @@
     text-decoration: none;
 }
 .circle{
-    width:10px; height: 10px; border-radius: 50%; border: 2px solid orange; cursor: hand;
+    width:15px; height: 15px; border-radius: 50%; border: 2px solid orange; cursor: hand;
 }
 .circle:hover{
     background-color:orange;
@@ -81,15 +81,15 @@
     
     <c:Header />
     <div style="float:left; width:100%;">
-        <div class="w3-content w3-section" style="padding:0px; margin:0px; position:related;" id = "mainDiv">
+        <div class="w3-content w3-section" style="padding:0px; margin:0px; position:related;" id = "mainDiv" >
         <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+                          'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
           <img class="mySlides" id = "aab" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider002.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+                          'img/slider002.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
           <img class="mySlides" id = "aac" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider003.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+                          'img/slider003.jpg')}" width="100%;" style="display:block; position:absolute; margin-top: -16px;"/>
           <img class="mySlides" id = "aad" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider004.jpg')}" width="100%;" style="display:block; position:absolute;"/>
+                          'img/slider004.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
         </div>
             
         <div id = "anotherElements" style="position:inherit; width:100%; height:auto;">
