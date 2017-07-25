@@ -1,5 +1,7 @@
 global class GamesToPLayNotifier implements Schedulable {
     
+    public integer emailsCnt { get; set; }
+    
     global void execute(SchedulableContext ctx) {
     	Set<String> emails = new Set<String>();
         List<Tournament__c> tournaments = [SELECT Id, Format__c FROM Tournament__c WHERE Status__c = 'Current'];
@@ -10,7 +12,7 @@ global class GamesToPLayNotifier implements Schedulable {
                     emails.addAll(getTeamMembersEmails(t));
             }
         }
-        sendNotification(emails);
+        emailsCnt = sendNotification(emails);
     }
     
     private Set<String> getPlayersEmails(Tournament__c tournament) {
@@ -49,8 +51,8 @@ global class GamesToPLayNotifier implements Schedulable {
     	return resultEmails;
     }
     
-    private void sendNotification(Set<String> emails) {
-        
+    private integer sendNotification(Set<String> emails) {
+        return emails.size();
     }
     
 }
