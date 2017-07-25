@@ -31,7 +31,7 @@
                         </script>
         </div>
                         
-       <!--<c:TeamInvitations player="{!player}"/> -->
+       <c:TeamInvitations player="{!player}"/> 
     
                 <!--<apex:pageBlock id="pIdd" title="Selected tournament">-->
                 <div style = "float:left; width:40%; height:300px; margin-top: 20px;">
@@ -105,7 +105,7 @@
         
         <apex:form >
             <apex:pageMessages />
-                <apex:pageBlock title="Select current tournament" rendered="true" mode='maindetail'>
+                <apex:pageBlock title="Select current tournament" rendered="true">
                     <apex:selectList value="{!currentTournamentId}" size="1" style="margin-left:18%;" required="true">
                         <apex:actionSupport event="onchange" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected" />    
                         <apex:selectOptions value="{!currentTournamentsOptions}"/>
@@ -114,7 +114,7 @@
         </apex:form>
         
         
-        <apex:pageBlock id="currentTournamentSelected" title="Selected tournament" mode="maindetail">
+        <apex:pageBlock id="currentTournamentSelected" title="Selected tournament">
             <apex:pageBlockSection title="Opportunity Information">
                 <apex:outputField value="{!currentTournament.Name}"/>
                 <apex:outputField value="{!currentTournament.Status__c}"/>

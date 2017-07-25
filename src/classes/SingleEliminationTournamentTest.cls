@@ -1,5 +1,5 @@
 @isTest
-public class SingleEliminationTournamentTest{
+public with sharing class SingleEliminationTournamentTest{
     
      public static testMethod void propertiesTest(){
          

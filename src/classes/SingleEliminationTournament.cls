@@ -230,7 +230,14 @@ public with sharing class SingleEliminationTournament{
         Game__c thirdPlaceMatch = new Game__c();
         thirdPlaceMatch.FirstCompetitor__c= competitorsLosersId.get(0);
         thirdPlaceMatch.SecondCompetitor__c= competitorsLosersId.get(1);
-        thirdPlaceMatch.FirstCompetitorScore__c= 0;
+        if(competitorsLosersId.get(1) != freeSlot){
+            thirdPlaceMatch.FirstCompetitorScore__c= 0;
+        }
+        else{
+            thirdPlaceMatch.FirstCompetitorScore__c= 2;
+            thirdPlaceMatch.FirstCompetitorAccept__c = true;
+            thirdPlaceMatch.SecondCompetitorAccept__c= true;
+        }
         thirdPlaceMatch.SecondCompetitorScore__c = 0;
         thirdPlaceMatch.Stage__c = thisGameStage;
         thirdPlaceMatch.WinningGroup__c = false;
