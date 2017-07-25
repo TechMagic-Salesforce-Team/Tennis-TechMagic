@@ -114,14 +114,17 @@ public with sharing class SingleEliminationTournament{
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
                     SecondCompetitorScore__c, Stage__c, Tournament__c 
                     From Game__c Where Tournament__C = :currentTournament.Id];
-            Integer countCompetitors = gamesForCurrentTournament.size(); 
-            if(countCompetitors  >0 && countCompetitors  !=null){
-                if(countCompetitors == 1) i = 1;
-                else{
-                    for(Integer j =1; j<countCompetitors ;j*=2){
-                        i++;
-                    } 
-                }               
+            List<Game__c> firstRoundGames = new List<Game__c>();
+            for(Game__c x : gamesForCurrentTournament){
+                if(x.Stage__c ==1){
+                    firstRoundGames.add(x);
+                }   
+            }
+            Integer countGames = firstRoundGames.size(); 
+            if(countGames >0 && countGames !=null){               
+                for(Integer j =1; j<=countGames ;j*=2){
+                    i++;
+                }                                
             }
             if(gamesForCurrentTournament !=null){
                 for(Integer j = 1; j<=i;j++){
