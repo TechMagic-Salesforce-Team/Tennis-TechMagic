@@ -1,44 +1,106 @@
 <apex:page id="LoginRegister" controller="PlayerController" cache="false" showHeader="false">
     <c:Header />  
+        <style>
+            .myCustomMessage {
+                background: none  !important;
+                border: none !important;
+            }
+        </style>
+   
+ 
+<style>
+.msgIcon {
+    display: none!important
+}
+.customMessage * {
+    color: #fff!important
+}
+.customMessage {
+    margin: 5px 0!important;
+    opacity: 1!important;
+    width: 100%;
+    font-size: 20px;
+    border: 0px;
+    padding-left: 10px;
+    background-color: #333;
+}
+.message {
+    opacity: .1
+}
+
+.inputField {
+    height:30px; 
+    width:200px;
+    font-size:15px;
+}
+</style>
+ 
+ 
+<script>
+    $(document).ready(function(){
+       overridePageMessages();    
+    });
+        
+    function overridePageMessages(){    
+        var textureEffect = '';
+        //Uncomment below line for texture effect on page messages
+        //textureEffect = 'slds-theme--alert-texture';
+                     
+        $('.warningM3').addClass('slds-notify slds-notify--toast slds-theme--warning customMessage '+textureEffect);          
+        $('.confirmM3').addClass('slds-notify slds-notify--alert slds-theme--success  customMessage '+textureEffect);    
+        $('.errorM3').addClass('slds-notify slds-notify--alert slds-theme--error customMessage '+textureEffect);                  
+        $('.infoM3').addClass('slds-notify slds-notify--toast customMessage '+textureEffect);    
+                         
+        $('.errorM3').removeClass('errorM3'); 
+        $('.confirmM3').removeClass('confirmM3'); 
+        $('.infoM3').removeClass('infoM3');   
+        $('.warningM3').removeClass('warningM3');  
+    }
+    </script>    
+        
+        
     <apex:sectionHeader title="Visualforce Example" subtitle="Player"/>
     <div style = 'float:left; height:100%; width:100%;'>
     <!------------------------------------REGISTRATION-------------------------------------------->
        <apex:form rendered="{!registrationPage}">
-        <apex:pageMessages />
+               <apex:outputPanel styleClass="myCustomMessage">
+        <apex:pageMessages/> </apex:outputPanel>
         <apex:pageBlock title="Registration">
+                
+            <apex:actionFunction name="sendEmail" action="{!sendEmail}"></apex:actionFunction>
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton action="{!registration}" value="Registration"/>
+                <apex:commandButton action="{!registration}" value="Registration" oncomplete="sendEmail()"/>
             </apex:pageBlockButtons>
             <p style="clear:left;"/>
             <apex:pageBlockSection showHeader="true" columns="1">
                 
-                <apex:pageBlockSectionItem >
+                <apex:pageBlockSectionItem>
                 <apex:outputLabel value="Name of player" for="player_name"/>
-                <apex:inputField value="{!player.Name}" id="player_name" required="true"/>
+                <apex:inputField value="{!player.Name}" id="player_name" required="true" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="Email player" for="player_email"/>
-                <apex:inputField value="{!player.Email__c}" id="player_email" />
+                <apex:inputField value="{!player.Email__c}" id="player_email" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
 
 
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="Password " for="player_password"/>
-                <apex:inputSecret value="{!player.Password__c}" id="player_password" required="true"/>
+                <apex:inputSecret value="{!player.Password__c}" id="player_password" required="true" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
 
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="Confirm password"/>
-                <apex:inputSecret value="{!confirmPassword}"/>
+                <apex:inputSecret value="{!confirmPassword}" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
                 
-                
+                <!--
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="File" for="file"/>
                 <apex:inputFile value="{!document.body}" filename="{!document.name}" id="file"/>
                 </apex:pageBlockSectionItem>
-                
+                -->
                 
             </apex:pageBlockSection>
         </apex:pageBlock>
@@ -57,12 +119,12 @@
             <apex:pageBlockSection showHeader="true" columns="1">
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="Email"/>
-                <apex:inputField value="{!player.Email__c}" required="true"/>
+                <apex:inputField value="{!player.Email__c}" required="true" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
                 
                 <apex:pageBlockSectionItem >
                 <apex:outputLabel value="Password"/>
-                <apex:inputSecret value="{!player.Password__c}" required="true"/>
+                <apex:inputSecret value="{!player.Password__c}" required="true" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
              </apex:pageBlockSection>
              </apex:pageBlock>
