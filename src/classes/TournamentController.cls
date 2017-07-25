@@ -158,13 +158,13 @@ public with sharing class TournamentController extends PlayerCookie{
     public PageReference checkTournamentExistance() {
         System.debug(isManager);
         if (isManager) {
-        currentTournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
-        if (currentTournamentId != null) {
-            currentTournament = findById();
-            if (currentTournament != null) {
-                return null;
+            currentTournamentId = ApexPages.currentPage().getParameters().get('tournamentId');
+            if (currentTournamentId != null) {
+                currentTournament = findById();
+                if (currentTournament != null) {
+                    return null;
+                }
             }
-        }
         }
         return Page.Tournaments;
     }

@@ -81,7 +81,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         try {
             insert(firstPlayerTeam);
             insert(secondPlayerTeam);
-            sendInvitation(currentPlayerId, selectedPlayer, team.Id);
+            sendInvitationEmail(currentPlayerId, selectedPlayer, team.Id);
             return Page.Tournaments;
         } catch (System.DMLException e) {
             ApexPages.addMessages(e);
@@ -108,7 +108,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         return Page.Home;
     }
     
-    private void sendInvitation(String fromPlayerId, String toPlayerId, String teamId) {
+    private void sendInvitationEmail(String fromPlayerId, String toPlayerId, String teamId) {
         Player__c fromPlayer = [SELECT Id, Name FROM Player__c WHERE Id = :fromPlayerId];
         Player__c toPlayer = [SELECT Id, Name, Email__c FROM Player__c WHERE Id = :toPlayerId];
         Team__c team = [SELECT Id, Name, Tournament__r.Name FROM Team__c WHERE Id = :teamId];
