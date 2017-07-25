@@ -152,6 +152,8 @@ public with sharing class DoubleEliminationTournament {
             cnt = cnt + 2;
         }
         
+        System.debug('gamesToUpdate: '+gamesToUpdate);
+        
         try {
             update(gamesToUpdate);
         } catch(System.DmlException e) {
