@@ -1,5 +1,16 @@
 public with sharing class PlayerTeamController extends PlayerCookie{
     
+    public Player__c currentPlayer2 { get; set; }
+    
+    public String invitationTournamentId { get; set; }
+    public String invitationTeamId { get; set; }
+    public String invitationPlayerId { get; set; }
+    
+    public List<TeamInvitation> teamInvitations { get {
+            if (teamInvitations == null) return getAllTeamInvitations();
+            return teamInvitations;
+    } set; }
+    
     public String tournamentId { get; set; }
     
     public Team__c team { get; set; }
@@ -66,11 +77,12 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         PlayerTeam__c secondPlayerTeam = new PlayerTeam__c();
         secondPlayerTeam.Team__c = team.Id;
         secondPlayerTeam.Player__c = selectedPlayer;
+        secondPlayerTeam.IsInvited__c = true;
 
         try {
             insert(firstPlayerTeam);
             insert(secondPlayerTeam);
-            sendInvitation(currentPlayerId, selectedPlayer, team.Id);
+            sendInvitationEmail(currentPlayerId, selectedPlayer, team.Id);
             return Page.Tournaments;
         } catch (System.DMLException e) {
             ApexPages.addMessages(e);
@@ -97,11 +109,93 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         return Page.Home;
     }
     
-    private void sendInvitation(String fromPlayerId, String toPlayerId, String teamId) {
+    private void sendInvitationEmail(String fromPlayerId, String toPlayerId, String teamId) {
         Player__c fromPlayer = [SELECT Id, Name FROM Player__c WHERE Id = :fromPlayerId];
         Player__c toPlayer = [SELECT Id, Name, Email__c FROM Player__c WHERE Id = :toPlayerId];
         Team__c team = [SELECT Id, Name, Tournament__r.Name FROM Team__c WHERE Id = :teamId];
         
         
     }
+    
+    private List<TeamInvitation> getAllTeamInvitations() {
+        List<Team__c> teams = [SELECT Id, Name, Tournament__r.Id, Tournament__r.Name, 
+            (SELECT Player__c FROM PlayerTeams__r WHERE IsInvited__c = false)
+            FROM Team__c WHERE IsComplete__c = false AND Tournament__r.Status__c = 'Upcoming'
+            AND Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayer2.Id)];
+        System.debug(teams);
+        List<String> playersIds = new List<String>();
+        List<Team__c> otherTeams = new List<Team__c>();
+        for(Team__c t : teams) {
+            List<PlayerTeam__c> list1 = t.PlayerTeams__r;
+            System.debug(list1);
+            if (list1.size() > 0 && list1[0].Player__c != currentPlayer2.Id) {
+                otherTeams.add(t);
+                playersIds.add(list1[0].Player__c);
+            }
+        }
+        
+        List<Player__c> otherPlayers = [SELECT Id, Name FROM Player__c WHERE Id IN :playersIds];
+        
+        List<TeamInvitation> result = new List<TeamInvitation>();
+        for(Team__c t : otherTeams) {
+            List<PlayerTeam__c> list1 = t.PlayerTeams__r;
+            for(Player__c p : otherPlayers) {
+                if (p.Id == list1[0].Player__c) {
+                    TeamInvitation tI = new TeamInvitation();
+                    tI.tournamentId = t.Tournament__r.Id;
+                    tI.tournamentName = t.Tournament__r.Name;
+                    tI.teamName = t.Name;
+                    tI.teamId = t.Id;
+                    tI.playerName = p.Name;
+                    tI.playerId = p.Id;
+                    
+                    result.add(tI);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    public void acceptInvitation() {
+        Team__c team = new Team__c(Id = invitationTeamId, IsComplete__c = true);
+        try {
+            update (team);
+        } catch (System.DmlException e) {
+            System.debug(e);
+            return;
+        }
+        List<Team__c> teams = [SELECT Id, (SELECT Id FROM PlayerTeams__r WHERE Player__c = :invitationPlayerId OR Player__c = :currentPlayer2.Id)
+            FROM Team__c WHERE Tournament__c = :invitationTournamentId AND IsComplete__c = false];
+        List<Team__c> teamsToDelete = new List<Team__c>();
+        for (Team__c t : teams) {
+            List<PlayerTeam__c> list1 = t.PlayerTeams__r;
+            if (list1.size() > 0) {
+                teamsToDelete.add(t);
+            }
+        }
+        try {
+            delete (teamsToDelete);
+        } catch (System.DmlException e) {
+            System.debug(e);
+        }
+    }
+    
+    public void declineInvitation() {
+        Team__c team = new Team__c(Id = invitationTeamId, IsComplete__c = true);
+        try {
+            delete (team);
+        } catch (System.DmlException e) {
+            System.debug(e);
+        }
+    }
+    
+    public class TeamInvitation {
+        public String tournamentId { get; set; }
+        public String tournamentName { get; set; }
+        public String teamName { get; set; }
+        public String teamId { get; set; }
+        public String playerName { get; set; }
+        public String playerId { get; set; }
+    }
+    
 }

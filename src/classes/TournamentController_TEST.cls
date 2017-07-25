@@ -148,4 +148,116 @@ public with sharing class TournamentController_TEST {
         
         Test.stopTest();           
     }
+    
+    public static testMethod void testCancel() {
+        PageReference pR = tC.cancel();
+        Test.startTest();
+        
+        System.assertEquals(Page.Tournaments.getUrl(), pR.getUrl());
+        
+        Test.stopTest(); 
+    }
+    
+    public static testMethod void testApply() {
+        
+        PageReference pR = tC.apply();
+        
+        Test.startTest();
+        
+        System.assertEquals(null, pR);
+        
+        t.Status__c = 'Upcoming';
+        insert(t);
+        tC.currentTournamentId = t.Id;
+        pR = tC.apply();
+        
+        System.assertEquals(null, pR);
+        
+        Player__c p = new Player__c(Email__c = 'vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
+        insert (p);
+        List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: p.Email__c limit 1];
+        System.debug(players);
+        Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
+        System.currentPageReference().setCookies(new Cookie[]{playerFromCookie});
+        
+        tC.search();
+        
+        pR = tC.apply();
+        
+        System.assertEquals(null, pR);
+        
+        List<PlayerTournament__c> pTs = [SELECt Id FROM PlayerTournament__c];
+        
+        System.assertEquals(1, pTs.size());
+        
+        Tournament__c t22 = new Tournament__c(Name='qwer', Type__c='Single Elimination', Format__c='2 x 2', StartDate__c=DateTime.now(), Status__c = 'Upcoming');
+        insert(t22);
+        tC.currentTournamentId = t22.Id;
+        pR = tC.apply();
+        
+        System.assertEquals(Page.PlayerTeamCreate.getUrl() + '?tournamentId=' + t22.Id, pR.getUrl());
+        
+        Test.stopTest(); 
+    }
+    
+    public static testMethod void testDisapply() {
+        
+        t.Status__c = 'Upcoming';
+        insert(t);
+        tC.currentTournamentId = t.Id;
+        
+        Player__c p = new Player__c(Email__c = 'vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
+        insert (p);
+        List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: p.Email__c limit 1];
+        System.debug(players);
+        Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
+        System.currentPageReference().setCookies(new Cookie[]{playerFromCookie});
+        
+        tC.search();
+        
+        PageReference pR = tC.apply();
+        
+        System.assertEquals(null, pR);
+        
+        List<PlayerTournament__c> pTs = [SELECt Id FROM PlayerTournament__c];
+        
+        System.assertEquals(1, pTs.size());
+        
+        tC.currentTournamentId = null;
+        tC.disApply();
+        
+        pTs = [SELECt Id FROM PlayerTournament__c];
+        
+        System.assertEquals(1, pTs.size());
+        
+        tC.currentTournamentId = t.Id;
+        tC.disApply();
+        
+        pTs = [SELECt Id FROM PlayerTournament__c];
+        
+        System.assertEquals(0, pTs.size());
+        
+        Tournament__c t22 = new Tournament__c(Name='qwer', Type__c='Single Elimination', Format__c='2 x 2', StartDate__c=DateTime.now(), Status__c = 'Upcoming');
+        insert(t22);
+        tC.currentTournamentId = t22.Id;
+        
+        Team__c team = new Team__c(Name = 'grbgv', Tournament__c = t22.Id);
+        insert(team);
+        
+        PlayerTeam__c pT = new PlayerTeam__c(Player__c = players.get(0).Id, Team__c = team.Id);
+        insert(pT);
+        
+        List<Team__c> teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tC.currentTournamentId AND 
+                    Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :players.get(0).Id)];
+        
+        System.assertEquals(1, teams.size());
+        
+        tC.disApply();
+        
+        teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tC.currentTournamentId AND 
+                    Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :players.get(0).Id)];
+        
+        System.assertEquals(0, teams.size());
+    }
+    
 }
