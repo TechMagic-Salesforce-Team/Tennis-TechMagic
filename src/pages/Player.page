@@ -21,7 +21,7 @@
                 var count = 0;
                 </script>
       
-       <apex:pageBlock  id = 'mainBlock'>
+       <apex:pageBlock id="mainBlock">
          <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left; height: 220px;">
                         <img src="{!imageUrl}" id='playerAvatar' alt="Image" style="width:auto; height: 100%; background-size: contain; float: left;"/>
                         <script>

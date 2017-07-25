@@ -5,7 +5,7 @@
             <p>You still have no team invitations.</p>
         </apex:pageBlockSection>
         <apex:pageBlockSection rendered="{!teamInvitations != null && teamInvitations.size > 0}">
-            <apex:form>
+            <apex:form >
                 <apex:pageBlockTable value="{!teamInvitations}" var="oneTeamInvitation">
                     <apex:column value="{!oneTeamInvitation.tournamentName}" headerValue="Tournament name"/>
                     <apex:column value="{!oneTeamInvitation.teamName}" headerValue="Team name"/>
