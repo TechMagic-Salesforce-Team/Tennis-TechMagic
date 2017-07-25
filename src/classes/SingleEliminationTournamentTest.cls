@@ -1,7 +1,6 @@
 @isTest
 public class SingleEliminationTournamentTest{
     
-    
      public static testMethod void propertiesTest(){
          
          //Right Parameters For players
@@ -132,10 +131,52 @@ public class SingleEliminationTournamentTest{
              }
          }
          System.assertEquals(1, countGamesByOneGames );
+         List<Game__c> deleteList = [Select ID FROM Game__c Where Tournament__c = :tOneParameter.Id];
+         delete deleteList;
          //two game
          upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
-         ListByOneGame = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);
-         System.assertEquals(1, ListByOneGame.size());
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         List<List<Game__c>> ListByTwoGame = new List<List<Game__c>>();
+         ListByTwoGame = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);
+         System.assertEquals(2, ListByTwoGame .size());
+         deleteList = [Select ID FROM Game__c Where Tournament__c = :tOneParameter.Id];
+         delete deleteList;
+         //3 game
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id, WinningGroup__c = false);
+         List<List<Game__c>> ListByThreeGame = new List<List<Game__c>>();
+         ListByThreeGame = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);         
+         System.assertEquals(2, ListByThreeGame .size());
+         deleteList = [Select ID FROM Game__c Where Tournament__c = :tOneParameter.Id];
+         delete deleteList;
+         //8 games at first stage
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc2', SecondCompetitor__c='cxz7', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc3', SecondCompetitor__c='cxz6', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc4', SecondCompetitor__c='cxz5', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc5', SecondCompetitor__c='cxz4', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc6', SecondCompetitor__c='cxz3', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc7', SecondCompetitor__c='cxz2', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc8', SecondCompetitor__c='cxz1', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=1, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=2, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=3, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=3, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=4, Tournament__c=tOneParameter.id);
+         upsert new Game__c(FirstCompetitor__c='zxc1', SecondCompetitor__c='cxz8', FirstCompetitorScore__c=0, SecondCompetitorScore__c=0, Stage__c=4, Tournament__c=tOneParameter.id, WinningGroup__c = false);
+
+         List<List<Game__c>> ListByEightGameAtFirstStage = new List<List<Game__c>>();
+         ListByEightGameAtFirstStage = thisSETOneParameter.generateSingleEliminationStageGrid(tOneParameter);          
+         System.assertEquals(4, ListByEightGameAtFirstStage .size());
+         for(List<Game__c> thisListGame : ListByEightGameAtFirstStage ){
+             for(Game__c game : thisListGame){
+                 
+             }
+         }
      }
      
      public static testmethod void createNextSingleEliminationStageTest(){
