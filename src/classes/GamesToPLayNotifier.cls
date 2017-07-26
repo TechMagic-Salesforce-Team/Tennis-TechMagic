@@ -1,6 +1,6 @@
 global class GamesToPLayNotifier implements Schedulable{
 //, Database.AllowsCallouts {
-    public integer emailsCnt { get; set; }
+    public static integer emailsCnt { get; set; }
     //@future 
     global void execute(SchedulableContext ctx) {
         //MailSender.sendEmail('rgaidukevich9@gmail.com','Uncompleted games','You have not played some games, please play them and submit results');

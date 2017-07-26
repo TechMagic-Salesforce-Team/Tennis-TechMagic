@@ -17,8 +17,17 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     
     public PageReference save() {
         try {
+            boolean isNewTournament = currentTournament.Id == null;
             currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
+            if (isNewTournament) {
+                List<Player__c> playersForEmails = [SELECT Email__c FROM Player__c WHERE Status__c = 'Active'];
+                List<String> emails = new List<String>();
+                for (Player__c p : playersForEmails) {
+                    emails.add(p.Email__c);
+                }
+                sendNotification(emails);
+            }
             try{
         	System.schedule('Start tournament', '0 9 * * * ?', new TournamentStarter());
             } catch(Exception ex) {
@@ -34,6 +43,13 @@ public with sharing virtual class TournamentController extends PlayerCookie{
             ApexPages.addMessages(e);
         }
         return null;
+    }
+    
+    @future(callout=true)
+    private static void sendNotification(List<String> emails) {
+        for (String email : emails){
+            MailSender.sendEmail(email,'New Tournament','You can apply for a new tournament which has been created!');
+        }
     }
     
     public PageReference cancel() {

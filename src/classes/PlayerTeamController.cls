@@ -109,12 +109,13 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         return Page.Home;
     }
     
-    private void sendInvitationEmail(String fromPlayerId, String toPlayerId, String teamId) {
+    @future(callout=true)
+    private static void sendInvitationEmail(String fromPlayerId, String toPlayerId, String teamId) {
         Player__c fromPlayer = [SELECT Id, Name FROM Player__c WHERE Id = :fromPlayerId];
         Player__c toPlayer = [SELECT Id, Name, Email__c FROM Player__c WHERE Id = :toPlayerId];
         Team__c team = [SELECT Id, Name, Tournament__r.Name FROM Team__c WHERE Id = :teamId];
         
-        
+        MailSender.sendEmail(toPlayer.Email__c, 'New team invitation','Dear, ' + toPlayer.Name + '! You have got an invitation from ' + fromPlayer.Name + ' to take part in the tournament ' + team.Tournament__r.Name + ' as a team member of ' + team.Name + '.');
     }
     
     private List<TeamInvitation> getAllTeamInvitations() {
