@@ -1,4 +1,4 @@
-public with sharing class TournamentController extends PlayerCookie{
+public with sharing virtual class TournamentController extends PlayerCookie{
     
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
@@ -254,5 +254,5 @@ public with sharing class TournamentController extends PlayerCookie{
         public Boolean isShowed {get; set;}
         public Boolean isApplied {get; set;}
     }
-   
+    
 }

@@ -63,7 +63,7 @@
                     <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
-                </apex:column>
+                </apex:column>                
                 <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}">
                     <apex:pageBlock >
                         <c:TournamentInformation tournament="{!t.tournament}"/>

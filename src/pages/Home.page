@@ -339,7 +339,7 @@ function carousel(){
      </apex:pageBlock>
      
      <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgressSize > 0 && tournamentsInProgress.size !=null && tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
-          <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>
+          <apex:form ><c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/></apex:form>
      </apex:pageBlock>    
       
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
