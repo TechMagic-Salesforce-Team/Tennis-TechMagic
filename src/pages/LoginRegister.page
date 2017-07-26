@@ -59,7 +59,7 @@
     </script>    
         
         
-    <apex:sectionHeader title="Visualforce Example" subtitle="Player"/>
+    <apex:sectionHeader title="Player"/>
     <div style = 'float:left; height:100%; width:100%;'>
     <!------------------------------------REGISTRATION-------------------------------------------->
        <apex:form rendered="{!registrationPage}">
@@ -75,7 +75,7 @@
             <apex:pageBlockSection showHeader="true" columns="1">
                 
                 <apex:pageBlockSectionItem>
-                <apex:outputLabel value="Name of player" for="player_name"/>
+                <apex:outputLabel value="Name of player" for="player_name" style='height:30px; margin-left:100px;'/>
                 <apex:inputField value="{!player.Name}" id="player_name" required="true" styleClass='inputField'/>
                 </apex:pageBlockSectionItem>
 

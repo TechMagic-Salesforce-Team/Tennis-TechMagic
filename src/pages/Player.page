@@ -29,12 +29,12 @@
                                 $("#playerAvatar").attr('src', 'https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png');
                             }
                         </script>
-        </div>
                         
-       <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/> 
+                        
+      
     
                 <!--<apex:pageBlock id="pIdd" title="Selected tournament">-->
-                <div style = "float:left; width:40%; height:300px; margin-top: 20px;">
+                <div style = "float:left; width:40%; margin-top: 20px;">
                         <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
                         <p style="font-size:15px; margin-left: 3%;">Name: {!player.Name}</p>
                         </div>
@@ -77,6 +77,8 @@
                           </apex:form>
                 </div>        
                     </div>
+                     <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/> 
+                        </div>
                      </apex:pageBlock>
             
                    
@@ -103,6 +105,9 @@
             <apex:actionFunction name="setFirstOptionSelected" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected"/>    
         </apex:form>        
         
+        
+        
+        <!--
         <apex:form >
             <apex:pageMessages />
                 <apex:pageBlock title="Select current tournament" rendered="true">
@@ -112,8 +117,8 @@
                 </apex:selectList>
                 </apex:pageBlock>
         </apex:form>
-        
-        
+        -->
+        <!--
         <apex:pageBlock id="currentTournamentSelected" title="Selected tournament">
             <apex:pageBlockSection title="Opportunity Information">
                 <apex:outputField value="{!currentTournament.Name}"/>
@@ -127,7 +132,7 @@
                </apex:pageBlockSection>
             </apex:pageBlockSection>
         </apex:pageBlock>
-        
+        -->
         
      
         
