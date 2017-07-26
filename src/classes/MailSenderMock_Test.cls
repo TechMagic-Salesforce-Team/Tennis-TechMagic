@@ -5,4 +5,4 @@ global class MailSenderMock_Test implements HttpCalloutMock{
         response.setStatusCode(200);
         return new HttpResponse();
     }       
-}  
+}
