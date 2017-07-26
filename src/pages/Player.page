@@ -98,7 +98,7 @@ html {
                 <div style = "float:left; margin-top: 150px; width:100%;">
                          <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
-                             <apex:pageBlock>
+                             <apex:pageBlock >
                                 <apex:pageBlockButtons location="bottom">       
                              <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
                             </apex:pageBlockButtons>
