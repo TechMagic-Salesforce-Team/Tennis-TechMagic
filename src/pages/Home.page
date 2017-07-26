@@ -203,6 +203,7 @@ function carousel(){
     
     
     function slideShow(){
+        if (detectMob()==false){
     if (count==elements.length-1) {
          console.log('less');
          backSlideShow();
@@ -217,6 +218,9 @@ function carousel(){
     }
     }   
     orangeFill(); 
+    } else {
+     circle_selected(3);
+   }
    }
     
     function backSlideShow(){
@@ -242,7 +246,7 @@ function carousel(){
                     }
                 }
                 elements[index].style.left = "0px";
-                elements[index].style = "display:block; position:absolute;";
+                elements[index].style = "display:block; position:absolute; margin-top: -16px;";
                 for (var i = 0; i < circles.length; i++){
                     if (i==index)circles[i].style = 'background-color:orange;';
                     else circles[i].style = 'background-color:white;';
@@ -261,6 +265,13 @@ function carousel(){
     else id1 = 0;
     }
     
+    function detectMob(){
+                if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                        return true;
+                    }
+                    return false;
+    }
+    
     id = setInterval(slideShow,6000);
     //id1 = setInterval(orangeFill,6000);
 </script>
@@ -276,7 +287,9 @@ function carousel(){
               {
                   rerenderPageBlockForSelectedTournamentTypeFunc();
               }
-         </script>
+              
+                
+                </script>
     
      <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgressSize > 0}" mode="maindetail">
      
@@ -326,7 +339,7 @@ function carousel(){
      </apex:pageBlock>
      
      <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgressSize > 0 && tournamentsInProgress.size !=null && tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
-          <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>
+          <apex:form ><c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/></apex:form>
      </apex:pageBlock>    
       
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>

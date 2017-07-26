@@ -13,7 +13,7 @@
 
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
     <apex:form >
-        <apex:pageBlock>
+        <apex:pageBlock >
             <apex:pageBlockSection >
                 <apex:inputField value="{!searchTournament.Name}" required="false" styleClass="styled-select"/>
                 <apex:inputField value="{!searchTournament.Type__c}" required="false" styleClass="styled-select"/>
@@ -22,7 +22,7 @@
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
-                <apex:actionFunction name='searchAction' action='{!search}' rerender="allTournamentsTable"/>
+                <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
@@ -63,7 +63,7 @@
                     <apex:commandButton value="Delete" action="{!deleteUpcoming}" rerender="allTournamentsTable">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
-                </apex:column>
+                </apex:column>                
                 <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}">
                     <apex:pageBlock >
                         <c:TournamentInformation tournament="{!t.tournament}"/>

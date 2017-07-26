@@ -88,6 +88,7 @@ html {
                 </div>        
                     </div>
                                 <div style="float:left; margin-top:50px;">
+                     <apex:pageBlock rendered="{!currentPlayer == null || player.Id != currentPlayer.Id}" mode="maindetail"></apex:pageBlock>
                      <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/>  
                      </div>
                      </div>
@@ -97,7 +98,7 @@ html {
                 <div style = "float:left; margin-top: 150px; width:100%;">
                          <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
-                             <apex:pageBlock>
+                             <apex:pageBlock >
                                 <apex:pageBlockButtons location="bottom">       
                              <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
                             </apex:pageBlockButtons>

@@ -1,2 +1,2 @@
-<apex:page controller="PlayerController" action='{!confirmRegistration}'>
+<apex:page controller="PlayerController" action="{!confirmRegistration}">
 </apex:page>

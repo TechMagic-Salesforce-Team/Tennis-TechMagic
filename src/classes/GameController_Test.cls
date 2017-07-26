@@ -1,6 +1,4 @@
-@isTest
-public with sharing class GameController_Test {
- @isTest private static void testInsert(){
+@isTest private static void testInsert(){
         Tournament__C tournament = new Tournament__c(name='ddd',format__c = '1 x 1',StartDate__c = Datetime.now(),Status__c='Current',type__c= 'Round Robin');  
         insert tournament;
         Player__c newPlayer1 = new Player__c(name = 'newPlayer1',email__c = 'dd@ddd.dd',IsManager__c=false,Password__c = '666666666',Status__c = 'Active');
@@ -35,5 +33,3 @@ public with sharing class GameController_Test {
         Test.stopTest();
     }
 }
-
-
