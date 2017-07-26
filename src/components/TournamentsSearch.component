@@ -13,15 +13,16 @@
 
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
     <apex:form >
-        <apex:pageBlock mode="edit">
+        <apex:pageBlock>
             <apex:pageBlockSection >
-                <apex:inputField value="{!searchTournament.Name}" required="false"/>
-                <apex:inputField value="{!searchTournament.Type__c}" required="false"/>
-                <apex:inputField value="{!searchTournament.Format__c}" required="false"/>
-                <apex:inputField value="{!searchTournament.Status__c}" required="false"/>
+                <apex:inputField value="{!searchTournament.Name}" required="false" styleClass="styled-select"/>
+                <apex:inputField value="{!searchTournament.Type__c}" required="false" styleClass="styled-select"/>
+                <apex:inputField value="{!searchTournament.Format__c}" required="false" styleClass="styled-select"/>
+                <apex:inputField value="{!searchTournament.Status__c}" required="false" styleClass="styled-select"/>
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
+                <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
@@ -74,4 +75,12 @@
             </apex:pageBlockSection>
         </apex:pageBlock>
     </apex:form>
+    
+        <script>
+                function searchTournaments(){
+                    searchAction();
+                }
+                searchTournaments();
+        </script>    
+            
 </apex:component>

@@ -31,6 +31,10 @@
     html {
         min-width: 500px;
         overflow-x: hidden;
+        webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+         box-sizing: border-box;  
+         max-width: 100%;
     }
     #menu ul {
     width: 300px;
@@ -199,6 +203,7 @@ function carousel(){
     
     
     function slideShow(){
+        if (detectMob()==false){
     if (count==elements.length-1) {
          console.log('less');
          backSlideShow();
@@ -213,6 +218,9 @@ function carousel(){
     }
     }   
     orangeFill(); 
+    } else {
+     circle_selected(3);
+   }
    }
     
     function backSlideShow(){
@@ -238,7 +246,7 @@ function carousel(){
                     }
                 }
                 elements[index].style.left = "0px";
-                elements[index].style = "display:block; position:absolute;";
+                elements[index].style = "display:block; position:absolute; margin-top: -16px;";
                 for (var i = 0; i < circles.length; i++){
                     if (i==index)circles[i].style = 'background-color:orange;';
                     else circles[i].style = 'background-color:white;';
@@ -257,6 +265,13 @@ function carousel(){
     else id1 = 0;
     }
     
+    function detectMob(){
+                if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                        return true;
+                    }
+                    return false;
+    }
+    
     id = setInterval(slideShow,6000);
     //id1 = setInterval(orangeFill,6000);
 </script>
@@ -272,7 +287,9 @@ function carousel(){
               {
                   rerenderPageBlockForSelectedTournamentTypeFunc();
               }
-         </script>
+              
+                
+                </script>
     
      <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgressSize > 0}" mode="maindetail">
      

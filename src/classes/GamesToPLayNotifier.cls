@@ -1,6 +1,9 @@
-global class GamesToPLayNotifier implements Schedulable {
-    
+global class GamesToPLayNotifier implements Schedulable{
+//, Database.AllowsCallouts {
+    public integer emailsCnt { get; set; }
+    //@future 
     global void execute(SchedulableContext ctx) {
+        //MailSender.sendEmail('rgaidukevich9@gmail.com','Uncompleted games','You have not played some games, please play them and submit results');
     	Set<String> emails = new Set<String>();
         List<Tournament__c> tournaments = [SELECT Id, Format__c FROM Tournament__c WHERE Status__c = 'Current'];
         for (Tournament__c t : tournaments) {
@@ -44,13 +47,17 @@ global class GamesToPLayNotifier implements Schedulable {
     	List<Player__c> players = [SELECT Email__c FROM Player__c WHERE Id IN
     		(SELECT Player__c FROM PlayerTeam__c WHERE Team__c IN :teamIds)];
     	for (Player__c p : players) {
-    		resultEmails.add(p.Email__c);
+    		resultEmails.add(p.Email__c); 
+            
     	}
     	return resultEmails;
     }
     
-    private void sendNotification(Set<String> emails) {
-        
+    @future(callout=true)
+    static void sendNotification(Set<String> emails) {
+        //MailSender.sendEmail('rgaidukevich9@gmail.com','Uncompleted games','You have not played some games, please play them and submit results');
+        for (String email:emails){
+            MailSender.sendEmail(email,'Uncompleted games','You have not played some games, please play them and submit results');
+        }
     }
-    
 }

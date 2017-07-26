@@ -22,6 +22,8 @@ public with sharing class PlayerController extends PlayerCookie{
     public Integer countLostGames {get;set;}
     public String nameTournamentForWonStatistics {get;set;}
     public List<Tournament__c> completedAndCurrentTournamentsOfPlayer {get;set;}
+    public List<String> codesOfException {get;set;}
+    
     
     public PlayerController(){
         playerCookieIsCurrentPlayer = false;
@@ -31,57 +33,62 @@ public with sharing class PlayerController extends PlayerCookie{
     
     
     public PageReference registration() {
-        List<ApexPages.message> errorMessages = new List<ApexPages.message>();
+        codesOfException = new List<String>();
         try {
             Integer parseNameToInteger = Integer.valueOf(player.Name);
-            errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,'Name can not be number'));
+            codesOfException.add('Name can not be number');
         } catch (TypeException ex){}
         
-         
-         
         
-        if (errorMessages.size()==0){
-            if (player.Password__c==confirmPassword){
+        List<Player__c> playersWithSuchEmail = [select Email__c from Player__c where Email__c =: player.Email__c];
+        if (playersWithSuchEmail.size()>0){
+            codesOfException.add('Player with the same email is already exists');
+        }
+        
+            if (player.Password__c==confirmPassword && playersWithSuchEmail.size()==0){
                 try{
-                    insert player;
-                    try {
-                        Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
-                        document.FolderId = folder.Id;
-                        document.AuthorId = UserInfo.getUserId();
-                        insert document;    
-                        player.Image__c = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/servlet/servlet.FileDownload?file='+document.Id;
-                        update player;
-                    } catch (DmlException dmlException){
+                        insert player;
+                        System.schedule('Deleting player if status will not be Active', '0 19 * * * ? *',new DeletePlayerSchedule());
+                    } catch (Exception ex){
                         System.debug('Dml exception while registration new player');
-                    } catch (NullPointerException nullPointerException){
-                         System.debug('Null pointer exception while registration new player');
-                    } catch (QueryException queryException){
-                         System.debug('Query exception while registration new player');
                     }
-                    
-                } catch(DmlException ex){
-                    errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,ex.getDmlMessage(0)));
-                }
-         } else {
-            errorMessages.add(new ApexPages.message(ApexPages.severity.ERROR,'Passwords are not the same'));
+            } else {
+                codesOfException.add('Passwords are not the same');
            }
+        
+        if (player.Password__c.length()<8){
+            codesOfException.add('Password is too short!!! Length of password must be at least 8 symbols');
         }
-        if (errorMessages.size()>0){
-            for (ApexPages.message mess: errorMessages){
-                ApexPages.addMessage(mess);
-            }
-            return null;
-        }
-        return Page.Home;
+        
+        return null;
     }
     
+    public PageReference sendEmail(){
+        if (codesOfException.size()==0){
+            String REDIRECT_URL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/ConfirmRegistration?confirmPlayer='+player.Id;
+            MailSender.sendEmail(player.Email__c,'Confirmation your account',REDIRECT_URL);
+            return Page.Home;
+        } else {
+                for (String code: codesOfException){
+                    ApexPages.addMessage(new ApexPages.message(ApexPages.severity.FATAL,code));
+                }
+                return null;
+            }
+            
+        }
+    
     public PageReference login(){
-        List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: player.Email__c limit 1];
+        List<Player__c> players = [select Id,Password__c,Status__c from Player__c where Email__c =: player.Email__c limit 1];
         if (players != null && players.size()>0){
             if (players.get(0).Password__c==player.Password__c) {
-                Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
-                ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
+                if (players.get(0).Status__c=='Active'){
+                    Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
+                    ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
                 return Page.Home;
+                } else {
+                    ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'You did not confirm account, please check your email to complete registration'));
+                    return null;
+                  } 
             } else {
                  ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'Wrong password'));
                  return null; 
@@ -253,5 +260,16 @@ public with sharing class PlayerController extends PlayerCookie{
         PageReference retURL = new PageReference(thisUrl);
         retURL.setRedirect(true);
         return retURL; 
+    }
+    
+    
+    public PageReference confirmRegistration(){
+        String idPlayer = ApexPages.currentPage().getParameters().get('confirmPlayer');
+        List<Player__c> playerConfirm = [select Id,Status__c from Player__c where Id=:idPlayer limit 1];
+        if (playerConfirm.size()>0){
+            playerConfirm.get(0).Status__c = 'Active';
+            update playerConfirm;
+        } 
+        return Page.Home;
     }
 }

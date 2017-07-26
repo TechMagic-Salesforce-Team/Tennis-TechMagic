@@ -20,12 +20,12 @@ public with sharing virtual class TournamentController extends PlayerCookie{
             currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
             try{
-            System.schedule('Start tournament', '0 13 * * * ?', new TournamentStarter());
+        	System.schedule('Start tournament', '0 9 * * * ?', new TournamentStarter());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
             try{
-            System.schedule('Notify players about games to play', '0 1 8 * * ?', new GamesToPLayNotifier());
+        	System.schedule('Notify players about games to play', '0 10 * * * ?', new GamesToPLayNotifier());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
