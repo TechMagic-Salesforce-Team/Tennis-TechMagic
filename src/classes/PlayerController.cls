@@ -48,7 +48,7 @@ public with sharing class PlayerController extends PlayerCookie{
             if (player.Password__c==confirmPassword && playersWithSuchEmail.size()==0){
                 try{
                         insert player;
-                        System.schedule('Deleting player if status will not be Active', '0 15 * * * ? *',new DeletePlayerSchedule());
+                        System.schedule('Deleting player if status will not be Active', '0 19 * * * ? *',new DeletePlayerSchedule());
                     } catch (Exception ex){
                         System.debug('Dml exception while registration new player');
                     }
