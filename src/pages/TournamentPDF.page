@@ -2,10 +2,26 @@
     <head>
         <style>
             .bPageBlock{
+                width: 100%;    
                 margin-bottom : 10px;  
                 margin-top : 10px;
             }
-            
+            .bPageBlock .pbTitle {
+                width: 100%;    
+                text-align: center;
+            }
+            .bPageBlock .custom1{
+                text-align: center;
+                vertical-align: middle;
+                line-height: 35px;
+                margin: auto;
+                width: 50%;
+            }
+            .custom2{
+                margin-top : 2px;
+                margin-bottom : 2px;
+                text-decoration: blink;
+            }
             .thisLinks:link, thisLinks:visited{ 
                 background-color: white;
                 color: black;
@@ -55,25 +71,30 @@
              }
         </style>        
     </head>
-    <apex:pageBlock title="Tournament - {!pdfCurrentTournament.Name}">
-        <apex:pageBlockSection showHeader="false" columns="2">
-            <apex:outputLabel value="Status : {!pdfCurrentTournament.Status__c}" styleClass="tournamentFields" />
-            <apex:outputLabel value="Format : {!pdfCurrentTournament.Format__c}" styleClass="tournamentFields" />
-            <apex:outputLabel value="Type : {!pdfCurrentTournament.Type__c}" styleClass="tournamentFields" />
-            <apex:outputLabel value="Start Date : {!pdfCurrentTournament.StartDate__c}" styleClass="tournamentFields" />
-        </apex:pageBlockSection>     
+    <apex:pageBlock title="Tournament - {!pdfCurrentTournament.Name}" id="firstBlock">
+        <apex:outputPanel layout="block" styleClass="custom1">
+
+            <apex:pageBlockSection showHeader="false" columns="1">
+                <apex:outputLabel value="Status : {!pdfCurrentTournament.Status__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Format : {!pdfCurrentTournament.Format__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Type : {!pdfCurrentTournament.Type__c}" styleClass="tournamentFields" />
+                <apex:outputLabel value="Start Date : {!pdfCurrentTournament.StartDate__c}" styleClass="tournamentFields" />
+            </apex:pageBlockSection>    
+        
+        </apex:outputPanel>
     </apex:pageBlock><br/>
     <apex:outputText styleClass="hYellowBackground" value="All Competetitors Who Take Part At This Tournament :"/><br/><br/>
     <apex:pageblock rendered="{!competitorsName.size > 0}">
         <apex:pageblockTable value="{!competitorsName}" var="competitor">
             <apex:column headerValue="">
-                <apex:outputText style="font-family: Arial Unicode MS;" value="{!competitor}"/><br/>
+                        <apex:outputPanel layout="block" styleClass="custom2">
+                            <apex:outputText style="font-family: Arial Unicode MS;" value="{!competitor}"/><br/>
+                        </apex:outputPanel>
             </apex:column>
         </apex:pageblockTable>
     </apex:pageblock>
     <apex:outputText style="font-family: Arial Unicode MS;" value="Noone has registered at this tournament" rendered="{!competitorsName.size == 0}"></apex:outputText>
     <br/><br/>
-    <apex:outputText styleClass="hYellowBackground" value="GRID"/>
     
     <div class ="divComponents"><c:SingleElimination componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Single Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
     <div class ="divComponents"><c:DoubleEliminationTournament componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Double Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
