@@ -98,7 +98,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
             List<Tournament__c> tournaments = [SELECT Id, Format__c, Status__c FROM Tournament__c WHERE Id =:tournamentId];
             if (tournaments.size() > 0) {
                 if (tournaments[0].Format__c == '2 x 2' && tournaments[0].Status__c == 'Upcoming') {
-                    List<Team__c> teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tournamentId AND 
+                    List<Team__c> teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tournamentId AND IsComplete__c = true AND
                         Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerId)];
                     if (teams.size() == 0) {
                         return null;
@@ -118,6 +118,9 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     }
     
     private List<TeamInvitation> getAllTeamInvitations() {
+        if (currentPlayer2 == null) {
+            return new List<TeamInvitation>();
+        }
         List<Team__c> teams = [SELECT Id, Name, Tournament__r.Id, Tournament__r.Name, 
             (SELECT Player__c FROM PlayerTeams__r WHERE IsInvited__c = false)
             FROM Team__c WHERE IsComplete__c = false AND Tournament__r.Status__c = 'Upcoming'
