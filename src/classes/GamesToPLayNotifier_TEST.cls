@@ -79,5 +79,3 @@ public with sharing class GamesToPLayNotifier_TEST {
     }
     
 }
-
-

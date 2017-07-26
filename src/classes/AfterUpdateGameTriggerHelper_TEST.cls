@@ -143,5 +143,3 @@ public with sharing class AfterUpdateGameTriggerHelper_TEST {
     }
     
 }
-
-

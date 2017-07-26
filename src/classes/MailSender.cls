@@ -18,5 +18,3 @@ public static void sendEmail(String to, String subject , String text){
         system.debug(response.getStatusCode());
     }
 }
-
-
