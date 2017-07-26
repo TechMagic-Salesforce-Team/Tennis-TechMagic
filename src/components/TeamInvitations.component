@@ -1,9 +1,15 @@
 <apex:component controller="PlayerTeamController" allowDML="true">
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
+        <div style="float:left;width:100%;">
     <apex:pageBlock id="invites"> 
-        <apex:pageBlockSection rendered="{!teamInvitations == null || teamInvitations.size == 0}">
-            <p>You still have no team invitations.</p>
+        <apex:pageBlockSection rendered="{!((teamInvitations == null || teamInvitations.size == 0) && currentPlayer2.Id == currentPlayer.Id)}">
+            <div style='width:200px; height:auto;'><p>You still have no team invitations.</p></div>
         </apex:pageBlockSection>
+        
+        <apex:pageBlockSection rendered="{!((teamInvitations == null || teamInvitations.size == 0) && currentPlayer2.Id != currentPlayer.Id)}">
+                         <div style='width:200px;'></div>
+        </apex:pageBlockSection>
+        
         <apex:pageBlockSection rendered="{!teamInvitations != null && teamInvitations.size > 0}">
             <apex:form >
                 <apex:pageBlockTable value="{!teamInvitations}" var="oneTeamInvitation">
@@ -27,5 +33,5 @@
                 </apex:pageBlockTable>
             </apex:form>
         </apex:pageBlockSection>
-    </apex:pageBlock>
+    </apex:pageBlock></div>
 </apex:component>

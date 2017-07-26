@@ -31,10 +31,7 @@
     html {
         min-width: 500px;
         overflow-x: hidden;
-        webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-         box-sizing: border-box;  
-         max-width: 100%;
+        max-width: 100%;
     }
     #menu ul {
     width: 300px;
@@ -85,7 +82,7 @@
     
     <c:Header />
     <div style="float:left; width:100%;">
-        <div class="w3-content w3-section" style="padding:0px; margin:0px; position:related;" id = "mainDiv" >
+        <div class="w3-content w3-section" style="padding:0px; margin:0px;" id = "mainDiv" >
         <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
                           'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
           <img class="mySlides" id = "aab" src="{!URLFOR($Resource.SiteSamples,

@@ -53,6 +53,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
         currentPlayerId = getCurrentPlayer().Id;
         players = [SELECT Id, Name FROM Player__c WHERE Id != :currentPlayerId AND Status__c = 'Active'];
         team = new Team__c();
+        
     }
     
     public PageReference cancel() {

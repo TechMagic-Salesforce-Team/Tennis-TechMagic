@@ -20,6 +20,9 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<PlayerStatistics__c> playerStatisticList {get;set;}
     public Integer countWonGames {get;set;}
     public Integer countLostGames {get;set;}
+    public Integer countWonSets {get;set;}
+    public Integer countLostSets {get;set;}
+    
     public String nameTournamentForWonStatistics {get;set;}
     public List<Tournament__c> completedAndCurrentTournamentsOfPlayer {get;set;}
     public List<String> codesOfException {get;set;}
@@ -166,26 +169,26 @@ public with sharing class PlayerController extends PlayerCookie{
     
    
     public PageReference getCurrentOrCompletedTournament(){
-        if (currentOrCompletedTournamentId==null || currentOrCompletedTournamentId == ''){
-            countWonGames = 0; countLostGames = 0;
-           for (PlayerStatistics__c ps: playerStatisticList){
-                countWonGames+=(Integer)ps.CountWonGames__c;
-                countLostGames+=(Integer)ps.CountLostGames__c;
-            }
-            nameTournamentForWonStatistics = 'all tournaments';
-        }
-        try{
+        try {
             currentOrCompleteTournament = [select Id,Name,Type__c,Status__c,Format__c,StartDate__c from Tournament__c where Id=:currentOrCompletedTournamentId limit 1];
             System.debug('Current or compl tournament: '+currentOrCompleteTournament);
-            PlayerStatistics__c playerStatisticsInSelectedTournament = [select Id,Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id and Tournament__c =:currentOrCompleteTournament.Id];
-            countWonGames = (Integer)playerStatisticsInSelectedTournament.CountWonGames__c;
-            countLostGames = (Integer)playerStatisticsInSelectedTournament.CountLostGames__c;
-            nameTournamentForWonStatistics = currentOrCompleteTournament.Name;
+            PlayerStatistics__c playerStatisticsInSelectedTournament = [select Id,Tournament__c, CountWonGames__c, CountLostGames__c, CountWonSets__c, CountLostSets__c from PlayerStatistics__c where Player__c=:player.Id and Tournament__c =:currentOrCompleteTournament.Id];
+                countWonGames = (Integer)playerStatisticsInSelectedTournament.CountWonGames__c;
+                countLostGames = (Integer)playerStatisticsInSelectedTournament.CountLostGames__c;
+                countWonSets=(Integer) playerStatisticsInSelectedTournament.CountWonSets__c;
+                countLostSets=(Integer) playerStatisticsInSelectedTournament.CountLostSets__c;
+                nameTournamentForWonStatistics = currentOrCompleteTournament.Name;
             } catch (Exception ex){
-            System.debug('Hello world');
-        }
-       
-        
+                System.debug('Hello world');
+                    countWonGames = 0; countLostGames = 0; countWonSets = 0; countLostSets = 0;
+                        for (PlayerStatistics__c ps: playerStatisticList){
+                        countWonGames+=(Integer)ps.CountWonGames__c;
+                        countLostGames+=(Integer)ps.CountLostGames__c;
+                        countWonSets+=(Integer) ps.CountWonSets__c;
+                        countLostSets+=(Integer) ps.CountLostSets__c;
+                        nameTournamentForWonStatistics = 'all tournaments';   
+                 }
+            }
         return null;
     }
     
@@ -234,7 +237,7 @@ public with sharing class PlayerController extends PlayerCookie{
                     playerCookieIsCurrentPlayer = currentPlayer.Id==player.Id;
             } else playerCookieIsCurrentPlayer = false;
             countWonGames = 0; countLostGames = 0;
-            playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c from PlayerStatistics__c where Player__c=:player.Id];
+            playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c, CountLostSets__c, CountWonSets__c from PlayerStatistics__c where Player__c=:player.Id];
             for (PlayerStatistics__c ps: playerStatisticList){
                 countWonGames+=(Integer)ps.CountWonGames__c;
                 countLostGames+=(Integer)ps.CountLostGames__c;
