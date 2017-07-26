@@ -47,36 +47,36 @@ public with sharing class RoundRobin {
         Map<String, String> idNameMap = Helper.getIdAndNameMap(myTournament);
         System.debug(idNameMap);
         List<List<GameJSON>> result = new List<List<GameJSON>>();
-	List<String> Ids = new List<String>(idNameMap.keySet());
+ List<String> Ids = new List<String>(idNameMap.keySet());
         System.debug(Ids.size()+'size');
-	List<GameJSON> firstRow = new List<GameJSON>();
-	firstRow.add(new GameJSON('','black','',''));
-	
+ List<GameJSON> firstRow = new List<GameJSON>();
+ firstRow.add(new GameJSON('','black','',''));
+ 
         for (String id : Ids) {
             firstRow.add(new GameJSON('','FFFFFF',idNameMap.get(id),''));
-	}
-	result.add(firstRow);
-	for (Integer i = 0; i < Ids.size(); i++) {       
+ }
+ result.add(firstRow);
+ for (Integer i = 0; i < Ids.size(); i++) {       
             List<GameJSON> row = new List<GameJSON>();
             row.add(new GameJSON('','FFFFFF',idNameMap.get(Ids[i]),''));
             //row.add(idNameMap.get(Ids[i]));
             for (Integer j = 0; j < Ids.size(); j++) {
-		if (i == j) {
+  if (i == j) {
                     row.add(new GameJSON('','black','',''));
-			} else {
-				for (Game__c g : games) {
+   } else {
+    for (Game__c g : games) {
                                     if (g.firstCompetitor__c == Ids[i] && g.secondCompetitor__c == Ids[j]) {
-					if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
+     if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
                                           Integer firstCompetitorScore = (Integer)g.FirstCompetitorScore__c;
                                           Integer secondCompetitorScore = (Integer)g.SecondCompetitorScore__c;
                                           String color = firstCompetitorScore>secondCompetitorScore?'green':'red';
                                           row.add(new GameJSON(g.Id,color,'',''+g.FirstCompetitorScore__c));
-					} else {
+     } else {
                                           row.add(new GameJSON(''+g.Id,'FFA03A','','0'));
                                     }
-				}
+    }
                                     if (g.firstCompetitor__c == Ids[j] && g.secondCompetitor__c == Ids[i]) {
-					if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
+        if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
                                             Integer firstCompetitorScore = (Integer)g.FirstCompetitorScore__c;
                                             Integer secondCompetitorScore = (Integer)g.SecondCompetitorScore__c;
                                             String color = firstCompetitorScore>secondCompetitorScore?'green':'red';   
@@ -90,7 +90,7 @@ public with sharing class RoundRobin {
                   }
            result.add(row);
         }
-		
+  
         return result;
     } 
     

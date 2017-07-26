@@ -6,7 +6,7 @@ trigger PlayerUpdateTrigger on Player__c (after update) {
     
     List<String> docsMustBeDeletedIds = new List<String>();
     for (Integer i = 0; i < newPlayers.size(); i++){
-        if (oldPlayers[i].Image__c != newPlayers[i].Image__c){
+        if (oldPlayers[i].Image__c!=null && oldPlayers[i].Image__c != newPlayers[i].Image__c){
             System.debug('found such player (updated document image)');
             String fileName = new Url(oldPlayers[i].Image__c).getFile();
             System.debug('fileName: '+fileName);

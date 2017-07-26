@@ -3,12 +3,12 @@
         <table align="center">
         <!--<tr><th width='200'>Players</th><th width = '300'>Games</th>
                         <th width = '100'>Total points</th></tr>-->
-    	<apex:repeat value="{!roundRobinMatrix}" var="row"> 
-    		<tr>
-    			<apex:repeat value="{!row}" var="column" id = 'myTable'>
+     <apex:repeat value="{!roundRobinMatrix}" var="row"> 
+      <tr>
+       <apex:repeat value="{!row}" var="column" id = 'myTable'>
                                         <td height='120' width='180' bgColor = '{!column.color}'><a href='{!column.hrefTo}' style='text-decoration: none;'>{!column.playerName} {!column.score}</a></td> 
-    			</apex:repeat>
-    		</tr>
-    	</apex:repeat>
+       </apex:repeat>
+      </tr>
+     </apex:repeat>
         </table>
 </apex:component>
