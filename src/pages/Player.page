@@ -3,7 +3,11 @@
        <c:Header />
     </head>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
-        
+        <style>
+html {
+    min-width: 1000px;
+}
+        </style>
     <body>
         <!--
         <apex:pageBlock rendered="true" title="All tournaments of current player">
@@ -21,9 +25,9 @@
                 var count = 0;
                 </script>
       
-       <apex:pageBlock id="mainBlock">
-         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left; height: 220px;">
-                        <img src="{!imageUrl}" id='playerAvatar' alt="Image" style="width:auto; height: 100%; background-size: contain; float: left;"/>
+       <apex:pageBlock id="mainBlock" mode="maindetail">
+         <div id = "imageUrlDiv" style="margin: 20px 20px 20px 20px; float: left; height: 250px;">
+                        <img src="{!imageUrl}" id='playerAvatar' alt="Image" style="max-width: 400px; height: 100%; background-size: contain; float: left;"/>
                         <script>
                             if ($("#playerAvatar").attr('src')=='null'){
                                 $("#playerAvatar").attr('src', 'https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png');
@@ -34,11 +38,11 @@
       
     
                 <!--<apex:pageBlock id="pIdd" title="Selected tournament">-->
-                <div style = "float:left; width:40%; margin-top: 20px;">
-                        <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
-                        <p style="font-size:15px; margin-left: 3%;">Name: {!player.Name}</p>
+                <div style = "float:left; width:60%; margin-top: 20px;">
+                        <div style = "float:left; width: 100%; margin-left: 3%;">
+                        <p style="font-size:15px;">Name: {!player.Name}</p>
                         </div>
-                        <div style = "float:left; border-bottom:2px solid grey; width: 100%;">
+                        <div style = "float:left; width:100%;">
                         <p style="font-size:15px; margin-left: 3%;">Won statistics of {!nameTournamentForWonStatistics}</p>
                         <script>
                             var hasTournaments = '{!hasCurrentTournaments}';
@@ -49,9 +53,9 @@
                         <p style="font-size:15px; margin-left: 3%;">Count won games {!countWonGames}</p>
                         <p style="font-size:15px; margin-left: 3%;">Count lost games {!countLostGames}</p>
                         
-                        <div class="w3-container">                       
+                        <div class="w3-container" >                       
                             <div class="w3-red" >
-                                    <div id="myBar" class="w3-container w3-green w3-center" style="width:50%; min-width: 0%;">20%</div>
+                                    <div id="myBar" class="w3-container w3-green w3-center" style="width:100%; min-width: 0%; height: 30px; margin-top: 20px;">20%</div>
                                         <script>
                                             var countWonGames = '{!countWonGames}';
                                             var countLoseGames = '{!countLostGames}';
@@ -67,25 +71,33 @@
                          
                          <div style = 'width:100%; height: 20px;'></div>
                          
+                                                
+                        <div style="float:left;">
+                            <p style='font-size:20px;'>Statistics of</p>
+                         </div>
                          
+                         <div style="float:left; margin-top: 20px;">
                           <apex:form >
                             <apex:pageMessages />
-                                <apex:selectList value="{!currentOrCompletedTournamentId}" size="1" style="margin-left:18%;">
+                                <apex:selectList value="{!currentOrCompletedTournamentId}" size="1" style="margin-left:18%; height:30px; text-align:center; font-size:20px;">
                                     <apex:actionSupport event="onchange" action="{!getCurrentOrCompletedTournament}" rerender="mainBlock" />    
                                     <apex:selectOptions value="{!completedAndCurrentTournamentsOfPlayerOptions}"/>
                                 </apex:selectList>
                           </apex:form>
+                          </div>
                 </div>        
                     </div>
-                     <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/> 
-                        </div>
+                                <div style="float:left; margin-top:50px;">
+                     <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/>  
+                     </div>
+                     </div>
                      </apex:pageBlock>
             
-                   
-                 <p style="clear:left;"/>
+                     
+                <div style = "float:left; margin-top: 150px; width:100%;">
                          <apex:form enctype="multipart/form-data" rendered="{!playerCookieIsCurrentPlayer}">
                             <apex:pageMessages />
-                             <apex:pageBlock >
+                             <apex:pageBlock>
                                 <apex:pageBlockButtons location="bottom">       
                              <apex:commandButton action="{!uploadNewImage}" value="Save" style="background-color:yellow;"/>
                             </apex:pageBlockButtons>
@@ -97,7 +109,7 @@
                             </apex:pageBlockSection>
                             </apex:pageBlock>
                             </apex:form>
-        
+        </div>  
         
         <c:TournamentsSearch player="{!player}"/>
         

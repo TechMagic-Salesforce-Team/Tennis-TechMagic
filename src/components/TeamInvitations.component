@@ -1,6 +1,6 @@
 <apex:component controller="PlayerTeamController" allowDML="true">
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
-    <apex:pageBlock id="invites">
+    <apex:pageBlock id="invites"> 
         <apex:pageBlockSection rendered="{!teamInvitations == null || teamInvitations.size == 0}">
             <p>You still have no team invitations.</p>
         </apex:pageBlockSection>
