@@ -22,7 +22,7 @@
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
-                <apex:actionFunction name='searchAction' action='{!search}' rerender="allTournamentsTable"/>
+                <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">

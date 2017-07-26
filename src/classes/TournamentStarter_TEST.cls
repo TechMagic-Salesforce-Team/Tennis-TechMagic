@@ -59,5 +59,3 @@ public with sharing class TournamentStarter_TEST {
     }
 
 }
-
-

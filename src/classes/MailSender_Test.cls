@@ -7,5 +7,3 @@ public with sharing class MailSender_Test {
        Test.stopTest();
   } 
 }
-
-

@@ -31,7 +31,11 @@ public with sharing class PlayersStatisticsGenerator {
                 playerStatisticList.add(
                 new PlayerStatistics__c(
                     Player__c = playerTournament.Player__c,
-                    Tournament__c = playerTournament.Tournament__c
+                    Tournament__c = playerTournament.Tournament__c,
+                    CountLostGames__c = 0,
+                    CountWonGames__c = 0,
+                    CountLostSets__c = 0,
+                    CountWonSets__c = 0
                 ));
             }
         ///////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +48,11 @@ public with sharing class PlayersStatisticsGenerator {
                     playerStatisticList.add(
                         new PlayerStatistics__c(
                         Player__c = playerTeam.Player__c,
-                        Tournament__c = team.Tournament__c
+                        Tournament__c = team.Tournament__c,
+                        CountLostGames__c = 0,
+                        CountWonGames__c = 0,
+                        CountLostSets__c = 0,
+                        CountWonSets__c = 0
                     ));
                 }
         }

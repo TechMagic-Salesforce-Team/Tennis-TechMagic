@@ -13,6 +13,95 @@ public with sharing class AfterUpdateGameTriggerHelper {
         List<Tournament__c> ts = [SELECT Id, Type__c, Status__c, Format__c FROM Tournament__c WHERE Id = :game.Tournament__c];
         if (ts.size() > 0) {
             Tournament__c t = ts[0];
+            // update player statistics
+            if (t.Format__c == '1 x 1') {
+                List<PlayerStatistics__c> pSs = [SELECT Id, Player__c, CountLostGames__c, CountWonGames__c, CountLostSets__c, CountWonSets__c
+                    FROM PlayerStatistics__c WHERE Tournament__c = :t.Id AND (Player__c = :game.FirstCompetitor__c OR Player__c = :game.SecondCompetitor__c)];
+                if (pSs.size() > 1) {
+                    PlayerStatistics__c pS0 = pSs[0];
+                    PlayerStatistics__c pS1 = pSs[1];
+                    if (pS0.Id == game.FirstCompetitor__c) {
+                        pS0.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS0.CountLostGames__c + 1 : pS0.CountLostGames__c;
+                        pS0.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS0.CountWonGames__c + 1 : pS0.CountWonGames__c;
+                        pS0.CountLostSets__c = pS0.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS0.CountWonSets__c = pS0.CountWonSets__c + game.FirstCompetitorScore__c;
+
+                        pS1.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS1.CountLostGames__c + 1 : pS1.CountLostGames__c;
+                        pS1.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS1.CountWonGames__c + 1 : pS1.CountWonGames__c;
+                        pS1.CountLostSets__c = pS1.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS1.CountWonSets__c = pS1.CountWonSets__c + game.SecondCompetitorScore__c;
+                    } else {
+                        pS1.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS1.CountLostGames__c + 1 : pS1.CountLostGames__c;
+                        pS1.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS1.CountWonGames__c + 1 : pS1.CountWonGames__c;
+                        pS1.CountLostSets__c = pS1.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS1.CountWonSets__c = pS1.CountWonSets__c + game.FirstCompetitorScore__c;
+
+                        pS0.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS0.CountLostGames__c + 1 : pS0.CountLostGames__c;
+                        pS0.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS0.CountWonGames__c + 1 : pS0.CountWonGames__c;
+                        pS0.CountLostSets__c = pS0.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS0.CountWonSets__c = pS0.CountWonSets__c + game.SecondCompetitorScore__c;
+                    }
+                    update (pS0);
+                    update (pS1);
+                }
+            } else {
+                List<Team__c> pSteams = [SELECT Id, (SELECT Player__c FROM PlayerTeams__r) FROM Team__c WHERE Tournament__c = :t.Id AND (Id = :game.FirstCompetitor__c OR Id = :game.SecondCompetitor__c)];
+                if (pSteams.size() > 1) {
+                    Team__c t111 = pSteams[0];
+                    Team__c t222 = pSteams[1];
+                    List<PlayerTeam__c> pts111 = t111.PlayerTeams__r;
+                    List<PlayerTeam__c> pts222 = t222.PlayerTeams__r;
+                    PlayerStatistics__c pS0 = [SELECT Id, Player__c, CountLostGames__c, CountWonGames__c, CountLostSets__c, CountWonSets__c
+                        FROM PlayerStatistics__c WHERE Tournament__c = :t.Id AND Player__c = :pts111[0].Player__c];
+                    PlayerStatistics__c pS1 = [SELECT Id, Player__c, CountLostGames__c, CountWonGames__c, CountLostSets__c, CountWonSets__c
+                        FROM PlayerStatistics__c WHERE Tournament__c = :t.Id AND Player__c = :pts111[1].Player__c];
+                    PlayerStatistics__c pS2 = [SELECT Id, Player__c, CountLostGames__c, CountWonGames__c, CountLostSets__c, CountWonSets__c
+                        FROM PlayerStatistics__c WHERE Tournament__c = :t.Id AND Player__c = :pts222[0].Player__c];
+                    PlayerStatistics__c pS3 = [SELECT Id, Player__c, CountLostGames__c, CountWonGames__c, CountLostSets__c, CountWonSets__c
+                        FROM PlayerStatistics__c WHERE Tournament__c = :t.Id AND Player__c = :pts222[1].Player__c];
+                    if (t111.Id == game.FirstCompetitor__c) {
+                        pS0.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS0.CountLostGames__c + 1 : pS0.CountLostGames__c;
+                        pS0.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS0.CountWonGames__c + 1 : pS0.CountWonGames__c;
+                        pS0.CountLostSets__c = pS0.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS0.CountWonSets__c = pS0.CountWonSets__c + game.FirstCompetitorScore__c;
+                        pS1.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS1.CountLostGames__c + 1 : pS1.CountLostGames__c;
+                        pS1.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS1.CountWonGames__c + 1 : pS1.CountWonGames__c;
+                        pS1.CountLostSets__c = pS1.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS1.CountWonSets__c = pS1.CountWonSets__c + game.FirstCompetitorScore__c;
+
+                        pS2.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS2.CountLostGames__c + 1 : pS2.CountLostGames__c;
+                        pS2.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS2.CountWonGames__c + 1 : pS2.CountWonGames__c;
+                        pS2.CountLostSets__c = pS2.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS2.CountWonSets__c = pS2.CountWonSets__c + game.SecondCompetitorScore__c;
+                        pS3.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS3.CountLostGames__c + 1 : pS3.CountLostGames__c;
+                        pS3.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS3.CountWonGames__c + 1 : pS3.CountWonGames__c;
+                        pS3.CountLostSets__c = pS3.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS3.CountWonSets__c = pS3.CountWonSets__c + game.SecondCompetitorScore__c;
+                    } else {
+                        pS2.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS2.CountLostGames__c + 1 : pS2.CountLostGames__c;
+                        pS2.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS2.CountWonGames__c + 1 : pS2.CountWonGames__c;
+                        pS2.CountLostSets__c = pS2.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS2.CountWonSets__c = pS2.CountWonSets__c + game.FirstCompetitorScore__c;
+                        pS3.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS3.CountLostGames__c + 1 : pS3.CountLostGames__c;
+                        pS3.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS3.CountWonGames__c + 1 : pS3.CountWonGames__c;
+                        pS3.CountLostSets__c = pS3.CountLostSets__c + game.SecondCompetitorScore__c;
+                        pS3.CountWonSets__c = pS3.CountWonSets__c + game.FirstCompetitorScore__c;
+
+                        pS0.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS0.CountLostGames__c + 1 : pS0.CountLostGames__c;
+                        pS0.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS0.CountWonGames__c + 1 : pS0.CountWonGames__c;
+                        pS0.CountLostSets__c = pS0.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS0.CountWonSets__c = pS0.CountWonSets__c + game.SecondCompetitorScore__c;
+                        pS1.CountLostGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS1.CountLostGames__c + 1 : pS1.CountLostGames__c;
+                        pS1.CountWonGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS1.CountWonGames__c + 1 : pS1.CountWonGames__c;
+                        pS1.CountLostSets__c = pS1.CountLostSets__c + game.FirstCompetitorScore__c;
+                        pS1.CountWonSets__c = pS1.CountWonSets__c + game.SecondCompetitorScore__c;
+                    }
+                    update (pS0);
+                    update (pS1);
+                    update (pS2);
+                    update (pS3);
+                }
+            }
             if (t.Type__c == 'Round Robin'){
                 List<Game__c> games = [SELECT Id, FirstCompetitorAccept__c, SecondCompetitorAccept__c FROM Game__c WHERE Tournament__c = :t.Id];
                 if (checkOneAccept(games)) {
