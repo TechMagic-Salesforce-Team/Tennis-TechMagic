@@ -3,7 +3,7 @@
         <style>
             .bPageBlock{
                 margin-bottom : 10px;  
-                margin-top : 10px;          
+                margin-top : 10px;
             }
             
             .thisLinks:link, thisLinks:visited{ 
@@ -22,17 +22,38 @@
              }
              .tournamentFields{
                  font-size : 17px;
-                 background : #d3fcff;
-             }
-             .hYellowBackground{
-                 background : #ffecd3;
              }
              .divComponents{
                  display : inline-block; 
                  width : 100%;
              }
-             
-        </style>
+             .LINKKKS{
+                background-color: white;
+                color: black;
+                border: 2px solid #c9fffc;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius : 20%;
+                min-width:90px; 
+                margin : 5px;
+                margin-left : 12px;     
+             }
+             .LINKKKSsite{
+                 background-color: white;
+                color: black;
+                border: 2px solid #c9fffc;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius : 20%;
+                min-width:166px; 
+                margin : 5px;
+                margin-left : 0px;     
+             }
+        </style>        
     </head>
     <apex:pageBlock title="Tournament - {!pdfCurrentTournament.Name}">
         <apex:pageBlockSection showHeader="false" columns="2">
@@ -46,11 +67,11 @@
     <apex:pageblock rendered="{!competitorsName.size > 0}">
         <apex:pageblockTable value="{!competitorsName}" var="competitor">
             <apex:column headerValue="">
-                <apex:outputText style="font-family: Arial Unicode MS; background : #d3fcff;" value="{!competitor}"/><br/>
+                <apex:outputText style="font-family: Arial Unicode MS;" value="{!competitor}"/><br/>
             </apex:column>
         </apex:pageblockTable>
     </apex:pageblock>
-    <apex:outputText style="font-family: Arial Unicode MS; background : #d3fcff;" value="Noone has registered at this tournament" rendered="{!competitorsName.size == 0}"></apex:outputText>
+    <apex:outputText style="font-family: Arial Unicode MS;" value="Noone has registered at this tournament" rendered="{!competitorsName.size == 0}"></apex:outputText>
     <br/><br/>
     <apex:outputText styleClass="hYellowBackground" value="GRID"/>
     
@@ -58,14 +79,14 @@
     <div class ="divComponents"><c:DoubleEliminationTournament componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Double Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
     <div class ="divComponents"><c:RoundRobin componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Round Robin' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
     <apex:pageBlock title="Follow us">
-        <apex:pageblockSection >
-            <apex:outputLink value="{!myURL}">Visit our site</apex:outputLink><br/>
-            <apex:outputLabel value="Follow us : "/><apex:outputLink value="http://www.techmagic.co/"><img id="theImage" src="https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAASRAAAAJGZmOTlhMTNmLWMzY2UtNDBiYi04ZjdkLWJkZTE3NmM4NzM4Mw.png" width="220" height="55"/>123</apex:outputLink>
-            <apex:outputLabel value="Facebook : "/><apex:outputLink value="https://www.facebook.com/TechMagic.co">TechMagic</apex:outputLink>
-            <apex:outputLabel value="Linkedin : "/><apex:outputLink value="https://www.linkedin.com/company/5276965">TechMagic</apex:outputLink>
-            <apex:outputLabel value="Github : "/><apex:outputLink value="https://github.com/techmagic-team">TechMagic</apex:outputLink>
-            <apex:outputLabel value="Twitter : "/><apex:outputLink value="https://twitter.com/TechMagic_inc">TechMagic</apex:outputLink>
-            <apex:outputLabel value="Instagram : "/><apex:outputLink value="https://www.instagram.com/techmagic/">TechMagic</apex:outputLink>
-        </apex:pageblockSection>
+            <apex:outputLink value="{!myURL}" styleClass="LINKKKSsite"><apex:outputText value="Visit Our Site"/></apex:outputLink><br/>
+            <apex:pageBlockSection columns="2">
+                <apex:outputLabel value="Follow us "/><apex:outputLink value="http://www.techmagic.co/" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+                <apex:outputLabel value="Facebook "/><apex:outputLink value="https://www.facebook.com/TechMagic.co" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+                <apex:outputLabel value="Linkedin "/><apex:outputLink value="https://www.linkedin.com/company/5276965" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+                <apex:outputLabel value="Github "/><apex:outputLink value="https://github.com/techmagic-team" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+                <apex:outputLabel value="Twitter "/><apex:outputLink value="https://twitter.com/TechMagic_inc" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+                <apex:outputLabel value="Instagram "/><apex:outputLink value="https://www.instagram.com/techmagic/" styleClass="LINKKKS"><apex:outputText value="TechMagic"/></apex:outputLink>
+            </apex:pageBlockSection>
     </apex:pageBlock>
 </apex:page>

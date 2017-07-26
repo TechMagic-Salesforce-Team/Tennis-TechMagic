@@ -7,5 +7,3 @@ global class DeletePlayerSchedule implements Schedulable{
         delete players;
     }
 }
-
-

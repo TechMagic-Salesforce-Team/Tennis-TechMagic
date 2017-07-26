@@ -1,6 +1,6 @@
-<apex:page controller='GameController' cache='false'>
-   <apex:form>
-     <apex:pageMessages/>      
+<apex:page controller="GameController" cache="false">
+   <apex:form >
+     <apex:pageMessages />      
      <apex:pageBlock title="Score" rendered="{!existInCurrentGame}">
                 <apex:inputField value="{!currentGame.FirstCompetitorScore__c}"/>
                 <apex:inputField value="{!currentGame.SecondCompetitorScore__c}"/>
