@@ -10,8 +10,6 @@ public with sharing class AfterUpdateGameTriggerHelper_TEST {
     
     public static testMethod void testGenerateGamesOrFinishTournament() {
         insert (t);
-        insert (t1);
-        insert (t2);
         
         insert (p0);
         insert (p1);
@@ -25,15 +23,29 @@ public with sharing class AfterUpdateGameTriggerHelper_TEST {
             ids.add(p.Id);
         }
         
-        t.Status__c = 'Current';
-        update (t);
-        DoubleEliminationTournament.generateRounds(ids, t.Id);
+        PlayerTournament__c pt111 = new PlayerTournament__c(Player__c = p0.Id, Tournament__c = t.Id);
+        PlayerTournament__c pt112 = new PlayerTournament__c(Player__c = p1.Id, Tournament__c = t.Id);
+        PlayerTournament__c pt113 = new PlayerTournament__c(Player__c = p2.Id, Tournament__c = t.Id);
+        
+        insert(pt111);
+        insert(pt112);
+        insert(pt113);
+        
+        TournamentStarter tsta = new TournamentStarter();
+        
+        tsta.execute(null);
         
         List<Game__c> games = [SELECT Id, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorAccept__c, SecondCompetitorAccept__c, FirstCompetitorScore__c, SecondCompetitorScore__c, Tournament__c, Stage__c, WinningGroup__c FROM Game__c ORDER BY Stage__c ASC, WinningGroup__c ASC];
         
         System.assertEquals(3, games.size());
         
+        List<PlayerStatistics__c> pSs = [SELECT Id FROM PlayerStatistics__c WHERE Tournament__c = :t.Id];
+        
+        System.assertEquals(3, pSs.size());
+        
         AfterUpdateGameTriggerHelper.generateGamesOrFinishTournament(games, games);
+        
+        t = [SELECT Id, Name, Format__c, Type__c, Status__c FROM Tournament__c WHERE Id = :t.Id];
         
         System.assertEquals(3, games.size());
         System.assertEquals('Current', t.Status__c);
@@ -104,6 +116,9 @@ public with sharing class AfterUpdateGameTriggerHelper_TEST {
         ids = new List<string>();
         ids.add(p0.Id);
         ids.add(p1.Id);
+        
+        insert (t1);
+        insert (t2);
         
         RoundRobin.RoundRobinTournament(t2, ids);
         
