@@ -88,6 +88,7 @@ html {
                 </div>        
                     </div>
                                 <div style="float:left; margin-top:50px;">
+                     <apex:pageBlock rendered="{!currentPlayer == null || player.Id != currentPlayer.Id}" mode="maindetail"></apex:pageBlock>
                      <c:TeamInvitations player="{!player}" rendered="{!currentPlayer != null && player.Id == currentPlayer.Id}"/>  
                      </div>
                      </div>
