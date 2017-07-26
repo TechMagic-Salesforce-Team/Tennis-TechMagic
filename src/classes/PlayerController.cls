@@ -64,7 +64,8 @@ public with sharing class PlayerController extends PlayerCookie{
     
     public PageReference sendEmail(){
         if (codesOfException.size()==0){
-            MailSender.sendEmail(player.Email__c,'asdasdas fucking workng','https://techmagic-table-tenis-developer-edition.eu11.force.com/code?=');
+            String REDIRECT_URL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/ConfirmRegistration?confirmPlayer='+player.Id;
+            MailSender.sendEmail(player.Email__c,'Confirmation your account',REDIRECT_URL);
             return Page.Home;
         } else {
                 for (String code: codesOfException){
@@ -76,12 +77,17 @@ public with sharing class PlayerController extends PlayerCookie{
         }
     
     public PageReference login(){
-        List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: player.Email__c limit 1];
+        List<Player__c> players = [select Id,Password__c,Status__c from Player__c where Email__c =: player.Email__c limit 1];
         if (players != null && players.size()>0){
             if (players.get(0).Password__c==player.Password__c) {
-                Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
-                ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
+                if (players.get(0).Status__c=='Active'){
+                    Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
+                    ApexPages.currentPage().setCookies(new Cookie[]{playerFromCookie});
                 return Page.Home;
+                } else {
+                    ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'You did not confirm account, please check your email to complete registration'));
+                    return null;
+                  } 
             } else {
                  ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'Wrong password'));
                  return null; 
