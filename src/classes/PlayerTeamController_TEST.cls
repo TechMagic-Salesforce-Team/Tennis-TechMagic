@@ -67,6 +67,8 @@ public with sharing class PlayerTeamController_TEST {
         ptc.team.Name = 'qqq';
         ptc.selectedPlayer = p1.Id;
         
+        Test.setMock(HttpCalloutMock.class,new MailSenderMock_Test());
+        
         System.assertEquals(Page.Tournaments.getUrl(), ptc.create().getUrl());
         
         System.assertEquals(1, ptc.playersOptions.size());

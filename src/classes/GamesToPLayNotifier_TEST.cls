@@ -10,6 +10,9 @@ public with sharing class GamesToPLayNotifier_TEST {
     public static Player__c p3 = new Player__c(Email__c = '3vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
     
     public static testMethod void testGamesToPLayNotifierScheduler() {
+        
+        Test.setMock(HttpCalloutMock.class,new MailSenderMock_Test());
+        
         insert (t);
         insert (t1);
         insert (t2);
