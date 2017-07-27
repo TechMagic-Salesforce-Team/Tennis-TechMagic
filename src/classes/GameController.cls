@@ -6,6 +6,8 @@ public with sharing class GameController extends PlayerCookie{
     public Tournament__c tournament {get;set;}
     public  PlayerTeam__c playersFromTeam {get;set;}
     public Game__c gameForConfirm{get;set;}
+    public String FirstCompetitor{get;set;}
+    public String SecondCompetitor{get;set;} 
     public GameController(){
         String player;
         currentGame  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
@@ -33,7 +35,8 @@ public with sharing class GameController extends PlayerCookie{
                     if(playersFromTeam.Team__c == currentGame.FirstCompetitor__c || playersFromTeam.Team__c == currentGame.SecondCompetitor__c)
                         existInCurrentGame = true;
         }
-       
+       FirstCompetitor = getNameById(currentGame.FirstCompetitor__c);
+       SecondCompetitor = getNameById(currentGame.SecondCompetitor__c);
     }
     
     public PageReference insertScore(){
@@ -83,5 +86,10 @@ public with sharing class GameController extends PlayerCookie{
             player = playersFromTeam.Team__c;
             return player;
         }
+    }
+    
+    private String getNameById(String id){
+        Map<String,String> newMap = Helper.getIdAndNameMap(tournament);
+        return newMap.get(id);
     }
 }
