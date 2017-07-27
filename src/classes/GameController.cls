@@ -5,6 +5,7 @@ public with sharing class GameController extends PlayerCookie{
     public Game__c currentGame {get; set;}
     public Tournament__c tournament {get;set;}
     public  PlayerTeam__c playersFromTeam {get;set;}
+    public Game__c gameForConfirm{get;set;}
     public GameController(){
         String player;
         currentGame  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
@@ -18,7 +19,7 @@ public with sharing class GameController extends PlayerCookie{
                       from tournament__c 
                       where id = :currentGame.Tournament__c];
         
-         
+        gameForConfirm = currentGame;
         System.debug(currentGame);
         currentPlayer = getCurrentPlayer();
         if((tournament.Format__c == '1 x 1') &&
@@ -51,13 +52,24 @@ public with sharing class GameController extends PlayerCookie{
     
     public PageReference submitScore(){
         String player = getTeamOrPlayer();
-            if(currentGame.FirstCompetitorAccept__c && player == currentGame.SecondCompetitor__c){
-                currentGame.SecondCompetitorAccept__c = true; 
+        Game__c previousGame = [select Id,FirstCompetitorScore__c,SecondCompetitorScore__c from Game__c where Id=:currentGame.Id limit 1];
+        System.debug('Previous game: '+previousGame);
+        System.debug('Current game: '+currentGame);
+        
+        if(currentGame.FirstCompetitorAccept__c && player == currentGame.SecondCompetitor__c){
+                gameForConfirm.SecondCompetitorAccept__c = true; 
             }else if(currentGame.SecondCompetitorAccept__c && player == currentGame.FirstCompetitor__c){
-                currentGame.FirstCompetitorAccept__c = true;
+                gameForConfirm.FirstCompetitorAccept__c = true;
             }
-            if(currentGame !=null)
-            update currentGame;
+        if (previousGame.FirstCompetitorScore__c==currentGame.FirstCompetitorScore__c && 
+            previousGame.SecondCompetitorScore__c == currentGame.SecondCompetitorScore__c){
+            update gameForConfirm;
+        } else {
+            ApexPages.addMessage(new ApexPages.message(ApexPages.severity.FATAL,'Submit btn is only to submit existing score. To change result of current game, please click InputScore button'));
+            return null;
+        }
+        
+        
         return Page.Home;
     }
     
@@ -72,6 +84,3 @@ public with sharing class GameController extends PlayerCookie{
             return player;
         }
     }
-}
-
- 

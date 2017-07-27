@@ -18,6 +18,21 @@
          .tournamentFields {
              font-size: 17px;
          }
+         .pdfLinkLikeButton:link, .pdfLinkLikeButton:visited{
+            background-color: white;
+            color: black;
+            border: 2px solid #cc1e1e;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            border-radius : 15%;
+            transition-duration: 0.7s;  
+         }
+         .pdfLinkLikeButton:hover{
+            background-color: #cc1e1e;
+            color: white;
+         }
     </style>
     
     <apex:attribute type="Tournament__c" name="tournament" assignTo="{!currentTournament}" required="true" description="Value to pass into the controller"/>
@@ -28,15 +43,14 @@
                 <apex:outputLabel value="Format {!currentTournament.Format__c}" styleClass="tournamentFields" />
                 <apex:outputLabel value="Type {!currentTournament.Type__c}" styleClass="tournamentFields" />
                 <apex:outputLabel value="Date {!currentTournament.StartDate__c}" styleClass="tournamentFields" />
-                
+                <apex:outputLink target="_blank" styleClass="pdfLinkLikeButton" value="TournamentPDF?id={!currentTournament.Id}">Save as pdf</apex:outputLink>
                 <!-- <apex:outputField  value="{!currentTournament.Name}"/>
                 <apex:outputField value="{!currentTournament.Status__c}"/>
                 <apex:outputField value="{!currentTournament.Format__c}"/>
                 <apex:outputField value="{!currentTournament.Type__c}"/>
                 <apex:outputField value="{!currentTournament.StartDate__c}" />-->
                 <p style = "clear:left;"/>
-    </apex:pageBlockSection>    
-
+    </apex:pageBlockSection>
     <c:SingleElimination componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Single Elimination' && currentTournament.Status__c!='Upcoming'}"/>
     <c:DoubleEliminationTournament componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Double Elimination' && currentTournament.Status__c!='Upcoming'}"/>
     <c:RoundRobin componentTournament="{!currentTournament}" rendered="{!currentTournament.Type__c=='Round Robin' && currentTournament.Status__c!='Upcoming'}"/>
