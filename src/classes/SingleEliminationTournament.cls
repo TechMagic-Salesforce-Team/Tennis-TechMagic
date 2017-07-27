@@ -14,15 +14,16 @@ public with sharing class SingleEliminationTournament{
 
     public List<List<Game__c>> representSingleEliminationGrid{
         get{
-            if(representSingleEliminationGrid == null) return generateSingleEliminationStageGrid(oneTournament);
+            if(representSingleEliminationGrid == null && oneTournament !=null) return generateSingleEliminationStageGrid(oneTournament);
+            if(representSingleEliminationGrid == null && oneTournament ==null) return new List<List<Game__c>>();
             return representSingleEliminationGrid;
         }
         set;
     }
     public Integer countOfStageOneTournament{
         get{
-            if(representSingleEliminationGrid.size() < 3 && representSingleEliminationGrid.size()>1)countOfStageOneTournament = 2;
-            else if(representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
+            if(representSingleEliminationGrid !=null && representSingleEliminationGrid.size() == 2)countOfStageOneTournament = 2;
+            else if(representSingleEliminationGrid !=null &&  representSingleEliminationGrid.size()<=1){countOfStageOneTournament = 3;}
             else{countOfStageOneTournament = 1;}
             return countOfStageOneTournament;
         }
@@ -33,7 +34,7 @@ public with sharing class SingleEliminationTournament{
             if(representSingleEliminationGrid !=null){
                 for(List<Game__c> x : representSingleEliminationGrid){
                     for(Game__c thisGame : x){
-                        if(!thisGame.WinningGroup__c) return true;
+                        if(!thisGame.WinningGroup__c && thisGame!=null) return true;
                     }
                 }     
             }return false;
@@ -107,16 +108,16 @@ public with sharing class SingleEliminationTournament{
         } 
     }
     public List<List<Game__c>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
-        if(currentTournament.id != null && currentTournament.Type__c !=null && currentTournament.Type__c =='Single Elimination'){
+        if(currentTournament != null && currentTournament.Type__c =='Single Elimination'){
             Integer i = 0; //Stage count
             List<List<Game__c>> thisGames = new List<List<Game__c>>();
             
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
                     SecondCompetitorScore__c, Stage__c, Tournament__c 
-                    From Game__c Where Tournament__C = :currentTournament.Id];
+                    From Game__c Where Tournament__c = :currentTournament.Id];
             List<Game__c> firstRoundGames = new List<Game__c>();
             for(Game__c x : gamesForCurrentTournament){
-                if(x.Stage__c ==1){
+                if(x.Stage__c ==1 ){
                     firstRoundGames.add(x);
                 }   
             }
