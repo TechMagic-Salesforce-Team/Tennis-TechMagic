@@ -1,7 +1,7 @@
-<apex:page controller='GameController' cache='false' showheader='false' tabStyle="Tournament__c" >
+<apex:page controller="GameController" cache="false" showheader="false" tabStyle="Tournament__c" >
     <c:Header />  
-        <apex:pageMessages/>      
-            <apex:form>
+        <apex:pageMessages />      
+            <apex:form >
                 <apex:pageBlock title="Score" rendered="{!existInCurrentGame}">
                    <h5>{!FirstCompetitor}</h5>
                         <apex:inputField value="{!currentGame.FirstCompetitorScore__c}"/>
