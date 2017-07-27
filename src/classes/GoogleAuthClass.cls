@@ -130,7 +130,7 @@ public class PlayerAccessToken {
             player.Name = playerFromGoogleApiJSON.name;
             player.Email__c = playerFromGoogleApiJSON.email;
             player.Password__c = '12345678';
-            player.Status__c = 'Not Active';
+            player.Status__c = 'Active';
             try {
                 insert player;
                 Cookie playerFromCookie = new Cookie('PlayerFromCookie', player.Id, null, 1440, false);
