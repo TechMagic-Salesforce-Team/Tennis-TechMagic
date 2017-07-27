@@ -4,7 +4,7 @@ public with sharing class GameController extends PlayerCookie{
     public Player__c currentPlayer {get; set;}
     public Game__c currentGame {get; set;}
     public Tournament__c tournament {get;set;}
-    public  PlayerTeam__c playersFromTeam {get;set;}
+    public PlayerTeam__c playersFromTeam {get;set;}
     public Game__c gameForConfirm{get;set;}
     public String FirstCompetitor{get;set;}
     public String SecondCompetitor{get;set;} 
@@ -88,7 +88,7 @@ public with sharing class GameController extends PlayerCookie{
         }
     }
     
-    private String getNameById(String id){
+    public String getNameById(String id){
         Map<String,String> newMap = Helper.getIdAndNameMap(tournament);
         return newMap.get(id);
     }
