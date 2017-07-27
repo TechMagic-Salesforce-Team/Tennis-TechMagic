@@ -76,11 +76,11 @@ public with sharing class RoundRobin {
                                     }
     }
                                     if (g.firstCompetitor__c == Ids[j] && g.secondCompetitor__c == Ids[i]) {
-        if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
+                                         if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
                                             Integer firstCompetitorScore = (Integer)g.FirstCompetitorScore__c;
                                             Integer secondCompetitorScore = (Integer)g.SecondCompetitorScore__c;
-                                            String color = firstCompetitorScore>secondCompetitorScore?'green':'red';   
-                                            row.add(new GameJSON(g.Id,color,'',''+g.FirstCompetitorScore__c));
+                                            String color = secondCompetitorScore>firstCompetitorScore?'green':'red';   
+                                            row.add(new GameJSON(g.Id,color,'',''+g.SecondCompetitorScore__c));
                                         } else {
                                             row.add(new GameJSON(''+g.Id,'FFA03A','','0'));
                                         }
