@@ -52,7 +52,65 @@ public with sharing class SingleEliminationTournamentTest{
          SingleEliminationTournament.StartSingleEliminationTournament(myIds, t2);
          gamesCount = [Select COUNT() From Game__c];
          System.assertEquals(44,gamesCount);
-          
+         delete [SELECT ID FROM Game__c]; 
+         
+         //Test size which will have pageblocktable single elimination tournament 
+         Player__c myPlayer10 = new Player__c(Name = 'MyName' , Password__c ='zxcvczzxc' , Email__c = 'www10@gmail.com');
+         Player__c myPlayer11 = new Player__c(Name = 'MyName' , Password__c ='zxcvczzxc' , Email__c = 'www11@gmail.com');
+         insert myPlayer10;
+         insert myPlayer11;
+         //without games, countOfStageOneTournament don't throw any exceptions 
+         System.assertNotEquals(null,thisSET.countOfStageOneTournament); 
+         SingleEliminationTournament thisSET2Games = new SingleEliminationTournament();
+         
+         //tournament will have only one stage, if countOfStageOneTournament = 3 than table will have only 33% width
+         Tournament__c t4 = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'MyTournament4');
+         insert t4;
+         Game__c game1 = new Game__c(FirstCompetitor__c = myPlayer10.Id, SecondCompetitor__c = myPlayer11.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = t4.id, WinningGroup__c = true); 
+         insert game1;
+         
+         //tournament will have 2 stage, if countOfStageOneTournament = 2 than table will have only 50% width
+         Tournament__c t5 = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'MyTournament5');
+         insert t5;
+         Game__c game2 = new Game__c(FirstCompetitor__c = myPlayer10.Id, SecondCompetitor__c = myPlayer11.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = t5.id, WinningGroup__c = true); 
+         Game__c game3 = new Game__c(FirstCompetitor__c = myPlayer11.Id, SecondCompetitor__c = myPlayer10.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = t5.id, WinningGroup__c = true); 
+         insert game2;
+         insert game3;
+         SingleEliminationTournament thisTestCount = new SingleEliminationTournament();
+         thisTestCount.representSingleEliminationGrid = thisTestCount.generateSingleEliminationStageGrid(t5);
+         System.assertEquals(2,thisTestCount.countOfStageOneTournament);
+         
+         thisTestCount.representSingleEliminationGrid = null;
+         //tournament will have 3+ stages, if countOfStageOneTournament = 1 than table will have 100% width
+         Tournament__c tournamentTestCountOfStage = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'tournamentTestCountOfStage');
+         insert tournamentTestCountOfStage;
+         Game__c gameTest1 = new Game__c(FirstCompetitor__c = myPlayer10.Id, SecondCompetitor__c = myPlayer11.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = tournamentTestCountOfStage.id, WinningGroup__c = true); 
+         Game__c gameTest2 = new Game__c(FirstCompetitor__c = myPlayer11.Id, SecondCompetitor__c = myPlayer10.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = tournamentTestCountOfStage.id, WinningGroup__c = true); 
+         Game__c gameTest3 = new Game__c(FirstCompetitor__c = myPlayer10.Id, SecondCompetitor__c = myPlayer11.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = tournamentTestCountOfStage.id, WinningGroup__c = true); 
+         Game__c gameTest4 = new Game__c(FirstCompetitor__c = myPlayer11.Id, SecondCompetitor__c = myPlayer10.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = tournamentTestCountOfStage.id, WinningGroup__c = true); 
+         insert gameTest1;
+         insert gameTest2;
+         insert gameTest3;
+         insert gameTest4;
+         thisTestCount.representSingleEliminationGrid = thisTestCount.generateSingleEliminationStageGrid(tournamentTestCountOfStage);
+         System.assertEquals(1,thisTestCount.countOfStageOneTournament);
+       
+         //Test loserGroupGame in List<List<Game__c>>()
+         delete [SELECT ID FROM Game__c]; 
+         Player__c myPlayer1 = new Player__c(Name = 'MyName' , Password__c ='zxcvczzxc' , Email__c = 'www1@gmail.com');
+         Player__c myPlayer2 = new Player__c(Name = 'MyName' , Password__c ='zxcvczzxc' , Email__c = 'www2@gmail.com');
+         insert myPlayer1;
+         insert myPlayer2;
+         Game__c gameTestLoserGroup1 = new Game__c(FirstCompetitor__c = myPlayer1.Id, SecondCompetitor__c = myPlayer2.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = t.id, WinningGroup__c = true); 
+         Game__c gameTestLoserGroup2 = new Game__c(FirstCompetitor__c = myPlayer2.Id, SecondCompetitor__c = myPlayer1.Id, FirstCompetitorScore__c = 0, SecondCompetitorScore__c = 0, Stage__c = 1, Tournament__c = t.id, WinningGroup__c = false); 
+         insert gameTestLoserGroup1;
+         insert gameTestLoserGroup2;
+         System.assertEquals(false,thisSET.isLoserGroupGame); 
+         thisSET.representSingleEliminationGrid = thisSET.generateSingleEliminationStageGrid(t);
+         thisSET.representSingleEliminationGrid.get(0).add(gameTestLoserGroup1);
+         thisSET.representSingleEliminationGrid.get(0).add(gameTestLoserGroup2);
+         System.assertEquals(true,thisSET.isLoserGroupGame); 
+
      } 
      
      public static testMethod void generateSingleEliminationStageGridTest(){
@@ -89,7 +147,10 @@ public with sharing class SingleEliminationTournamentTest{
          System.assertEquals(t.id,thisSet.oneTournament.id);
          thisListListGames = thisSET.generateSingleEliminationStageGrid(t);
          thisSET.representSingleEliminationGrid = thisSET.generateSingleEliminationStageGrid(thisSET.oneTournament);
+         if(thisSET.oneTournament == null) throw new NullPointerException(); 
+         if(thisSET.representSingleEliminationGrid.size() == 0){throw new NullPointerException();}
          System.assertEquals(3, thisListListGames.size());
+         System.assertEquals(thisSET.generateSingleEliminationStageGrid(thisSET.oneTournament).size(), thisListListGames.size());
          System.assertEquals(thisSET.representSingleEliminationGrid.size(), thisListListGames.size());
          Integer countGames = 0;
          for(List<Game__c> eachListGame : thisSET.representSingleEliminationGrid){
