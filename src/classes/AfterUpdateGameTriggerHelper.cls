@@ -20,7 +20,7 @@ public with sharing class AfterUpdateGameTriggerHelper {
                 if (pSs.size() > 1) {
                     PlayerStatistics__c pS0 = pSs[0];
                     PlayerStatistics__c pS1 = pSs[1];
-                    if (pS0.Id == game.FirstCompetitor__c) {
+                    if (pS0.Player__c == game.FirstCompetitor__c) {
                         pS0.CountLostGames__c = game.FirstCompetitorScore__c < game.SecondCompetitorScore__c ? pS0.CountLostGames__c + 1 : pS0.CountLostGames__c;
                         pS0.CountWonGames__c = game.FirstCompetitorScore__c > game.SecondCompetitorScore__c ? pS0.CountWonGames__c + 1 : pS0.CountWonGames__c;
                         pS0.CountLostSets__c = pS0.CountLostSets__c + game.SecondCompetitorScore__c;
