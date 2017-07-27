@@ -1,17 +1,18 @@
-<apex:page controller="GameController" cache="false">
-   <apex:form >
-     <apex:pageMessages />      
-     <apex:pageBlock title="Score" rendered="{!existInCurrentGame}">
-                <apex:inputField value="{!currentGame.FirstCompetitorScore__c}"/>
-                <apex:inputField value="{!currentGame.SecondCompetitorScore__c}"/>
-            <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Input Score" action="{!insertScore}"/>
-                <apex:commandButton value="Submit Score" action="{!submitScore}"/>
-            </apex:pageBlockButtons>
-     </apex:pageBlock>
-   <apex:pageBlock title="Score" rendered="{!!existInCurrentGame}">
-                <apex:outputField value="{!currentGame.FirstCompetitorScore__c}"/>
-                <apex:outputField value="{!currentGame.SecondCompetitorScore__c}"/>
-   </apex:pageBlock> 
-   </apex:form>
-</apex:page>
+<apex:page controller='GameController' cache='false' showheader='false' tabStyle="Tournament__c" >
+    <c:Header />  
+        <apex:pageMessages/>      
+            <apex:form>
+                <apex:pageBlock title="Score" rendered="{!existInCurrentGame}">
+                    <h3>First Player Score:</h3><apex:inputField value="{!currentGame.FirstCompetitorScore__c}"/>
+                    <h3>First Player Score:</h3><apex:inputField value="{!currentGame.SecondCompetitorScore__c}"/>
+                <apex:pageBlockButtons location="bottom">
+                 <apex:commandButton value="Input Score" action="{!insertScore}"/>
+                 <apex:commandButton value="Submit Score" action="{!submitScore}"/>
+              </apex:pageBlockButtons>
+       </apex:pageBlock>
+     <apex:pageBlock title="Score" rendered="{!!existInCurrentGame}">
+              <h>you don't have access to this game</h>
+    </apex:pageBlock> 
+    </apex:form>
+    <c:Footer />
+ </apex:page>
