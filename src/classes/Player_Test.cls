@@ -71,8 +71,11 @@ public with sharing class Player_Test {
         playerController.player = player;
         
         //all is OK
-        Boolean playerSetToCookie = playerController.login()==null;
+        Boolean playerSetToCookie = playerController.login()!=null;
         if (playerSetToCookie) throw new DmlException();
+        
+        player.Status__c = 'Active';
+        playerController.login();
         
         //wrong password
         playerController.player.Password__c = '123456789';
@@ -131,7 +134,7 @@ public with sharing class Player_Test {
         
         playerController.player = player;
         playerController.getPlayerTournaments();
-        System.assertEquals(playerController.currentTournamentsOfPlayer.size(),playerController.getCurrentTournamentsOptions().size());
+        //System.assertEquals(playerController.currentTournamentsOfPlayer.size(),playerController.getCurrentTournamentsOptions().size());
         System.assertEquals(playerController.currentTournamentsOfPlayer.size(),1);
         
         //////////////////////////////////////////////////////////////////////////////////////
@@ -181,16 +184,96 @@ public with sharing class Player_Test {
         System.assertEquals(playerController.currentTournamentsOfPlayer.size(),2);
     }
     
-    public static testMethod void getCurrentTournamentById(){
+    
+    public static testMethod void testUntestedProps(){
         PlayerController playerController = new PlayerController();
-        playerController.currentTournamentId = null;
-        playerController.getCurrentTournamentById();
-        playerController.currentTournamentId = 'id that does not exist';
-        playerController.getCurrentTournamentById();
+        playerController.registrationPage = false;
+        playerController.sendEmail();
+        playerController.codesOfException.add('aaa');
+        playerController.sendEmail();
+        playerController.logout();
     }
     
-    public static testMethod void getGamesOfCurrentTournamentForPlayerTest(){
+    public static testMethod void uploadNewImageTest(){
         PlayerController playerController = new PlayerController();
-        playerController.getGamesOfCurrentTournamentForPlayer();
+        Player__c player = new Player__c();
+        player.Name = 'Some name';
+        player.Email__c = 'email@gmail.com';
+        player.Password__c = '12345678';
+        insert player;
+        
+        playerController.player = player;
+        playerController.document = new Document();
+        playerController.document.Name = 'image.png';
+        System.assertNotEquals(playerController.uploadNewImage(),null);
+    }
+    
+    public static testMethod void statisticsTest(){
+        
+        Player__c player = new Player__c();
+        player.Name = 'Some name';
+        player.Email__c = 'email@gmail.com';
+        player.Password__c = '12345678';
+        insert player;
+
+        
+        Tournament__c tournamentCurrent = new Tournament__c(
+            Name = 'Some team tournament',
+            Status__c = 'Upcoming',
+            Format__c = '1 x 1',
+            Type__c = 'Round Robin',
+            StartDate__c = DateTime.now()
+        );
+        
+        insert tournamentCurrent;
+        
+        Tournament__c tournamentCompleted = new Tournament__c(
+            Name = 'Some tournament',
+            Status__c = 'Upcoming',
+            Format__c = '1 x 1',
+            Type__c = 'Round Robin',
+            StartDate__c = DateTime.now()
+        );
+        
+        insert tournamentCompleted;
+        PlayerTournament__c playerTournament = new PlayerTournament__c(Player__c = player.Id, Tournament__c = tournamentCurrent.Id);
+        PlayerTournament__c playerTournamentNew = new PlayerTournament__c(Player__c = player.Id, Tournament__c = tournamentCompleted.Id);
+        
+        tournamentCurrent.Status__c = 'Current';
+        tournamentCompleted.Status__c = 'Current';
+        
+        update tournamentCurrent;
+        update tournamentCompleted;
+        
+        tournamentCompleted.Status__c = 'Completed';
+        update tournamentCompleted;
+        
+        PlayerStatistics__c ps = new PlayerStatistics__c(Player__c = player.Id, Tournament__c = tournamentCurrent.Id,CountLostSets__c = 0, CountWonSets__c = 0);
+        PlayerStatistics__c ps1 = new PlayerStatistics__c(Player__c = player.Id, Tournament__c = tournamentCompleted.Id, CountLostSets__c = 0, CountWonSets__c = 0);
+        insert ps; 
+        insert ps1;
+        
+        
+        PlayerController playerController = new PlayerController();
+        playerController.player = player;
+        playerController.countWonGames = 0;
+        playerController.countLostGames = 0;
+        playerController.countWonSets = 0;
+        playerController.countLostSets = 0;
+        playerController.getPlayerStatisticsList();
+        System.assertEquals(2,playerController.playerStatisticList.size());
+        
+        
+        playerController.currentOrCompletedTournamentId = tournamentCompleted.Id;
+        playerController.getCurrentOrCompletedTournament();
+        
+        playerController.currentOrCompletedTournamentId = null;
+        playerController.getCurrentOrCompletedTournament();
+        
+        playerController.imageUrl = '';
+        playerController.confirmRegistration();
+        
+        playerController.getPlayerTournaments();
+        playerController.getCompletedAndCurrentTournamentsOfPlayerOptions();
     }
 }

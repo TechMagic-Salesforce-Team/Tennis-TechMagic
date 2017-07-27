@@ -8,11 +8,11 @@
                 <apex:pageBlockButtons location="bottom">
                  <apex:commandButton value="Input Score" action="{!insertScore}"/>
                  <apex:commandButton value="Submit Score" action="{!submitScore}"/>
-              </apex:pageBlockButtons>
-       </apex:pageBlock>
-     <apex:pageBlock title="Score" rendered="{!!existInCurrentGame}">
-              <h>you don't have access to this game</h>
-    </apex:pageBlock> 
-    </apex:form>
-    <c:Footer />
- </apex:page>
+            </apex:pageBlockButtons>
+     </apex:pageBlock>
+   <apex:pageBlock title="Score" rendered="{!!existInCurrentGame}">
+                        <h>you don't have access to this game</h>
+   </apex:pageBlock> 
+   </apex:form>
+   <c:Footer />
+</apex:page>
