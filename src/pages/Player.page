@@ -120,9 +120,7 @@ html {
         
         <c:TournamentsSearch player="{!player}"/>
         
-        <apex:form >
-            <apex:actionFunction name="setFirstOptionSelected" action="{!getCurrentTournamentById}" rerender="currentTournamentSelected"/>    
-        </apex:form>        
+              
         
         
         

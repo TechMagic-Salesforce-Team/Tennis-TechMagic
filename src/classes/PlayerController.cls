@@ -9,9 +9,7 @@ public with sharing class PlayerController extends PlayerCookie{
     public List<Tournament__c> tournamentsOfPlayer {get;set;}
     public List<Tournament__c> currentTournamentsOfPlayer {get;set;}
     public List<Game__c> gamesOfCurrentPlayerInSelectedTournament {get;set;}
-    public Tournament__c currentTournament {get;set;}
     public Tournament__c currentOrCompleteTournament {get;set;}
-    public String currentTournamentId {get;set;}
     public String currentOrCompletedTournamentId {get;set;}
     public Document document {get;set;}
     public String imageUrl {get;set;}
@@ -31,6 +29,7 @@ public with sharing class PlayerController extends PlayerCookie{
     public PlayerController(){
         playerCookieIsCurrentPlayer = false;
         findPlayer();
+        codesOfException = new List<String>();
     }
     
     
@@ -68,8 +67,12 @@ public with sharing class PlayerController extends PlayerCookie{
     
     public PageReference sendEmail(){
         if (codesOfException.size()==0){
+            try {
             String REDIRECT_URL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0]+'/ConfirmRegistration?confirmPlayer='+player.Id;
             MailSender.sendEmail(player.Email__c,'Confirmation your account',REDIRECT_URL);
+            } catch (Exception ex){
+                System.debug('exception');
+            }
             return Page.Home;
         } else {
                 for (String code: codesOfException){
@@ -156,7 +159,7 @@ public with sharing class PlayerController extends PlayerCookie{
          }
         return options;
     }
-    
+    /*
     public List<SelectOption> getCurrentTournamentsOptions() {
  	 List<SelectOption> options = formOptionsByTournament(currentTournamentsOfPlayer);
         
@@ -166,6 +169,7 @@ public with sharing class PlayerController extends PlayerCookie{
         
  	 return options;
     }
+    */
     
    
     public PageReference getCurrentOrCompletedTournament(){
@@ -196,6 +200,7 @@ public with sharing class PlayerController extends PlayerCookie{
         return formOptionsByTournament(completedAndCurrentTournamentsOfPlayer);
     }
     
+    /*
     public PageReference getCurrentTournamentById(){
         if (currentTournamentId==null) return null;
         List<Tournament__c> tournaments = [select Id,Name,Status__c,Format__c,Type__c from Tournament__c where Id =: currentTournamentId limit 1];
@@ -212,6 +217,8 @@ public with sharing class PlayerController extends PlayerCookie{
         SecondCompetitor__c =: player.Id)
         ];
     }
+    */
+    
     
     public void findPlayer(){
         Map<String,String> apexPageParams = new Map<String,String>();
@@ -237,11 +244,10 @@ public with sharing class PlayerController extends PlayerCookie{
                     playerCookieIsCurrentPlayer = currentPlayer.Id==player.Id;
             } else playerCookieIsCurrentPlayer = false;
             countWonGames = 0; countLostGames = 0;
-            playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c, CountLostSets__c, CountWonSets__c from PlayerStatistics__c where Player__c=:player.Id];
-            for (PlayerStatistics__c ps: playerStatisticList){
-                countWonGames+=(Integer)ps.CountWonGames__c;
-                countLostGames+=(Integer)ps.CountLostGames__c;
-            }
+            
+            
+            
+            getPlayerStatisticsList();
             
             //AggregateResult[] aggregateResultTotal  = 
                 //[select Tournament__c, sum(CountWonGames__c) sumCwg, sum(CountLostGames__c) sumClg from PlayerStatistics__c where Player__c='a000Y00000DqZlu' group by Tournament__c];
@@ -251,8 +257,23 @@ public with sharing class PlayerController extends PlayerCookie{
        } 
     }
     
+    public void getPlayerStatisticsList(){
+        playerStatisticList = [select Tournament__c, CountWonGames__c, CountLostGames__c, CountLostSets__c, CountWonSets__c from PlayerStatistics__c where Player__c=:player.Id];
+            for (PlayerStatistics__c ps: playerStatisticList){
+                countWonGames+=(Integer)ps.CountWonGames__c;
+                countLostGames+=(Integer)ps.CountLostGames__c;
+            }
+    }
+    
     public PageReference uploadNewImage(){
-        Folder folder = [select Id,Name from Folder where name = 'Folder' limit 1];
+        Folder folder;
+        try {
+            folder = [select Id,Name from Folder where name = 'Folder' limit 1];
+        } catch (Exception ex){
+            ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR,'No folder with name Folder'));
+            return null;
+        }
+        
         document.FolderId = folder.Id;
         document.AuthorId = UserInfo.getUserId();
         insert document;    

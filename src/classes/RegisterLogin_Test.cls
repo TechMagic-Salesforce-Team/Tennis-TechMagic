@@ -70,7 +70,7 @@ public with sharing class RegisterLogin_Test {
         playerController.player = player;
         
         //all is OK
-        Boolean playerSetToCookie = playerController.login()==null;
+        Boolean playerSetToCookie = playerController.login()!=null;
         if (playerSetToCookie) throw new DmlException();
         
         //wrong password

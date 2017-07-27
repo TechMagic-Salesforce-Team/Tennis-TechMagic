@@ -110,9 +110,8 @@
             </div>
              
         </div>  
-    </div>
-    
-     <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px; position:relative;">
+        
+         <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px; position:relative;">
                 <div style="width:30%; height:30%; float:left; margin-left: 1%;">
                 <a href='Tournaments'>
                 <img src="{!URLFOR($Resource.SiteSamples,
@@ -148,7 +147,10 @@
                 <p id = "text">YOUR PROFILE</p>
                 </div>
                 
-     </div>   
+     </div>  
+    </div>
+    
+     
     <script>
 var id1 = 1;
 var elements = $('.mySlides');

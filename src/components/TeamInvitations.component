@@ -10,7 +10,12 @@
                          <div style='width:200px;'></div>
         </apex:pageBlockSection>
         
-        <apex:pageBlockSection rendered="{!teamInvitations != null && teamInvitations.size > 0}">
+        
+        <apex:pageBlockSection rendered="{!((teamInvitations == null || teamInvitations.size != 0) && currentPlayer2.Id != currentPlayer.Id)}">
+                         <div style='width:200px;'></div>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection rendered="{!teamInvitations != null && teamInvitations.size > 0 && currentPlayer2.Id == currentPlayer.Id}">
             <apex:form >
                 <apex:pageBlockTable value="{!teamInvitations}" var="oneTeamInvitation">
                     <apex:column value="{!oneTeamInvitation.tournamentName}" headerValue="Tournament name"/>
@@ -34,4 +39,9 @@
             </apex:form>
         </apex:pageBlockSection>
     </apex:pageBlock></div>
+    
+        <script>
+            //alert('{!currentPlayer2.Id}'+'...'+'{!currentPlayer.Id}');
+        
+        </script>
 </apex:component>
