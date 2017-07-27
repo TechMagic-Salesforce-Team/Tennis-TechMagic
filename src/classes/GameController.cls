@@ -21,11 +21,11 @@ public with sharing class GameController extends PlayerCookie{
          
         System.debug(currentGame);
         currentPlayer = getCurrentPlayer();
-        if((tournament.Format__c == '1 X 1') &&
+        if((tournament.Format__c == '1 x 1') &&
             ((currentPlayer.id == currentGame.FirstCompetitor__c)||(currentPlayer.id == currentGame.SecondCompetitor__c))&&
             (!currentGame.FirstCompetitorAccept__c||!currentGame.SecondCompetitorAccept__c)){
                 existInCurrentGame = true;
-        } else if(tournament.Format__c == '2 X 2'){
+        } else if(tournament.Format__c == '2 x 2'){
                             playersFromTeam = [Select Player__c,Team__c 
                                    from PlayerTeam__c 
                                    where (Player__c =:currentPlayer.id and (Team__c = :currentGame.FirstCompetitor__c OR Team__c = :currentGame.SecondCompetitor__c))];
@@ -63,7 +63,7 @@ public with sharing class GameController extends PlayerCookie{
     
     private String getTeamOrPlayer(){
         String player;
-        if(tournament.Format__c == '1 X 1'){
+        if(tournament.Format__c == '1 x 1'){
             player = currentPlayer.id;
             return player;
         }
