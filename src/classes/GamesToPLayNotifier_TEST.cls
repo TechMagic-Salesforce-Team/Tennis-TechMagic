@@ -70,9 +70,11 @@ public with sharing class GamesToPLayNotifier_TEST {
         
         gtpn.execute(null);
         
+
         Test.startTest();
         
         //System.assertEquals(null, GamesToPLayNotifier.emailsCnt);
+
         
         Test.stopTest();
         
