@@ -29,12 +29,12 @@ public with sharing virtual class TournamentController extends PlayerCookie{
                 sendNotification(emails);
             }
             try{
-        	System.schedule('Start tournament', '0 9 * * * ?', new TournamentStarter());
+        	System.schedule('Start tournament', '0 30 * * * ?', new TournamentStarter());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
             try{
-        	System.schedule('Notify players about games to play', '0 10 * * * ?', new GamesToPLayNotifier());
+        	System.schedule('Notify players about games to play', '0 31 * * * ?', new GamesToPLayNotifier());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
