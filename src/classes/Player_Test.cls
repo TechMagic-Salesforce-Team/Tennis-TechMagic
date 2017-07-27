@@ -275,5 +275,14 @@ public with sharing class Player_Test {
         
         playerController.getPlayerTournaments();
         playerController.getCompletedAndCurrentTournamentsOfPlayerOptions();
+        
+        Test.setCurrentPageReference(new PageReference('Page.Player')); 
+        System.currentPageReference().getParameters().put('pageType', 'login');
+        playerController = new PlayerController();
+        System.currentPageReference().getParameters().put('pageType', 'registration');
+        playerController = new PlayerController();
+        Test.setCurrentPageReference(new PageReference('Page.Player'));
+        System.currentPageReference().getParameters().put('playerId', player.Id);
+        playerController = new PlayerController();
     }
 }

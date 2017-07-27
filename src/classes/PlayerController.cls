@@ -222,8 +222,9 @@ public with sharing class PlayerController extends PlayerCookie{
     
     public void findPlayer(){
         Map<String,String> apexPageParams = new Map<String,String>();
-        apexPageParams.put('pageType',ApexPages.currentPage().getParameters().get('pageType'));
         apexPageParams.put('playerId',ApexPages.currentPage().getParameters().get('playerId'));
+        apexPageParams.put('pageType',ApexPages.currentPage().getParameters().get('pageType'));
+        
         
         if (apexPageParams.get('pageType')!=null){
             String pageType = apexPageParams.get('pageType');
@@ -235,11 +236,12 @@ public with sharing class PlayerController extends PlayerCookie{
             registrationPage = false;
           }
        } else if (apexPageParams.get('playerId')!=null){
-            document = new Document();
+            System.debug('player');
+            String someStr = 'aaa';
             String idPlayer = apexPageParams.get('playerId');
             player = [select Id,Name,Email__c,Password__c,Image__c from Player__c where Id=:idPlayer limit 1];
             imageUrl = ''+player.Image__c;
-            
+            document = new Document();
             if (isLoggedIn){
                     playerCookieIsCurrentPlayer = currentPlayer.Id==player.Id;
             } else playerCookieIsCurrentPlayer = false;
