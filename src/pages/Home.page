@@ -76,10 +76,7 @@
     </style>
             <script>var id;</script>
     
-    
-    
-    
-    
+ 
     <c:Header />
     <div style="float:left; width:100%;">
         <div class="w3-content w3-section" style="padding:0px; margin:0px;" id = "mainDiv" >
