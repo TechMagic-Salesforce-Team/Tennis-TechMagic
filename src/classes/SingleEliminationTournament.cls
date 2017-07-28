@@ -1,4 +1,4 @@
-public with sharing class SingleEliminationTournament{
+public with sharing class SingleEliminationTournament implements ISingleEliminationTournament{
     public Integer ijz{get{return 1;}set;}
     public Tournament__c oneTournament{get;set;}
     public Map<String, String> competitorsName{
