@@ -1,8 +1,89 @@
 <apex:page standardStylesheets="true" controller="TournamentController" cache="false" showHeader="false">
-    <c:Header />  
-    <apex:pageBlock rendered="{!isManager}">
-        <apex:outputLink value="apex/CreateTournament" id="theLink">New tournament</apex:outputLink>
-    </apex:pageBlock>
-    <c:TournamentsSearch />
-    <c:Footer />  
+<script src="jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<head>
+<style>
+.container {
+    position: relative;
+    width: 10%;
+}
+
+.image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+}
+
+.container:hover .image {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  background-color: #333;
+  color: white;
+  font-size: 16px;
+  padding: 16px 32px;
+}
+.text:hover{
+    cursor: pointer;
+}
+.bPageBlock{
+  background-color: yellow;  
+}
+</style>
+</head>
+
+<c:Header />
+
+
+
+<apex:pageBlock rendered="{!isManager}">
+<div class="container">
+  <img src="http://guyanachronicle.com/wp-content/uploads/2013/11/table_tennis.jpg" alt="Avatar" class="image" style="width:100%"/>
+  <div class="middle">
+                                <div class="text" onclick="newTournament()">Create tournament</div>
+  </div>
+</div>
+</apex:pageBlock>
+ <c:TournamentsSearch />
+<c:Footer /> 
+
+        <script>
+        
+            function newTournament(){
+                var hostname;
+                    var url = window.location.href;
+
+                    if (url.indexOf("://") > -1) {
+                            hostname = url.split('/')[2];
+                        }
+                            else {
+                        hostname = url.split('/')[0];
+                    }
+                    //find & remove port number
+                     hostname = hostname.split(':')[0];
+                     //find & remove "?"
+                     hostname = hostname.split('?')[0];
+                     hostname = '/apex/createTournament';
+                     $(location).attr('href', hostname)
+        }
+        </script>
+
 </apex:page>
