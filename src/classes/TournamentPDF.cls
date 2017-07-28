@@ -25,7 +25,10 @@ public with sharing class TournamentPDF extends TournamentController{
     } 
     
     private List<String> getFinalResultForSingleEliminationTournament(Tournament__c currentTournament){
-    
+        if(currentTournament !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Status__c == 'Complete'){
+            List<Game__c> allGamesForCurrentTournament = [Select Id, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, SecondCompetitorScore__c From Game__c Where Tournament__c = :currentTournament.Id];
+            
+        }else{return new List<String>();}
         return null;    
     
     }
