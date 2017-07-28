@@ -1,2 +1,3 @@
-public with sharing  class Game{ 
+public with sharing  class Game{
+
 }

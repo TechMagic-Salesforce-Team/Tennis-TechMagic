@@ -22,5 +22,12 @@ public with sharing class TournamentPDF extends TournamentController{
             }
         }
         myURL = (''+URL.getSalesforceBaseUrl()).split('=')[1].split(']')[0];
-    }        
+    } 
+    
+    private List<String> getFinalResultForSingleEliminationTournament(Tournament__c currentTournament){
+    
+        return null;    
+    
+    }
+           
 }
