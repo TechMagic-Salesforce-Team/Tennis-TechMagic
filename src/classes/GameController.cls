@@ -1,7 +1,6 @@
 public with sharing class GameController extends PlayerCookie{
       
     public boolean existInCurrentGame {get;set;}
-    public Player__c currentPlayer {get; set;}
     public Game__c currentGame {get; set;}
     public Tournament__c tournament {get;set;}
     public PlayerTeam__c playersFromTeam {get;set;}
@@ -9,7 +8,6 @@ public with sharing class GameController extends PlayerCookie{
     public String FirstCompetitor{get;set;}
     public String SecondCompetitor{get;set;} 
     public GameController(){
-        String player;
         currentGame  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
                         SecondCompetitor__c, SecondCompetitorScore__c, SecondCompetitorAccept__c,
                         Tournament__c
@@ -23,15 +21,19 @@ public with sharing class GameController extends PlayerCookie{
         
         gameForConfirm = currentGame;
         System.debug(currentGame);
-        currentPlayer = getCurrentPlayer();
         if((tournament.Format__c == '1 x 1') &&
             ((currentPlayer.id == currentGame.FirstCompetitor__c)||(currentPlayer.id == currentGame.SecondCompetitor__c))&&
             (!currentGame.FirstCompetitorAccept__c||!currentGame.SecondCompetitorAccept__c)){
                 existInCurrentGame = true;
-        } else if(tournament.Format__c == '2 x 2'){
-                            playersFromTeam = [Select Player__c,Team__c 
+        } else if(tournament.Format__c == '2 x 2' && (!currentGame.FirstCompetitorAccept__c||!currentGame.SecondCompetitorAccept__c)){
+            try{
+                playersFromTeam = [Select Player__c,Team__c 
                                    from PlayerTeam__c 
-                                   where (Player__c =:currentPlayer.id and (Team__c = :currentGame.FirstCompetitor__c OR Team__c = :currentGame.SecondCompetitor__c))];
+                                   where (Player__c =:currentPlayer.id and (Team__c = :currentGame.FirstCompetitor__c OR Team__c = :currentGame.SecondCompetitor__c)) limit 1];    
+            }catch(Exception e){
+                return;
+            }
+                
                     if(playersFromTeam.Team__c == currentGame.FirstCompetitor__c || playersFromTeam.Team__c == currentGame.SecondCompetitor__c)
                         existInCurrentGame = true;
         }
@@ -89,7 +91,9 @@ public with sharing class GameController extends PlayerCookie{
     }
     
     public String getNameById(String id){
+        System.debug('fp1');
         Map<String,String> newMap = Helper.getIdAndNameMap(tournament);
+        System.debug('fp1' + newMap.size());
         return newMap.get(id);
     }
 }
