@@ -159,8 +159,7 @@ public with sharing class SingleEliminationTournament{
                 Id freeSlot;
                 If(currentTournament.Format__c == '1 x 1'){ 
                     freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
-                }
-                else{ 
+                } else{ 
                     freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
                 }                    
                 for(Integer round=0; round<=competitorsWinnersId.size()-1;round +=2){
@@ -249,7 +248,5 @@ public with sharing class SingleEliminationTournament{
             catch(DMLException e){}
          
         }
-    }
-        
-    
+    }  
 }
