@@ -13,7 +13,7 @@
                  <apex:commandButton rendered="{!isHoverCommandButton}" value="Resubmit Score" action="{!insertScore}"/>
             </apex:pageBlockButtons>
      </apex:pageBlock>
-   <apex:pageBlock title="Score" rendered="{!!existInCurrentGame}">
+   <apex:pageBlock title="Score" rendered="{!!isExistInCurrentGame}">
                         <h>you don't have access to this game</h> 
    </apex:pageBlock> 
    </apex:form>
