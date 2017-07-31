@@ -24,7 +24,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
             if (playersOptions == null) {
                 playersOptions = new List<SelectOption>();
                 List<Team__c> teams = [SELECT Name, (SELECT Player__c FROM PlayerTeams__r)
-                FROM Team__c WHERE Tournament__c = :tournamentId];
+                FROM Team__c WHERE Tournament__c = :tournamentId and IsComplete__c=true];
                 for (Player__c p: players) {
                     SelectOption selectOption;
                     for (Team__c t: teams) {
