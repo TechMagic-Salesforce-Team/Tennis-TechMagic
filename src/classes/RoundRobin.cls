@@ -26,6 +26,7 @@ public with sharing class RoundRobin{
         insert currentTournamentGames;
     }
      public List<List<GameJSON>> RoundRobinGrid(Tournament__c myTournament) {
+        Integer count = 0;
         Player__c currentPlayer = null;
         Boolean isLoggedIn = ApexPages.currentPage().getCookies().get('PlayerFromCookie')!=null;
         if (isLoggedIn) {
@@ -45,8 +46,8 @@ public with sharing class RoundRobin{
         System.debug(Ids.size()+'size');
         List<GameJSON> firstRow = new List<GameJSON>();
         firstRow.add(new GameJSON('','black','',''));
-        
-     
+        Map<Id,Team__c> teams = new Map<Id,Team__c>([select Id,Name,(select Player__c from PlayerTeams__r) from Team__c where Tournament__c=:myTournament.Id]);
+        Map<Id,Player__c> players = new Map<Id,Player__c>([select Id,Name from Player__c]);
         Id idPlayerOrTeamThatRelatedToPlayerFromCookie;
         if (isLoggedIn) {
            if (myTournament.Format__c == '1 x 1'){
@@ -59,10 +60,17 @@ public with sharing class RoundRobin{
         } 
         for (String id : Ids) {
             GameJSON gamejs = new GameJSON('','FFFFFF',idNameMap.get(id),'');
+            gamejs.idGameJSONUnique = 'id_'+count;
+            if (myTournament.Format__c!='1 x 1'){
+                gamejs.playerId = id;
+                gamejs.player1OfTeam = players.get(teams.get(id).PlayerTeams__r.get(0).Player__c).Name;
+                gamejs.player2OfTeam = players.get(teams.get(id).PlayerTeams__r.get(1).Player__c).Name;
+            }
             if (isLoggedIn && id==idPlayerOrTeamThatRelatedToPlayerFromCookie){
                 gamejs.fontColor = '#FF69B4';
             } else gamejs.fontColor = 'black';
             firstRow.add(gamejs);
+            count++;
         }
         
         //System.debug('idPlayerOrTeamThatRelatedToPlayerFromCookie '+idPlayerOrTeamThatRelatedToPlayerFromCookie+',currentplayer: '+currentPlayer.Id);
@@ -70,6 +78,13 @@ public with sharing class RoundRobin{
         for (Integer i = 0; i < Ids.size(); i++) {       
                    List<GameJSON> row = new List<GameJSON>();
                    GameJSON gamejs = new GameJSON('','FFFFFF',idNameMap.get(Ids[i]),'');
+                   gamejs.idGameJSONUnique = 'id_'+count;
+                   if (myTournament.Format__c!='1 x 1'){
+                        gamejs.playerId = Ids[i];
+                        gamejs.player1OfTeam = players.get(teams.get(Ids[i]).PlayerTeams__r.get(0).Player__c).Name;
+                        gamejs.player2OfTeam = players.get(teams.get(Ids[i]).PlayerTeams__r.get(1).Player__c).Name;
+                   }
+                   
                    if (isLoggedIn && Ids[i]==idPlayerOrTeamThatRelatedToPlayerFromCookie){ 
                     gamejs.fontColor = '#FF69B4';
                    } else gamejs.fontColor = 'black';
@@ -103,6 +118,7 @@ public with sharing class RoundRobin{
                                  } 
                          }
                   result.add(row);
+                  count++;
                }
 
                return result;
