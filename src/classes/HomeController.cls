@@ -66,6 +66,7 @@ public with sharing class HomeController extends PlayerCookie{
         set;
     }
     public HomeController(){
+        System.debug('home ctrl');
          tournamentsInProgress = getAllTournamentsInProgress();
          tournamentBySelectOption = tournamentsInProgress.get(0);
          tournamentsInProgressSize = tournamentsInProgress.size();

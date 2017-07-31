@@ -6,7 +6,8 @@
      <apex:repeat value="{!roundRobinMatrix}" var="row"> 
       <tr>
        <apex:repeat value="{!row}" var="column" id="myTable">
-                                        <td height='120' width='180' bgColor = '{!column.color}'><a href='{!column.hrefTo}' style='text-decoration: none;'>{!column.playerName} {!column.score}</a></td> 
+                    <td height='120' width='180' bgColor = '{!column.color}'><a href='{!column.hrefTo}' style='text-decoration: none;'>
+                            <font style="color: {!column.fontColor}">{!column.playerName}</font> {!column.score}</a></td> 
        </apex:repeat>
       </tr>
      </apex:repeat>
