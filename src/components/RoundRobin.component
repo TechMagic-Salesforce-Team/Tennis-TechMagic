@@ -1,14 +1,31 @@
 <apex:component controller="RoundRobin">
 <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!tournament}" description="need to give this tournament for good work" required="true"/>
-        <table align="center">
-        <!--<tr><th width='200'>Players</th><th width = '300'>Games</th>
-                        <th width = '100'>Total points</th></tr>-->
+     <table align="center">
      <apex:repeat value="{!roundRobinMatrix}" var="row"> 
       <tr>
        <apex:repeat value="{!row}" var="column" id="myTable">
-                                        <td height='120' width='180' bgColor = '{!column.color}'><a href='{!column.hrefTo}' style='text-decoration: none;'>{!column.playerName} {!column.score}</a></td> 
+                    <td id='id_{!column.playerId}' height='120' width='180' bgColor = '{!column.color}' 
+                    onmouseover="showTeamPlayers('id_{!column.idGameJSONUnique}','{!column.playerName}','{!column.player1OfTeam}','{!column.player2OfTeam}',true)"
+                    onmouseout="showTeamPlayers('id_{!column.idGameJSONUnique}','{!column.playerName}','{!column.player1OfTeam}','{!column.player2OfTeam}',false)">
+                        <a href='{!column.hrefTo}' style='text-decoration: none;'>
+                        <font id='font_id_{!column.idGameJSONUnique}' style="color: {!column.fontColor}">{!column.playerName}</font> {!column.score} {!column.firstCompetitorId}
+                        </a>
+                    </td> 
        </apex:repeat>
       </tr>
      </apex:repeat>
-        </table>
+     </table>
+        
+    <script>
+        function showTeamPlayers(id,teamName,firstPlayerName,secondPlayerName,overTrue){
+            var format2x2 = "{!tournament.Format__c=='2 x 2'}";
+            if (format2x2=='true'){
+            if (overTrue){
+            document.getElementById('font_'+id).innerHTML=''+firstPlayerName+', '+secondPlayerName;
+        } else {
+             document.getElementById('font_'+id).innerHTML=''+teamName;
+           }
+          }
+        }
+    </script>
 </apex:component>
