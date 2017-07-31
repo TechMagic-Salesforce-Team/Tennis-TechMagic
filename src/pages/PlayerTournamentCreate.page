@@ -1,0 +1,10 @@
+<apex:page controller="PlayerTournamentController" action="{!apply}" showHeader="false" cache="false">
+  <c:Header />
+  <apex:pageBlock rendered="{!isAlreadyApplied}">
+  	
+  </apex:pageBlock>
+  <apex:pageBlock rendered="{!!isAlreadyApplied}">
+  	
+  </apex:pageBlock>
+  <c:Footer />
+</apex:page>

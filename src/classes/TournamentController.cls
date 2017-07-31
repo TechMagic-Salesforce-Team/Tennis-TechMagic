@@ -21,20 +21,22 @@ public with sharing virtual class TournamentController extends PlayerCookie{
             currentTournament.Status__c = 'Upcoming';
             upsert(currentTournament);
             if (isNewTournament) {
-                List<Player__c> playersForEmails = [SELECT Email__c FROM Player__c WHERE Status__c = 'Active'];
+                List<Player__c> playersForEmails = [SELECT Id, Email__c FROM Player__c WHERE Status__c = 'Active'];
+                List<String> ids = new List<String>();
                 List<String> emails = new List<String>();
                 for (Player__c p : playersForEmails) {
+                    ids.add(p.Id);
                     emails.add(p.Email__c);
                 }
-                sendNotification(emails);
+                sendNotification(ids, emails, currentTournament.Id, currentTournament.Name, currentTournament.Type__c, currentTournament.Format__c);
             }
             try{
-        	System.schedule('Start tournament', '0 30 * * * ?', new TournamentStarter());
+        	   //System.schedule('Start tournament', '0 07 * * * ?', new TournamentStarter());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
             try{
-        	System.schedule('Notify players about games to play', '0 31 * * * ?', new GamesToPLayNotifier());
+        	   //System.schedule('Notify players about games to play', '0 10 * * * ?', new GamesToPLayNotifier());
             } catch(Exception ex) {
                 System.debug('An exception occured while creating new schedule(if it exists)');  
             }
@@ -46,9 +48,15 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     }
     
     @future(callout=true)
-    private static void sendNotification(List<String> emails) {
-        for (String email : emails){
-            MailSender.sendEmail(email,'New Tournament','You can apply for a new tournament which has been created!');
+    private static void sendNotification(List<String> ids, List<String> emails, String currentTournamentId, String currentTournamentName, String currentTournamentType, String currentTournamentFormat) {
+        String text = 'You can apply for a new tournament ' + currentTournamentName + '! The type of the tournament is '+ currentTournamentType 
+        + ', and the format is ' + currentTournamentFormat + '.\n';
+        for (Integer i = 0; i < ids.size(); i++){
+            MailSender.sendEmail(emails[i], 'New Tournament', 
+                currentTournamentFormat == '1 x 1' ? 
+                    (text + 'Follow the link to apply: https://techmagic-my-tennis-developer-edition.eu11.force.com/PlayerTournamentCreate?tp='
+                        + currentTournamentId + ids[i])
+                    : text);
         }
     }
     
