@@ -1,12 +1,13 @@
 public with sharing class GameController extends PlayerCookie{
       
-    public boolean existInCurrentGame {get;set;}
+    public boolean isExistInCurrentGame {get;set;} 
     public Game__c currentGame {get; set;}
     public Tournament__c tournament {get;set;}
     public PlayerTeam__c playersFromTeam {get;set;}
     public Game__c gameForConfirm{get;set;}
     public String FirstCompetitor{get;set;}
     public String SecondCompetitor{get;set;} 
+    public boolean isHoverCommandButton {get;set;}
     public GameController(){
         currentGame  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
                         SecondCompetitor__c, SecondCompetitorScore__c, SecondCompetitorAccept__c,
@@ -21,10 +22,12 @@ public with sharing class GameController extends PlayerCookie{
         
         gameForConfirm = currentGame;
         System.debug(currentGame);
+        if(currentGame.FirstCompetitor__c == '?' || currentGame.SecondCompetitor__c == '?') return;
+        if(currentGame.FirstCompetitorAccept__c || currentGame.SecondCompetitorAccept__c) isHoverCommandButton = true;
         if((tournament.Format__c == '1 x 1') &&
             ((currentPlayer.id == currentGame.FirstCompetitor__c)||(currentPlayer.id == currentGame.SecondCompetitor__c))&&
             (!currentGame.FirstCompetitorAccept__c||!currentGame.SecondCompetitorAccept__c)){
-                existInCurrentGame = true;
+                isExistInCurrentGame = true;
         } else if(tournament.Format__c == '2 x 2' && (!currentGame.FirstCompetitorAccept__c||!currentGame.SecondCompetitorAccept__c)){
             try{
                 playersFromTeam = [Select Player__c,Team__c 
@@ -34,8 +37,8 @@ public with sharing class GameController extends PlayerCookie{
                 return;
             }
                 
-                    if(playersFromTeam.Team__c == currentGame.FirstCompetitor__c || playersFromTeam.Team__c == currentGame.SecondCompetitor__c)
-                        existInCurrentGame = true;
+                    if((playersFromTeam.Team__c == currentGame.FirstCompetitor__c || playersFromTeam.Team__c == currentGame.SecondCompetitor__c))
+                        isExistInCurrentGame = true;
         }
        FirstCompetitor = getNameById(currentGame.FirstCompetitor__c);
        SecondCompetitor = getNameById(currentGame.SecondCompetitor__c);
@@ -50,7 +53,15 @@ public with sharing class GameController extends PlayerCookie{
            currentGame.FirstCompetitorAccept__c = false;
            currentGame.SecondCompetitorAccept__c = true; 
         }
-        update currentGame; 
+        if(((currentGame.FirstCompetitorScore__c > currentGame.SecondCompetitorScore__c)||(currentGame.FirstCompetitorScore__c < currentGame.SecondCompetitorScore__c))&&
+        ((currentGame.FirstCompetitorScore__c >= 0)&&(currentGame.FirstCompetitorScore__c >= 0))&&
+        (currentGame.FirstCompetitorScore__c !=currentGame.SecondCompetitorScore__c)){
+            update currentGame; 
+        }
+        else {
+            ApexPages.addMessage(new ApexPages.message(ApexPages.severity.FATAL,'Wrong score. Pls input correct score!'));
+            return null;
+        }
         return Page.Home;
     }
     
