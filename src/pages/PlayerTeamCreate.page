@@ -1,4 +1,4 @@
-<apex:page controller="PlayerTeamController" action="{!validatePageVisitor}">
+<apex:page controller="PlayerTeamController" action="{!validatePageVisitor}" cache="false">
     <apex:form >
         <apex:pageBlock mode="edit">
             <apex:pageMessages />
@@ -14,4 +14,5 @@
             </apex:pageBlockButtons>
         </apex:pageBlock>
     </apex:form>
+    
 </apex:page>
