@@ -35,7 +35,12 @@
                 <apex:column value="{!t.tournament.Type__c}"/>
                 <apex:column value="{!t.tournament.Format__c}"/>
                 <apex:column value="{!t.tournament.StartDate__c}"/>
-                <apex:column value="{!t.tournament.Status__c}"/>
+                <apex:column headerValue="Status">
+                    <apex:outputText value="{!t.tournament.Status__c}" rendered="{!isManager && t.tournament.Status__c != 'Upcoming' || !isManager}"/>
+                    <apex:commandButton value="Start" action="{!start}" rendered="{!isManager && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>
                 <apex:column headerValue="View">
                     <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable" rendered="{!!t.isShowed}">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>

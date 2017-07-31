@@ -64,6 +64,15 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     }
     
     public PageReference create() {
+        List<Team__c> teamsToCheck = [SELECT Id FROM Team__c WHERE Tournament__c = :tournamentId AND IsComplete__c = true
+            AND Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerId OR Player__c = :selectedPlayer)];
+        
+        if (teamsToCheck.size() > 0) {
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING, 
+                    'Either you or your partner is already applied'));
+            return null;
+        }
+        
         // create team;
         team.Tournament__c = tournamentId;
         try {

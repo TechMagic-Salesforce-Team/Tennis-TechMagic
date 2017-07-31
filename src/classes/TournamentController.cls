@@ -14,7 +14,6 @@ public with sharing virtual class TournamentController extends PlayerCookie{
         currentTournament = new Tournament__c();
     }
     
-    
     public PageReference save() {
         try {
             boolean isNewTournament = currentTournament.Id == null;
@@ -74,25 +73,31 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     
     public PageReference apply() {
         Tournament__c thisTournament = findById();
-        if (thisTournament != null) {
+        if (thisTournament != null && thisTournament.Status__c == 'Upcoming') {
             if (thisTournament.Format__c == '2 x 2') {
                 Pagereference pageRef = Page.PlayerTeamCreate;
                 pageRef.getParameters().put('tournamentId', currentTournamentId);
                 return pageRef;
             } else {
-                PlayerTournament__c pT = new PlayerTournament__c(Player__c = getCurrentPlayer().Id, Tournament__c = currentTournamentId);
-                try {
-                    insert (pT);
-                    for (TournamentWrapper tW : allTournaments) {
-                        if (tW.tournament.Id == currentTournamentId) {
-                            tW.isApplied = true;
-                            break;
+                String pId = getCurrentPlayer().Id;
+                List<PlayerTournament__c> playerTournaments = [SELECT Id FROM PlayerTournament__c 
+                        WHERE Player__c = :pId AND Tournament__c = :currentTournamentId];
+                if (playerTournaments.size() == 0) {
+                    PlayerTournament__c pT = new PlayerTournament__c(Player__c = pId, Tournament__c = currentTournamentId);
+                    try {
+                        insert (pT);
+                        for (TournamentWrapper tW : allTournaments) {
+                            if (tW.tournament.Id == currentTournamentId) {
+                                tW.isApplied = true;
+                                break;
+                            }
                         }
+                    } catch (System.DmlException e) {
+                        System.debug(e);
+                        ApexPages.addMessages(e);
                     }
-                } catch (System.DmlException e) {
-                    System.debug(e);
-                    ApexPages.addMessages(e);
                 }
+                search();
             }
         }
         return null;
@@ -100,9 +105,10 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     
     public void disapply() {
         Tournament__c thisTournament = findById();
-        if (thisTournament != null) {
+        if (thisTournament != null && thisTournament.Status__c == 'Upcoming') {
             if (thisTournament.Format__c == '2 x 2') {
-                List<Team__c> teamsToDelete = [SELECT Id FROM Team__c WHERE Tournament__c = :currentTournamentId AND 
+                List<Team__c> teamsToDelete = [SELECT Id, Name, (SELECT Player__c FROM PlayerTeams__r WHERE Player__c != :getCurrentPlayer().Id)
+                    FROM Team__c WHERE Tournament__c = :currentTournamentId AND IsComplete__c = true AND
                     Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :getCurrentPlayer().Id)];
                 try {
                     delete (teamsToDelete);
@@ -111,6 +117,11 @@ public with sharing virtual class TournamentController extends PlayerCookie{
                             tW.isApplied = false;
                             break;
                         }
+                    }
+                    if (teamsToDelete.size() > 0) {
+                        List<PlayerTeam__c> playerTeams = teamsToDelete[0].PlayerTeams__r;
+                        Player__c player = [SELECT Email__c FROM Player__c WHERE Id = :playerTeams[0].Player__c];
+                        sendDissapplyNotification(player.Email__c, thisTournament.Name, teamsToDelete[0].Name);
                     }
                 } catch (System.DmlException e) {
                     System.debug(e);
@@ -131,6 +142,21 @@ public with sharing virtual class TournamentController extends PlayerCookie{
                     ApexPages.addMessages(e);
                 }
             }
+        }
+    }
+    
+    @future(callout=true)
+    private static void sendDissapplyNotification(String email, String currentTournamentName, String currentTeamName) {
+        String text = 'The team ' + currentTeamName + ' taking part in the tournament ' + currentTournamentName + ' has been deleted by your team partner.';
+        MailSender.sendEmail(email, 'Team deletion', text);
+    }
+    
+    public void start() {
+        Tournament__c tournamentToStart = findById();
+        if (tournamentToStart != null && tournamentToStart.Status__c == 'Upcoming') {
+            TournamentStarter tStarter = new TournamentStarter();
+            tStarter.start(tournamentToStart);
+            search();
         }
     }
     
