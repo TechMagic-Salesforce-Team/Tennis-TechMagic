@@ -23,6 +23,7 @@
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
                 <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
+                <apex:commandButton value="New tournament" action="{!create}" rendered="{!isManager}"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
