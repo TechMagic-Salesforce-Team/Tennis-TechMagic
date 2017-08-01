@@ -12,7 +12,6 @@
                  <apex:commandButton rendered="{!!isHoverCommandButton}" value="Input Score" action="{!insertScore}"/>
             </apex:pageBlockButtons>
      </apex:pageBlock>
-     
      <apex:pageBlock title="Score" rendered="{!isExistInCurrentGame && isHoverCommandButton}">
                    <h5>{!FirstCompetitor}</h5><br/>
                         <apex:outputField value="{!currentGame.FirstCompetitorScore__c}"/>: 
@@ -23,7 +22,6 @@
                  <apex:commandButton rendered="{!isHoverCommandButton}" value="Resubmit Score" action="{!changeStatic}"/>
             </apex:pageBlockButtons>
      </apex:pageBlock>
-
    <apex:pageBlock title="Score" rendered="{!!isExistInCurrentGame}">
                         <h>you don't have access to this game</h> 
    </apex:pageBlock> 
