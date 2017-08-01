@@ -103,26 +103,27 @@ public with sharing class DoubleEliminationTournament {
                         gamejs.firstCompetitorColor = g.FirstCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
                         gamejs.secondCompetitorColor = g.SecondCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
                         gamejs.winningGroup = g.WinningGroup__c; gamejs.stage = g.Stage__c.intValue();
+                        gamejs.editable = gamejs.firstCompetitorId==playerOrTeamRelatedToPlayerFromCookie||gamejs.secondCompetitorId==playerOrTeamRelatedToPlayerFromCookie;
                         
-                        
+                    
                         if (currentTournament.Format__c=='1 x 1'){
                             if (gamejs.firstCompetitorId!='?'){
                             Player__c player = (Player__c) teamsOrPlayers.get(gamejs.firstCompetitorId);
                             gamejs.firstCompetitorName = player.Name;
-                          }
+                          } else gamejs.firstCompetitorName='?';
                         if (gamejs.secondCompetitorId!='?'){
                             Player__c player = (Player__c) teamsOrPlayers.get(gamejs.secondCompetitorId);
                             gamejs.secondCompetitorName = player.Name;
-                            }
+                            } else gamejs.secondCompetitorName='?';
                         } else {
                         if (gamejs.firstCompetitorId!='?'){
                             Team__c team = (Team__c) teamsOrPlayers.get(gamejs.firstCompetitorId);
                             gamejs.firstCompetitorName = team.Name;
-                            }
+                            } else gamejs.firstCompetitorName='?';
                         if (gamejs.secondCompetitorId!='?'){
                             Team__c team = (Team__c) teamsOrPlayers.get(gamejs.secondCompetitorId);
                             gamejs.secondCompetitorName = team.Name;
-                        }
+                        } else gamejs.secondCompetitorName='?';
                         }
                         
                                      //******too many sql queries (101)****//
