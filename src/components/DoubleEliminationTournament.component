@@ -33,18 +33,19 @@
                 </apex:column>
             </apex:repeat>
         </apex:pageBlockTable>-->
-        
-        
-        
-        
-         <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1"> 
+         <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1" id="myTable1"> 
             <apex:repeat value="{!representDoubleEliminationGridJSON}" var="thisRows">
                 <apex:column width="{!100/representDoubleEliminationGridJSON.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
                         <apex:pageBlock rendered="{!thisGame.winningGroup= true}"><center>
-                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}({!thisGame.firstCompetitorScore})</p> <br/><br/>
-                            <apex:outputLink styleClass="thisLinks" value="Game?id={!thisGame.gameId}">VS</apex:outputLink><br/><br/> 
-                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}({!thisGame.secondCompetitorScore})</p>
+                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}</p> 
+                            <apex:outputLink rendered="{!thisGame.editable}"  styleClass="thisLinks" value="Game?id={!thisGame.gameId}">
+                                {!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}
+                            </apex:outputLink>
+                            <apex:outputLink rendered="{!!thisGame.editable}"  styleClass="thisLinksNotEditable" value="#myTable1">
+                                {!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}
+                            </apex:outputLink>    
+                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}</p>
                             </center>
                         </apex:pageBlock>   
                     </apex:repeat>
@@ -52,22 +53,24 @@
             </apex:repeat>
         </apex:pageBlockTable>
         
-        <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1"> 
+        <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1" id="myTable2"> 
             <apex:repeat value="{!representDoubleEliminationGridJSON}" var="thisRows">
                 <apex:column width="{!100/representDoubleEliminationGridJSON.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
                         <apex:pageBlock rendered="{!thisGame.winningGroup= false}"><center>
-                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}({!thisGame.firstCompetitorScore})</p> <br/><br/>
-                            <apex:outputLink styleClass="thisLinks" value="Game?id={!thisGame.gameId}">VS</apex:outputLink><br/><br/> 
-                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}({!thisGame.secondCompetitorScore})</p>
+                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}</p>
+                            <apex:outputLink rendered="{!thisGame.editable}" styleClass="thisLinks" value="Game?id={!thisGame.gameId}">
+                                {!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}
+                            </apex:outputLink>
+                            <apex:outputLink rendered="{!!thisGame.editable}"  styleClass="thisLinksNotEditable" value="#myTable2">
+                                {!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}
+                            </apex:outputLink>
+                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}</p>
                             </center>
                         </apex:pageBlock>   
                     </apex:repeat>
                 </apex:column>
             </apex:repeat>
-        </apex:pageBlockTable>
-        
-       
+        </apex:pageBlockTable>  
     </apex:pageBlock>
-    
 </apex:component>

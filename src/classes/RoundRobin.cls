@@ -99,19 +99,31 @@ public with sharing class RoundRobin{
                                                  Integer firstCompetitorScore = (Integer)g.FirstCompetitorScore__c;
                                                  Integer secondCompetitorScore = (Integer)g.SecondCompetitorScore__c;
                                                  String color = firstCompetitorScore>secondCompetitorScore?'green':'red';
-                                                 row.add(new GameJSON(g.Id,color,'',''+g.FirstCompetitorScore__c));
-            } else {
-                                                 row.add(new GameJSON(''+g.Id,'FFA03A','','0'));
+                                                 gamejs = new GameJSON(g.Id,color,'',''+g.FirstCompetitorScore__c);
+                                                 gamejs.editable = g.FirstCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie||g.SecondCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie;
+                                                 gamejs.hrefTo = gamejs.editable ? 'game?id='+gamejs.gameId:'#myTable';
+                                                 row.add(gamejs);
+                                            } else {
+                                                 gamejs = new GameJSON(''+g.Id,'FFA03A','','0');
+                                                 gamejs.editable = g.FirstCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie||g.SecondCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie;
+                                                 gamejs.hrefTo = gamejs.editable ? 'game?id='+gamejs.gameId:'#myTable';
+                                                 row.add(gamejs);
                                            }
-           }
+                                        }
                                            if (g.firstCompetitor__c == Ids[j] && g.secondCompetitor__c == Ids[i]) {
                                                 if (g.SecondCompetitorAccept__c && g.FirstCompetitorAccept__c) {
                                                    Integer firstCompetitorScore = (Integer)g.FirstCompetitorScore__c;
                                                    Integer secondCompetitorScore = (Integer)g.SecondCompetitorScore__c;
                                                    String color = secondCompetitorScore>firstCompetitorScore?'green':'red';   
-                                                   row.add(new GameJSON(g.Id,color,'',''+g.SecondCompetitorScore__c));
+                                                   gamejs = new GameJSON(g.Id,color,'',''+g.SecondCompetitorScore__c);
+                                                   gamejs.editable = g.FirstCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie||g.SecondCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie;
+                                                   gamejs.hrefTo = gamejs.editable ? 'game?id='+gamejs.gameId:'#myTable';
+                                                   row.add(gamejs);
                                                } else {
-                                                   row.add(new GameJSON(''+g.Id,'FFA03A','','0'));
+                                                   gamejs = new GameJSON(g.Id,'FFA03A','','0');
+                                                   gamejs.editable = g.FirstCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie||g.SecondCompetitor__c==idPlayerOrTeamThatRelatedToPlayerFromCookie;
+                                                   gamejs.hrefTo = gamejs.editable ? 'game?id='+gamejs.gameId:'#myTable';
+                                                   row.add(gamejs);
                                                }
                                            } 
                                        }

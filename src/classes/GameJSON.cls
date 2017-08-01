@@ -21,12 +21,13 @@ public with sharing class GameJSON {
         public String secondCompetitorColor {get;set;}
         public String firstCompetitorName {get;set;}
         public String secondCompetitorName {get;set;}
+        public Boolean editable {get;set;}
         public GameJSON(){}
         public GameJSON(String gameId1,String color1,String playerName1,String score1){
             gameId = gameId1; color = color1; playerName = playerName1; score = score1;
             if (gameId=='') hrefTo = '#myTable'; 
             else hrefTo = 'game?id='+gameId;
-    }
+        }
 }
 
 
