@@ -7,8 +7,8 @@
                     <td id='id_{!column.playerId}' height='120' width='180' bgColor = '{!column.color}' 
                     onmouseover="showTeamPlayers('id_{!column.idGameJSONUnique}','{!column.playerName}','{!column.player1OfTeam}','{!column.player2OfTeam}',true)"
                     onmouseout="showTeamPlayers('id_{!column.idGameJSONUnique}','{!column.playerName}','{!column.player1OfTeam}','{!column.player2OfTeam}',false)">
-                        <a href='{!column.hrefTo}' style='text-decoration: none;'>
-                        <font id='font_id_{!column.idGameJSONUnique}' style="color: {!column.fontColor}">{!column.playerName}</font> {!column.score} {!column.firstCompetitorId}
+                        <a href='{!column.hrefTo}' style='text-decoration: none; display: block;'>
+                        <font id='font_id_{!column.idGameJSONUnique}' style="color: {!column.fontColor}">{!column.playerName}</font> <span style="display: block; width: 100%; height: 100%; font-size: 40px; vertical-align: middle; margin-left: 40%">{!column.score}</span> {!column.firstCompetitorId}
                         </a>
                     </td> 
        </apex:repeat>
