@@ -52,38 +52,8 @@
 
 <c:Header />
 
-
-
-<apex:pageBlock rendered="{!isManager}">
-<div class="container">
-  <img src="http://guyanachronicle.com/wp-content/uploads/2013/11/table_tennis.jpg" alt="Avatar" class="image" style="width:100%"/>
-  <div class="middle">
-                                <div class="text" onclick="newTournament()">Create tournament</div>
-  </div>
-</div>
-</apex:pageBlock>
  <c:TournamentsSearch />
+ 
 <c:Footer /> 
-
-        <script>
-        
-            function newTournament(){
-                var hostname;
-                    var url = window.location.href;
-
-                    if (url.indexOf("://") > -1) {
-                            hostname = url.split('/')[2];
-                        }
-                            else {
-                        hostname = url.split('/')[0];
-                    }
-                    //find & remove port number
-                     hostname = hostname.split(':')[0];
-                     //find & remove "?"
-                     hostname = hostname.split('?')[0];
-                     hostname = '/apex/createTournament';
-                     $(location).attr('href', hostname)
-        }
-        </script>
 
 </apex:page>

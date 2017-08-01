@@ -5,6 +5,10 @@ public with sharing class TournamentController_TEST {
     public static Tournament__c t = new Tournament__c(Name='qwer', Type__c='Single Elimination', Format__c='1 x 1', StartDate__c=DateTime.now());
     public static Tournament__c t1 = new Tournament__c(Name='qwer', Type__c='', Format__c='1 x 1', StartDate__c=DateTime.now());
 
+    public static testMethod void testCreate() {
+        PageReference pR = tC.create();
+        System.assertEquals(Page.CreateTournament.getUrl(), pR.getUrl());
+    }
     
     public static testMethod void testSave() {
         tC.currentTournament = t;

@@ -14,6 +14,12 @@ public with sharing virtual class TournamentController extends PlayerCookie{
         currentTournament = new Tournament__c();
     }
     
+    public PageReference create() {
+        Pagereference pageRef = Page.CreateTournament;
+        pageRef.setRedirect(true);
+        return pageRef;
+    }
+    
     public PageReference save() {
         try {
             boolean isNewTournament = currentTournament.Id == null;
