@@ -1,7 +1,9 @@
 <apex:component controller="DoubleEliminationTournament">
     <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
     <apex:pageBlock mode="maindetail">
-        <apex:pageBlockTable value="{!ijz}" var="thisStageGames">
+        
+
+    <!--<apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1"> 
             <apex:repeat value="{!representDoubleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representDoubleEliminationGrid.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
@@ -16,7 +18,8 @@
             </apex:repeat>
         </apex:pageBlockTable>
         
-        <apex:pageBlockTable value="{!ijz}" var="thisStageGames">
+       
+        <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="2">
             <apex:repeat value="{!representDoubleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representDoubleEliminationGrid.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
@@ -29,8 +32,42 @@
                     </apex:repeat>
                 </apex:column>
             </apex:repeat>
+        </apex:pageBlockTable>-->
+        
+        
+        
+        
+         <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1"> 
+            <apex:repeat value="{!representDoubleEliminationGridJSON}" var="thisRows">
+                <apex:column width="{!100/representDoubleEliminationGridJSON.size}%">
+                    <apex:repeat value="{!thisRows}" var="thisGame">
+                        <apex:pageBlock rendered="{!thisGame.winningGroup= true}"><center>
+                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}({!thisGame.firstCompetitorScore})</p> <br/><br/>
+                            <apex:outputLink styleClass="thisLinks" value="Game?id={!thisGame.gameId}">VS</apex:outputLink><br/><br/> 
+                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}({!thisGame.secondCompetitorScore})</p>
+                            </center>
+                        </apex:pageBlock>   
+                    </apex:repeat>
+                </apex:column>
+            </apex:repeat>
         </apex:pageBlockTable>
         
+        <apex:pageBlockTable value="{!ijz}" var="thisStageGames" title="1"> 
+            <apex:repeat value="{!representDoubleEliminationGridJSON}" var="thisRows">
+                <apex:column width="{!100/representDoubleEliminationGridJSON.size}%">
+                    <apex:repeat value="{!thisRows}" var="thisGame">
+                        <apex:pageBlock rendered="{!thisGame.winningGroup= false}"><center>
+                                <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}({!thisGame.firstCompetitorScore})</p> <br/><br/>
+                            <apex:outputLink styleClass="thisLinks" value="Game?id={!thisGame.gameId}">VS</apex:outputLink><br/><br/> 
+                                <p style="color: {!thisGame.secondCompetitorColor}">{!thisGame.secondCompetitorName}({!thisGame.secondCompetitorScore})</p>
+                            </center>
+                        </apex:pageBlock>   
+                    </apex:repeat>
+                </apex:column>
+            </apex:repeat>
+        </apex:pageBlockTable>
+        
+       
     </apex:pageBlock>
     
 </apex:component>
