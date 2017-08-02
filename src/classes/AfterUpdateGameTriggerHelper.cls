@@ -108,19 +108,18 @@ public with sharing class AfterUpdateGameTriggerHelper {
                     TournamentController.finish(t);
                 }
             } else if (t.Type__c == 'Single Elimination') {
-                List<Game__c> games = [SELECT Id, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorAccept__c, SecondCompetitorAccept__c, FirstCompetitorScore__c, SecondCompetitorScore__c, Tournament__c, Stage__c
+                List<Game__c> games = [SELECT Id, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorAccept__c, SecondCompetitorAccept__c, FirstCompetitorScore__c, SecondCompetitorScore__c, Tournament__c, Stage__c, Type__c
                     FROM Game__c WHERE Tournament__c = :t.Id AND Stage__c = :game.Stage__c];
+                boolean areFinal = true;
+                for (Game__c g : games) {
+                    areFinal = areFinal && g.Type__c == 'Final';
+                    if (!areFinal) break;
+                }
                 if (checkOneAccept(games)) {
-                    if (games.size() > 2) {
-                        SingleEliminationTournament.createNextSingleEliminationStage(games, t);
+                    if (areFinal) {
+                        TournamentController.finish(t);
                     } else {
-                        List<Game__c> previousGames = [SELECT Id, FirstCompetitorAccept__c, SecondCompetitorAccept__c 
-                            FROM Game__c WHERE Tournament__c = :t.Id AND Stage__c = :(game.Stage__c - 1.0)];
-                        if (previousGames.size() > 2 || previousGames.size() == 0 && games.size() == 2) {
-                            SingleEliminationTournament.createNextSingleEliminationStage(games, t);
-                        } else {
-                            TournamentController.finish(t);
-                        }
+                        SingleEliminationTournament.createNextSingleEliminationStage(games, t);
                     }
                 }
             } else if (t.Type__c == 'Double Elimination') {  
