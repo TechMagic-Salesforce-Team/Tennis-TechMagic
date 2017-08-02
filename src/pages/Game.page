@@ -23,7 +23,7 @@
             </apex:pageBlockButtons>
      </apex:pageBlock>
    <apex:pageBlock title="Score" rendered="{!!isExistInCurrentGame}">
-                        <h>you don't have access to this game</h> 
+                        <h>Wrong Game. Don't touch upl please</h> 
    </apex:pageBlock> 
    </apex:form>
    <c:Footer />

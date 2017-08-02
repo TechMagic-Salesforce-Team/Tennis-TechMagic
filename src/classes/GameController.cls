@@ -14,13 +14,14 @@ public with sharing class GameController extends PlayerCookie{
     public String SecondCompetitor{get;set;} 
     public boolean isHoverCommandButton {get;set;}
     public GameController(){
-        if(currentPlayer ==null) return;
-        currentGame  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
-                        SecondCompetitor__c, SecondCompetitorScore__c, SecondCompetitorAccept__c,
-                        Tournament__c
-                        From Game__c 
-                        Where id =:ApexPages.currentPage().getParameters().get('id')
-                        limit 1];
+        List<Game__c> currentGames  = [Select FirstCompetitor__c, FirstCompetitorScore__c, FirstCompetitorAccept__c,
+                                       SecondCompetitor__c, SecondCompetitorScore__c, SecondCompetitorAccept__c,
+                                       Tournament__c
+                                       From Game__c 
+                                       Where id =:ApexPages.currentPage().getParameters().get('id')
+                                       limit 1];
+        if(currentGames.size() == 0 || currentPlayer ==null) return;
+        currentGame = currentGames.get(0);
         
         tournament = [Select id,Format__c 
                       from tournament__c 
