@@ -71,7 +71,7 @@
                     </apex:commandButton>
                 </apex:column>                
                 <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}" onmousemove="this.style.backgroundColor='white'" onmouseout="this.style.backgroundColor =''">
-                    <apex:pageBlock onmousemove="this.style.backgroundColor=''" onmouseout="this.style.backgroundColor =''">
+                    <apex:pageBlock onmousemove="this.style.backgroundColor='white'" onmouseout="this.style.backgroundColor =''">
                         <c:TournamentInformation tournament="{!t.tournament}"/>
                     </apex:pageBlock>
                 </apex:column>

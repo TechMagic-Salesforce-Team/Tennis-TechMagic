@@ -16,10 +16,10 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     }
 
 
-    public List<List<GameJSON>> representSingleEliminationGrid{
+    public List<List<Game__c>> representSingleEliminationGrid{
         get{
             if(representSingleEliminationGrid == null && oneTournament !=null) return generateSingleEliminationStageGrid(oneTournament);
-            if(representSingleEliminationGrid == null && oneTournament ==null) return new List<List<GameJSON>>();
+            if(representSingleEliminationGrid == null && oneTournament ==null) return new List<List<Game__c>>();
             return representSingleEliminationGrid;
         }
         set;
@@ -36,9 +36,9 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     public boolean isLoserGroupGame{
         get{
             if(representSingleEliminationGrid !=null){
-                for(List<GameJSON> x : representSingleEliminationGrid){
-                    for(GameJSON thisGame : x){
-                        if(!thisGame.winningGroup && thisGame!=null) return true;
+                for(List<Game__c> x : representSingleEliminationGrid){
+                    for(Game__c thisGame : x){
+                        if(!thisGame.WinningGroup__c && thisGame!=null) return true;
                     }
                 }     
             }return false;
@@ -55,7 +55,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             
             if(CompetitorsIds.size() == 2){
                 try{insert new Game__c(FirstCompetitor__c= CompetitorsIds.get(0),SecondCompetitor__c = CompetitorsIds.get(1),FirstCompetitorScore__c = 0,
-                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 1, Type__c = 'Final');}
+                                       SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 1, Type__c = 'Final');}
                 catch(DMLException e){}
                 return;            
             }
@@ -201,62 +201,28 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
         }else{}
     }
     
-    public List<List<GameJSON>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
+    public List<List<Game__c>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
         if(currentTournament != null && currentTournament.Type__c =='Single Elimination'){
-            //List<List<Game__c>> thisGames = new List<List<Game__c>>();
-            List<List<GameJSON>> gameJSONList = new List<List<GameJSON>>();
-            Player__c currentPlayer = null;
-            if (ApexPages.currentPage().getCookies().get('PlayerFromCookie')!=null){
-                Id playerId = ApexPages.currentPage().getCookies().get('PlayerFromCookie').getValue();
-                currentPlayer = currentPlayer = [select Id,Name,Email__c,Password__c,IsManager__c from Player__c where Id = :playerId];
-            }
-            
-            String playerOrTeamRelatedToPlayerFromCookie = null;
-            Map<Id,Sobject> teamsOrPlayers = null;
-            if (currentTournament.Format__c=='1 x 1'){
-                teamsOrPlayers = new Map<Id,Player__c>([select Id,Name from Player__c]);
-                if (currentPlayer!=null) playerOrTeamRelatedToPlayerFromCookie = currentPlayer.Id;
-            } else {
-                teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
-                if (currentPlayer!=null){
-                    for (Team__c team: (List<Team__c>)teamsOrPlayers.Values()){
-                        playerOrTeamRelatedToPlayerFromCookie = 
-                            team.PlayerTeams__r.get(0).Player__c==currentPlayer.Id || team.PlayerTeams__r.get(1).Player__c == currentPlayer.Id?team.Id:null;
-                        if (playerOrTeamRelatedToPlayerFromCookie!=null) break;
-                    }
-                }
-            }
+            List<List<Game__c>> thisGames = new List<List<Game__c>>();
             
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
                     SecondCompetitorScore__c, Stage__c, Tournament__c 
                     From Game__c Where Tournament__c = :currentTournament.Id Order By Stage__c];
             if(gamesForCurrentTournament !=null && !gamesForCurrentTournament.isEmpty()){
                 for(Integer j = 1; j<=gamesForCurrentTournament.get(gamesForCurrentTournament.size()-1).Stage__c.intValue();j++){
-                    List<GameJSON> gameJson = new List<GameJSON>();
+                    List<Game__c> stageLists = new List<Game__c>();
                     for(Game__c x : gamesForCurrentTournament){
-                        if(j == x.Stage__c.intValue()){
-                            //stageLists.add(x);
-                            GameJSON gamejs = new GameJSON();
-                            gamejs.gameId = x.Id; gamejs.firstCompetitorId = x.FirstCompetitor__c; gamejs.secondCompetitorId = x.SecondCompetitor__c;
-                            gamejs.firstCompetitorScore = ''+x.FirstCompetitorScore__c; gamejs.secondCompetitorScore = ''+x.SecondCompetitorScore__c;
-                            gamejs.stage = x.Stage__c.intValue();
-                            gamejs.winningGroup = x.WinningGroup__c;
-                            gamejs.firstCompetitorColor = x.FirstCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
-                            gamejs.secondCompetitorColor = x.SecondCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
-                            gamejs.editable = 
-                                gamejs.firstCompetitorId==playerOrTeamRelatedToPlayerFromCookie || gamejs.secondCompetitorId==playerOrTeamRelatedToPlayerFromCookie;    
-                            if (gamejs.editable) gamejs.hrefTo = 'Game?id='+gamejs.gameId;
-                            else gamejs.hrefTo = '#table1';
-                            gameJson.add(gamejs);
+                        if(j !=null && j == x.Stage__c.intValue()){
+                            stageLists.add(x);     
                         }
                     }
-                    gameJSONList.add(gameJson);
+                    thisGames.add(stageLists);    
                 }
-            }else{return new List<List<GameJSON>>();}
-            return gameJSONList;
+            }else{return new List<List<Game__c>>();}
+            return thisGames;
         }else{
             competitorsName = new Map<String, String>();
-            return new List<List<GameJSON>>();
+            return new List<List<Game__c>>();
         }    
     }
 }

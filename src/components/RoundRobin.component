@@ -1,6 +1,6 @@
 <apex:component controller="RoundRobin">
 <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!tournament}" description="need to give this tournament for good work" required="true"/>
-        <table align="center">
+     <table align="center">
      <apex:repeat value="{!roundRobinMatrix}" var="row"> 
       <tr>
        <apex:repeat value="{!row}" var="column" id="myTable">
@@ -15,7 +15,7 @@
       </tr>
      </apex:repeat>
      </table>
-
+        
     <script>
         function showTeamPlayers(id,teamName,firstPlayerName,secondPlayerName,overTrue){
             var format2x2 = "{!tournament.Format__c=='2 x 2'}";
