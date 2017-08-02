@@ -52,6 +52,13 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                 TournamentController.finish(currentTournament);
                 return;
             }
+            
+            if(CompetitorsIds.size() == 2){
+                try{insert new Game__c(FirstCompetitor__c= CompetitorsIds.get(0),SecondCompetitor__c = CompetitorsIds.get(1),FirstCompetitorScore__c = 0,
+                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 1, Type__c = 'Final');}
+                catch(DMLException e){}
+                return;            
+            }
             Integer i = 0;
             Integer countStages = 0;
             for(Integer j = 1; j<=CompetitorsIds.size(); j *=2){
