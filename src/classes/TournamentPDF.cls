@@ -52,6 +52,7 @@ public with sharing class TournamentPDF extends TournamentController{
             }
             
             else{
+                List<PlayerStatistics__c> PlayerStatistic = new List<PlayerStatistics__c>();
                 for(String x : finalCompetitorsMap.values()){
                     
                     if(x != '-' && x != '?'){
