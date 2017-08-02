@@ -5,6 +5,10 @@ public with sharing class TournamentController_TEST {
     public static Tournament__c t = new Tournament__c(Name='qwer', Type__c='Single Elimination', Format__c='1 x 1', StartDate__c=DateTime.now());
     public static Tournament__c t1 = new Tournament__c(Name='qwer', Type__c='', Format__c='1 x 1', StartDate__c=DateTime.now());
 
+    public static testMethod void testCreate() {
+        PageReference pR = tC.create();
+        System.assertEquals(Page.CreateTournament.getUrl(), pR.getUrl());
+    }
     
     public static testMethod void testSave() {
         tC.currentTournament = t;
@@ -208,10 +212,14 @@ public with sharing class TournamentController_TEST {
         
         Player__c p = new Player__c(Email__c = 'vdv@vdv.dv', IsManager__c = true, Password__c = '1234567890', Name = 'bdf', Status__c = 'Active');
         insert (p);
+        Player__c p1 = new Player__c(Email__c = '1vdv@vdv.dv', IsManager__c = true, Password__c = '11234567890', Name = '1bdf', Status__c = 'Active');
+        insert (p1);
         List<Player__c> players = [select Id,Password__c from Player__c where Email__c =: p.Email__c limit 1];
         System.debug(players);
         Cookie playerFromCookie = new Cookie('PlayerFromCookie', players.get(0).Id, null, 1440, false);
         System.currentPageReference().setCookies(new Cookie[]{playerFromCookie});
+        
+        Test.setMock(HttpCalloutMock.class,new MailSenderMock_Test());
         
         tC.search();
         
@@ -241,11 +249,13 @@ public with sharing class TournamentController_TEST {
         insert(t22);
         tC.currentTournamentId = t22.Id;
         
-        Team__c team = new Team__c(Name = 'grbgv', Tournament__c = t22.Id);
+        Team__c team = new Team__c(Name = 'grbgv', Tournament__c = t22.Id, IsComplete__c = true);
         insert(team);
         
         PlayerTeam__c pT = new PlayerTeam__c(Player__c = players.get(0).Id, Team__c = team.Id);
         insert(pT);
+        PlayerTeam__c pT1 = new PlayerTeam__c(Player__c = p1.Id, Team__c = team.Id);
+        insert(pT1);
         
         List<Team__c> teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tC.currentTournamentId AND 
                     Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :players.get(0).Id)];

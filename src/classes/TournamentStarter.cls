@@ -7,16 +7,19 @@ global class TournamentStarter implements Schedulable {
             WHERE Status__c = 'Upcoming' AND StartDate__c <= :dt];
         // Let's make a limit to start only 3 tournaments for one time to be sure that we will not exceed salesforce limits
         for(integer i = 0; i < (tournamentsToStart.size() > 3 ? 3 : tournamentsToStart.size()); i++) {
-            try {
-                tournamentsToStart[i].Status__c = 'Current';
-                update(tournamentsToStart[i]);
-                generateGames(tournamentsToStart[i]);
-            } catch (Exception e) {
-                System.debug(e);
-            }
+            start(tournamentsToStart[i]);
         }
     }
     
+    public void start(Tournament__c tournament) {
+        try {
+            tournament.Status__c = 'Current';
+            update(tournament);
+            generateGames(tournament);
+        } catch (Exception e) {
+            System.debug(e);
+        }
+    }
     
     private void generateGames(Tournament__c tournament) {
         List<String> ids = getCompetitorsIds(tournament);

@@ -23,6 +23,7 @@
             <apex:pageBlockButtons location="bottom">
                 <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
                 <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
+                <apex:commandButton value="New tournament" action="{!create}" rendered="{!isManager}"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
@@ -35,7 +36,12 @@
                 <apex:column value="{!t.tournament.Type__c}"/>
                 <apex:column value="{!t.tournament.Format__c}"/>
                 <apex:column value="{!t.tournament.StartDate__c}"/>
-                <apex:column value="{!t.tournament.Status__c}"/>
+                <apex:column headerValue="Status">
+                    <apex:outputText value="{!t.tournament.Status__c}" rendered="{!isManager && t.tournament.Status__c != 'Upcoming' || !isManager}"/>
+                    <apex:commandButton value="Start" action="{!start}" rendered="{!isManager && t.tournament.Status__c == 'Upcoming'}" rerender="allTournamentsTable">
+                        <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
+                    </apex:commandButton>
+                </apex:column>
                 <apex:column headerValue="View">
                     <apex:commandButton value="View" action="{!view}" rerender="allTournamentsTable" rendered="{!!t.isShowed}">
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
@@ -64,8 +70,8 @@
                         <apex:param name="currentTournamentId" value="{!t.tournament.Id}" assignTo="{!currentTournamentId}"/>
                     </apex:commandButton>
                 </apex:column>                
-                <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}">
-                    <apex:pageBlock >
+                <apex:column breakBefore="true" colspan="9" rendered="{!t.isShowed}" onmousemove="this.style.backgroundColor='white'" onmouseout="this.style.backgroundColor =''">
+                    <apex:pageBlock onmousemove="this.style.backgroundColor='white'" onmouseout="this.style.backgroundColor =''">
                         <c:TournamentInformation tournament="{!t.tournament}"/>
                     </apex:pageBlock>
                 </apex:column>

@@ -2,6 +2,10 @@ public with sharing class DoubleEliminationTournament {
     
     public integer ijz {get {return 1;} set;}
     public Tournament__c oneTournament{get;set;}
+    public List<List<GameJSON>> representDoubleEliminationGridJSON{get{
+            if (representDoubleEliminationGridJSON==null) generateDoubleEliminationGrid(oneTournament);
+            return representDoubleEliminationGridJSON;
+    }set;}
     
     public List<List<Game__c>> representDoubleEliminationGrid{
         get{
@@ -28,6 +32,8 @@ public with sharing class DoubleEliminationTournament {
     }
     
     public List<List<Game__c>> generateDoubleEliminationGrid(Tournament__c currentTournament){
+        System.debug('DET grid');
+        representDoubleEliminationGridJSON = new List<List<GameJSON>>();
         if(currentTournament.id != null && currentTournament.Type__c !=null && currentTournament.Type__c =='Double Elimination'){
             Decimal i = 0; //Stage count
             List<List<Game__c>> thisGames = new List<List<Game__c>>();
@@ -52,6 +58,83 @@ public with sharing class DoubleEliminationTournament {
                     thisGames.add(stageLists);    
                 }
             }
+            
+            Boolean isLoggedIn = ApexPages.currentPage().getCookies().get('PlayerFromCookie')!=null;
+            Player__c currentPlayer = null;
+            if (isLoggedIn) {
+                Id playerId = ApexPages.currentPage().getCookies().get('PlayerFromCookie').getValue();
+                currentPlayer = [select Id,Name,Email__c,Password__c,IsManager__c from Player__c where Id = :playerId];
+            } 
+            
+            Map<Id,Sobject> teamsOrPlayers = null;
+            String playerOrTeamRelatedToPlayerFromCookie = null;
+            if (currentTournament.Format__c=='1 x 1'){
+                teamsOrPlayers = new Map<Id,Player__c>([select Id,Name from Player__c]);
+            } else teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
+            
+            
+             /////////////////////////////////////////////////////////////////////
+            
+            if (isLoggedIn){
+                if (currentTournament.Format__c!='1 x 1'){
+                    for (Team__c team: (List<Team__c>)teamsOrPlayers.Values()){
+                        playerOrTeamRelatedToPlayerFromCookie = team.PlayerTeams__r.get(0).Player__c==currentPlayer.Id?team.PlayerTeams__r.get(0).Player__c:null;
+                        if (playerOrTeamRelatedToPlayerFromCookie==null)
+                            playerOrTeamRelatedToPlayerFromCookie = team.PlayerTeams__r.get(1).Player__c==currentPlayer.Id?team.PlayerTeams__r.get(1).Player__c:null;
+                        if (playerOrTeamRelatedToPlayerFromCookie!=null) break; 
+                    }
+                } else {
+                    playerOrTeamRelatedToPlayerFromCookie = currentPlayer.Id;
+                }
+            }
+            
+           
+            for (List<Game__c> gameList: thisGames){
+                List<GameJSON> gamejsList = new List<GameJSON>();                
+                    for (Game__c g: gameList){
+                        GameJSON gamejs = new GameJSON();
+                        gamejs.gameId = g.Id; 
+                        gamejs.firstCompetitorId = g.FirstCompetitor__c;
+                        gamejs.SecondCompetitorId = g.SecondCompetitor__c;
+                        
+                    
+                        gamejs.firstCompetitorScore = ''+g.FirstCompetitorScore__c;
+                        gamejs.secondCompetitorScore = ''+g.SecondCompetitorScore__c; //gamejs.hrefTo = 'game?id='+g.Id;
+                        gamejs.firstCompetitorColor = g.FirstCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
+                        gamejs.secondCompetitorColor = g.SecondCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
+                        gamejs.winningGroup = g.WinningGroup__c; gamejs.stage = g.Stage__c.intValue();
+                        gamejs.editable = gamejs.firstCompetitorId==playerOrTeamRelatedToPlayerFromCookie||gamejs.secondCompetitorId==playerOrTeamRelatedToPlayerFromCookie;
+                        
+                    
+                        if (currentTournament.Format__c=='1 x 1'){
+                            if (gamejs.firstCompetitorId!='?'){
+                            Player__c player = (Player__c) teamsOrPlayers.get(gamejs.firstCompetitorId);
+                            gamejs.firstCompetitorName = player.Name;
+                          } else gamejs.firstCompetitorName='?';
+                        if (gamejs.secondCompetitorId!='?'){
+                            Player__c player = (Player__c) teamsOrPlayers.get(gamejs.secondCompetitorId);
+                            gamejs.secondCompetitorName = player.Name;
+                            } else gamejs.secondCompetitorName='?';
+                        } else {
+                        if (gamejs.firstCompetitorId!='?'){
+                            Team__c team = (Team__c) teamsOrPlayers.get(gamejs.firstCompetitorId);
+                            gamejs.firstCompetitorName = team.Name;
+                            } else gamejs.firstCompetitorName='?';
+                        if (gamejs.secondCompetitorId!='?'){
+                            Team__c team = (Team__c) teamsOrPlayers.get(gamejs.secondCompetitorId);
+                            gamejs.secondCompetitorName = team.Name;
+                        } else gamejs.secondCompetitorName='?';
+                        }
+                        
+                                     //******too many sql queries (101)****//
+                    //gamejs.firstCompetitorName =  competitorsName.get(gamejs.firstCompetitorId);
+                        //gamejs.secondCompetitorName =  competitorsName.get(gamejs.secondCompetitorId);
+                         
+                        gamejsList.add(gamejs);
+                    }
+                representDoubleEliminationGridJSON.add(gamejsList);
+            }
+            System.debug((representDoubleEliminationGridJSON.size()==thisGames.size())+',,,,,'+representDoubleEliminationGridJSON.size());
             return thisGames;
         }
         return new List<List<Game__c>>(); 

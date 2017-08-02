@@ -66,8 +66,9 @@ public with sharing class HomeController extends PlayerCookie{
         set;
     }
     public HomeController(){
+        System.debug('home ctrl');
          tournamentsInProgress = getAllTournamentsInProgress();
-         tournamentBySelectOption = tournamentsInProgress.get(0);
+         if (tournamentsInProgress.size()>0) tournamentBySelectOption = tournamentsInProgress.get(0);
          tournamentsInProgressSize = tournamentsInProgress.size();
     }
     
@@ -75,19 +76,13 @@ public with sharing class HomeController extends PlayerCookie{
     private List<Tournament__c> getAllTournamentsInProgress(){
         List<Tournament__c> tournaments = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
                                            FROM Tournament__c Where Status__c = 'Current'];
-        if(tournaments.size()>0){                                    
-            return tournaments;
-        }
-        else{
-            tournaments.add(new Tournament__c());
-            return tournaments;
-        }
+        return tournaments;
     }
     
     public void rerenderPageBlockForSelectedTournament(){
         List<Tournament__c> thisTournament = [SELECT ID, Name, StartDate__c, Type__c, Status__c, Format__c
                                               FROM Tournament__c Where Status__c = 'Current' AND Id = :selectedTournament];
-        if(thisTournament.size() !=null && thisTournament.size()>0){
+        if(thisTournament.size()>0){
             tournamentBySelectOption = thisTournament.get(0);
         }    
     }    

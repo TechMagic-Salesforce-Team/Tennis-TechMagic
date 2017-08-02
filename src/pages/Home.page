@@ -27,9 +27,15 @@
         font-size : 17px;
         text-align:center;
     }
-    .mySlides {display:none;}
+    .mySlides {
+        display:none;
+        display:block;
+        position:absolute;
+        margin-top: -16px;
+        min-width: 800px;
+    }
     html {
-        min-width: 500px;
+        min-width: 800px;
         overflow-x: hidden;
         max-width: 100%;
     }
@@ -41,7 +47,7 @@
     text-decoration: none;
 }
 .circle{
-    width:15px; height: 15px; border-radius: 50%; border: 2px solid orange; cursor: hand;
+    width:15px; height: 15px; border-radius: 50%; border: 2px solid orange; cursor: hand; 
 }
 .circle:hover{
     background-color:orange;
@@ -73,31 +79,38 @@
 .category-inside-block:hover{
     display: block;
 }
+
+
+
+
     </style>
             <script>var id;</script>
     
  
     <c:Header />
     <div style="float:left; width:100%;">
-        <div class="w3-content w3-section" style="display:block; padding:0px; margin:0px;" id = "mainDiv" >
-          <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider001.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
+
+        <div class="w3-content w3-section" style="padding:0px; margin:0px;" id = "mainDiv" >
+        <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
+                          'img/slider001.jpg')}" width="100%;"/>
           <img class="mySlides" id = "aab" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider002.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
+                          'img/slider002.jpg')}" width="100%;"/>
           <img class="mySlides" id = "aac" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider003.jpg')}" width="100%;" style="display:block; position:absolute; margin-top: -16px;"/>
+                          'img/slider003.jpg')}" width="100%;"/>
           <img class="mySlides" id = "aad" src="{!URLFOR($Resource.SiteSamples,
-                          'img/slider004.jpg')}" width="100%;" style="display:block; position:absolute;  margin-top: -16px;"/>
+                          'img/slider004.jpg')}" width="100%;"/>
         </div>
-            
-        <div id = "anotherElements" style="display:block ; position:inherit; width:100%; height:auto;">
+
+        
+        <div id = "anotherElements" style="width:100%; height:auto; margin-top: 35%;">
+
             <div style="height:10px; float:left; margin-top:0px;" id="divAllHTML">
                                 <div id="menu" style="margin-bottom: 10px;">
                      <ul id = 'ulCircles'>
                                                 <script>
                                                     var elements = $('.mySlides');
                                                     for (var i = 0; i < elements.length; i++){
-                                                        $('#ulCircles').append("<li><div class='circle' onclick='circle_selected("+i+")'></div></li>");
+                                                        $('#ulCircles').append("<li><div class='circle' onclick='circle_selected_and_clear_interval("+i+")'></div></li>");
                                                     }
                                                 </script>
                     </ul>   
@@ -105,13 +118,15 @@
                 <div style="float:left; width:500px; height:1px;" id = "divHTML">
                 </div>
             </div>
-             
         </div>  
-         <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px; position:relative;">
+
+        
+         
+         <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px;">
                 <div style="width:30%; height:30%; float:left; margin-left: 1%;">
                 <a href='Tournaments'>
                 <img src="{!URLFOR($Resource.SiteSamples,
-                          'img/all-tournaments.jpg')}" width="100%" height="80%;"  class="categoryImg">
+                          'img/all-tournaments.jpg')}" width="100%" height="auto;"  class="categoryImg">
                 </img>
                 </a>
                 <p id="text" >ALL TOURNAMENTS</p>
@@ -120,13 +135,13 @@
                 <div style="width:30%; height:30%; float:left; margin-left: 3%;">
                 <a href='Players'>
                 <img src="{!URLFOR($Resource.SiteSamples,
-                          'img/all-players.jpg')}" width="100%" height="80%;" class="categoryImg">
+                          'img/all-players.jpg')}" width="100%" height="auto;" class="categoryImg">
                 </img>
                 </a>
                 <p id = "text">ALL PLAYERS</p>
                 </div>
                 
-                <div style="width:30%; height:30%; float:left; visibility: hidden; margin-left: 3%;" id='profile-id'>
+                <div style="width:30%; height:auto; float:left; visibility: hidden; margin-left: 3%;" id='profile-id'>
                         <script>
                             var isLoggedIn = {!isLoggedIn};
                             if (isLoggedIn) {
@@ -144,18 +159,20 @@
                 </div>
                 
      </div>  
+        
     </div>
     
      
     <script>
 var id1 = 1;
+var id2;
 var elements = $('.mySlides');
 var circles = $('.circle');
 var myIndex = 0;
 carousel();
 marginTogResize();
 myInterval = 1600;
-var count = 0;
+var count = 2;
 
 
 /*
@@ -187,6 +204,8 @@ function carousel(){
     }
     
     $(document).ready(function() {  
+    if (detectMob()) count=2; 
+    else count = 0;    
     slideShow();   
 });
     
@@ -196,6 +215,28 @@ function carousel(){
         clearInterval(id);
     });
     
+    
+     function isAppleProduct(){
+        /*var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+
+        var isEdge = !isIE && !!window.StyleMedia;
+
+        var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+        var isBlink = (isChrome || isOpera) && !!window.CSS;
+        */
+        
+        if( /iPhone|iPad|iPod/i.test(navigator.userAgent) ){
+            $( ".circle" ).css( "visibility", "hidden" );
+            return true;
+        } 
+        return false;
+    }
     
     function slideShow(){
         if (detectMob()==false){
@@ -214,9 +255,31 @@ function carousel(){
     }   
     orangeFill(); 
     } else {
-     circle_selected(3);
+        count++;
+        count%=elements.length; 
+        if (!isAppleProduct()) circle_selected(count);
+        else {
+            $("#"+elements[count].id).fadeOut("slow");
+            count++;
+            count%=elements.length;
+
+
+            for (var i = 0; i < elements.length; i++){
+                        $("#"+elements[i].id).stop( true, true ).fadeOut();
+                        if (i!=count) {
+                            elements[i].style = 'display:none';
+                        }
+                    }
+
+
+            $("#"+elements[count].id).stop( true, true ).fadeIn();
+            id1 = count;
+            orangeFill();
+        }
    }
    }
+    
+    
     
     function backSlideShow(){
         elements[elements.length-1].style.left = "0px";  
@@ -232,8 +295,8 @@ function carousel(){
    
      
      function circle_selected(index){
-                clearInterval(id);
-                clearInterval(id1);
+                //clearInterval(id);
+                //clearInterval(id1);
                 for (var i = 0; i < elements.length; i++){
                     $("#"+elements[i].id).stop( true, true ).fadeIn();
                     if (i!=index) {
@@ -247,6 +310,11 @@ function carousel(){
                     else circles[i].style = 'background-color:white;';
                 }
                 id1 = index;
+    }
+    
+    function circle_selected_and_clear_interval(index){
+        circle_selected(index);
+        clearInterval(id);
     }
     
     function orangeFill(){
@@ -267,11 +335,11 @@ function carousel(){
                     return false;
     }
     
+    isAppleProduct();
     id = setInterval(slideShow,6000);
-    //id1 = setInterval(orangeFill,6000);
 </script>
 
-     <apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
+     <apex:pageBlock rendered="true" mode="maindetail">
           
          <script>
               function rerenderCurrentTournament()
@@ -286,7 +354,7 @@ function carousel(){
                 
                 </script>
     
-     <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgressSize > 0}" mode="maindetail">
+     <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgress.size>0}" mode="maindetail">
      
          <apex:form >
              <apex:inputHidden value="{!selectedTournament}" id="tournamentIdHidden"/>
@@ -309,8 +377,8 @@ function carousel(){
                  </apex:pageBlockSection>
              </apex:pageBlock> -->
              
-             <apex:pageBlock title="All Current Tournament" mode="maindetail">
-                 <apex:pageBlockSection columns="2">   
+             <apex:pageBlock title="All Current Tournaments" mode="maindetail">
+                 <apex:pageBlockSection columns="2" >   
                      <apex:outputLabel style="font-size : 22px;">Type  &nbsp; &nbsp;<apex:selectList onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1" styleClass="styled-select">
                          <apex:selectOptions value="{!tournamentTypeOptions}"></apex:selectOptions>
                      </apex:selectList></apex:outputLabel>
@@ -328,16 +396,22 @@ function carousel(){
                     <apex:column value="{!tournament.Format__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
                     <apex:column value="{!tournament.Status__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
                 </apex:pageBlockTable>
-            </apex:pageBlock>      
+            </apex:pageBlock>   
+
+            
+
          </apex:form>
-         </apex:pageBlock>     
-     </apex:pageBlock>
+         </apex:pageBlock>  
+
+            <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments Found" rendered="{!tournamentsInProgressSize == 0}"></apex:pageBlock> 
+            </apex:pageBlock>
      
-     <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgressSize > 0 && tournamentsInProgress.size !=null && tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
+     
+     <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
           <apex:form ><c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/></apex:form>
-     </apex:pageBlock>    
+     </apex:pageBlock> 
       
-     <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
+     
      
      <c:Footer />  
      

@@ -11,6 +11,7 @@ public with sharing class PlayerTeamController extends PlayerCookie{
             return teamInvitations;
     } set; }
     
+    public Tournament__c currentTournament { get; set; }
     public String tournamentId { get; set; }
     
     public Team__c team { get; set; }
@@ -23,8 +24,10 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     public LIst<SelectOption> playersOptions { get {
             if (playersOptions == null) {
                 playersOptions = new List<SelectOption>();
-                List<Team__c> teams = [SELECT Name, (SELECT Player__c FROM PlayerTeams__r)
-                FROM Team__c WHERE Tournament__c = :tournamentId];
+                List<Team__c> teams = [
+                    SELECT Name, (SELECT Player__c FROM PlayerTeams__r)
+                    FROM Team__c WHERE Tournament__c = :tournamentId AND IsComplete__c = true
+                ];
                 for (Player__c p: players) {
                     SelectOption selectOption;
                     for (Team__c t: teams) {
@@ -61,6 +64,15 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     }
     
     public PageReference create() {
+        List<Team__c> teamsToCheck = [SELECT Id FROM Team__c WHERE Tournament__c = :tournamentId AND IsComplete__c = true
+            AND Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerId OR Player__c = :selectedPlayer)];
+        
+        if (teamsToCheck.size() > 0) {
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING, 
+                    'Either you or your partner is already applied'));
+            return null;
+        }
+        
         // create team;
         team.Tournament__c = tournamentId;
         try {
@@ -95,13 +107,15 @@ public with sharing class PlayerTeamController extends PlayerCookie{
     }
     
     public PageReference validatePageVisitor() {
+        System.debug('cookie: ' + currentPlayerId);
         if (isLoggedIn) {
-            List<Tournament__c> tournaments = [SELECT Id, Format__c, Status__c FROM Tournament__c WHERE Id =:tournamentId];
+            List<Tournament__c> tournaments = [SELECT Id, Format__c, Status__c, Type__c, StartDate__c, Name FROM Tournament__c WHERE Id =:tournamentId];
             if (tournaments.size() > 0) {
                 if (tournaments[0].Format__c == '2 x 2' && tournaments[0].Status__c == 'Upcoming') {
                     List<Team__c> teams = [SELECT Id FROM Team__c WHERE Tournament__c = :tournamentId AND IsComplete__c = true AND
                         Id IN (SELECT Team__c FROM PlayerTeam__c WHERE Player__c = :currentPlayerId)];
                     if (teams.size() == 0) {
+                        currentTournament = tournaments[0];
                         return null;
                     }
                 }
