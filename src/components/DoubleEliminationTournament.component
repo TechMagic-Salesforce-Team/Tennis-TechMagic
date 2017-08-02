@@ -57,7 +57,7 @@
             <apex:repeat value="{!representDoubleEliminationGridJSON}" var="thisRows">
                 <apex:column width="{!100/representDoubleEliminationGridJSON.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
-                        <apex:pageBlock rendered="{!thisGame.winningGroup=false}"><center>
+                        <apex:pageBlock rendered="{!thisGame.winningGroup= false}"><center>
                                 <p style="color: {!thisGame.firstCompetitorColor}">{!thisGame.firstCompetitorName}</p>
                             <apex:outputLink rendered="{!thisGame.editable}" styleClass="thisLinks" value="Game?id={!thisGame.gameId}">
                                 {!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}

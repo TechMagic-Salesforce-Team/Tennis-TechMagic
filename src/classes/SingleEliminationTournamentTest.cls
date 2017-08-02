@@ -158,8 +158,12 @@ public with sharing class SingleEliminationTournamentTest{
          insert thisListGames;    
          SingleEliminationTournament thisSET = new SingleEliminationTournament();
          System.assertEquals(null,thisSET.oneTournament);
+         System.assertEquals(0,thisSET.competitorsName.size());
          thisSet.oneTournament = t;
          System.assertEquals(t.id,thisSet.oneTournament.id);
+         //because first and second competitor has wrong id
+         System.assertEquals(1,thisSet.competitorsName.size());
+         
          thisListListGames = thisSET.generateSingleEliminationStageGrid(t);
          thisSET.representSingleEliminationGrid = thisSET.generateSingleEliminationStageGrid(thisSET.oneTournament);
          if(thisSET.oneTournament == null) throw new NullPointerException(); 
@@ -512,7 +516,7 @@ public with sharing class SingleEliminationTournamentTest{
              myCompetitorsIds.add(x.Player__c);
          }   
          SingleEliminationTournament.StartSingleEliminationTournament(myCompetitorsIds, t);
-         List<Game__c> myGamesInLoserGroup = [Select ID, WinningGroup__c From Game__c where WinningGroup__c = false AND Tournament__c = :t.id];
+         List<Game__c> myGamesInLoserGroup = [Select ID, WinningGroup__c From Game__c where WinningGroup__c = false AND Tournament__c = :t.id AND Type__c = 'Final'];
          System.assertEquals(1,myGamesInLoserGroup.size()); 
          System.assertEquals(16, [Select Id From Game__c Where Tournament__c = :t.id].size());
          System.assertEquals(0,[Select Id From Game__c Where Tournament__c = :t.id AND Stage__c = 1 AND (FirstCompetitor__c = '?' OR SecondCompetitor__c = '?')].size());
@@ -529,7 +533,8 @@ public with sharing class SingleEliminationTournamentTest{
              myCompetitorsIdsTest.add(x.Player__c);
          }
          SingleEliminationTournament.StartSingleEliminationTournament(myCompetitorsIdsTest, myT);
-         System.assertEquals(1,[Select Id From Game__c Where Tournament__c = :myT.id AND WinningGroup__c = false].size()); 
+         System.assertEquals(1,[Select Id From Game__c Where Tournament__c = :myT.id AND WinningGroup__c = false AND Type__c = 'Final'].size()); 
+         System.assertEquals(1,[Select Id From Game__c Where Tournament__c = :myT.id AND WinningGroup__c = true AND Type__c = 'Final'].size()); 
          System.assertEquals(5,[Select Id From Game__c Where Tournament__c = :myT.id].size()); 
          System.assertEquals(0,[Select Id From Game__c Where Tournament__c = :myT.id AND Stage__c = 1 AND (FirstCompetitor__c = '?' OR SecondCompetitor__c = '?')].size());
          
@@ -541,5 +546,19 @@ public with sharing class SingleEliminationTournamentTest{
          onlyOneCompetitort.add([Select Player__c From PlayerTournament__c Where Tournament__c = :tournamentWichHaveOnlyOneCompetitor.id Limit 1].Player__c);   
          SingleEliminationTournament.StartSingleEliminationTournament(onlyOneCompetitort, tournamentWichHaveOnlyOneCompetitor);
          System.assertEquals(0,[Select id From Game__c Where Tournament__c = :tournamentWichHaveOnlyOneCompetitor.id].size());
+         
+         Tournament__c myT2Competitors = new Tournament__c(StartDate__c = DateTime.now(),Format__c ='1 x 1', Type__c = 'Single Elimination', Status__c = 'Current', Name = 'MyTournament2Comp');
+         insert myT2Competitors; 
+         List<PlayerTournament__c> myPlayerTournamentsTest2Competitors = new List<PlayerTournament__c>();
+         myPlayerTournamentsTest2Competitors.add(new PlayerTournament__c(Player__c = myPlayer1.Id, Tournament__c = myT2Competitors.id));    
+         myPlayerTournamentsTest2Competitors.add(new PlayerTournament__c(Player__c = myPlayer2.Id, Tournament__c = myT2Competitors.id)); 
+         insert myPlayerTournamentsTest2Competitors;
+         List<String> myPlayerTournamentsTest2CompetitorsIDs = new List<String>();
+         for(PlayerTournament__c x : myPlayerTournamentsTest2Competitors){
+             myPlayerTournamentsTest2CompetitorsIDs.add(x.Player__c);
+         }
+         SingleEliminationTournament.StartSingleEliminationTournament(myPlayerTournamentsTest2CompetitorsIDs, myT2Competitors);
+         System.assertEquals(0,[Select Id From Game__c Where Tournament__c = :myT2Competitors.id AND WinningGroup__c = false AND Type__c = 'Final'].size()); 
+         System.assertEquals(1,[Select Id From Game__c Where Tournament__c = :myT2Competitors.id AND WinningGroup__c = true AND Type__c = 'Final'].size());
      }
 }

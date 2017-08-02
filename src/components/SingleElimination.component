@@ -1,16 +1,14 @@
 <apex:component controller="SingleEliminationTournament">
     <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
     <apex:pageBlock mode="maindetail" id="cGrid2" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size !=0}">
- 
-        <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" style="width : {!100/countOfStageOneTournament }%;" id="table1">
+            <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" style="width : {!100/countOfStageOneTournament }%;">
             <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representSingleEliminationGrid.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
-                        <apex:pageBlock rendered="{!thisGame.winningGroup= true}" tabStyle="Tournament__c"><center>
-                            <p style="color: {!thisGame.firstCompetitorColor}"><apex:outputText value="{!competitorsName[thisGame.firstCompetitorId]}"/></p>
-                            <apex:outputLink rendered="{!thisGame.editable}" styleClass="thisLinks" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
-                            <apex:outputLink rendered="{!!thisGame.editable}" styleClass="thisLinksNotEditable" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
-                            <p style="color: {!thisGame.secondCompetitorColor}"><apex:outputText value="{!competitorsName[thisGame.secondCompetitorId]}"/></p> 
+                        <apex:pageBlock rendered="{!thisGame.WinningGroup__c = true}" tabStyle="Tournament__c"><center>
+                            <apex:outputText value="{!competitorsName[thisGame.FirstCompetitor__c]}"/>(<apex:outputField value="{!thisGame.FirstCompetitorScore__c}"/>) <br/><br/>
+                            <apex:outputLink target="_blank" styleClass="thisLinks" value="Game?id={!thisGame.Id}">VS</apex:outputLink><br/><br/> 
+                            <apex:outputText value="{!competitorsName[thisGame.SecondCompetitor__c]}"/>(<apex:outputField value="{!thisGame.SecondCompetitorScore__c}"/>) 
                             </center>
                         </apex:pageBlock>   
                     </apex:repeat>
@@ -18,15 +16,14 @@
             </apex:repeat>
         </apex:pageBlockTable></center>
         
-        <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size !=0 && isLoserGroupGame}" style="width : {!100/countOfStageOneTournament }%;" id="table2">
+        <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size !=0 && isLoserGroupGame}" style="width : {!100/countOfStageOneTournament }%;">
             <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representSingleEliminationGrid.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
-                        <apex:pageBlock tabStyle="Game__c" title="3rd Place Match" rendered="{!thisGame.WinningGroup == false}"><center>
-                            <p style="color: {!thisGame.firstCompetitorColor}"><apex:outputText rendered="{!thisGame.WinningGroup = false}" value="{!competitorsName[thisGame.firstCompetitorId]}"/></p>    
-                            <apex:outputLink rendered="{!thisGame.WinningGroup = false && thisGame.editable}" styleClass="thisLinks" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink> 
-                            <apex:outputLink rendered="{!thisGame.WinningGroup = false && !thisGame.editable}" styleClass="thisLinksNotEditable" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink> 
-                            <p style="color: {!thisGame.secondCompetitorColor}"><apex:outputText rendered="{!thisGame.WinningGroup = false}" value="{!competitorsName[thisGame.secondCompetitorId]}"/></p>
+                        <apex:pageBlock tabStyle="Game__c" title="3rd Place Match" rendered="{!thisGame.WinningGroup__c == false}"><center>
+                            <apex:outputText rendered="{!thisGame.WinningGroup__c = false}" value="{!competitorsName[thisGame.FirstCompetitor__c]}"/>(<apex:outputField rendered="{!thisGame.WinningGroup__c == false}" value="{!thisGame.FirstCompetitorScore__c}"/>) <br/><br/>
+                            <apex:outputLink target="_blank" rendered="{!thisGame.WinningGroup__c = false}" styleClass="thisLinks" value="Game?id={!thisGame.Id}">VS</apex:outputLink><br/><br/> 
+                            <apex:outputText rendered="{!thisGame.WinningGroup__c = false}" value="{!competitorsName[thisGame.SecondCompetitor__c]}"/>(<apex:outputField rendered="{!thisGame.WinningGroup__c == false}" value="{!thisGame.SecondCompetitorScore__c}"/>) 
                             </center>
                         </apex:pageBlock>  
                     </apex:repeat>
@@ -34,4 +31,5 @@
             </apex:repeat>
         </apex:pageBlockTable></center>
     </apex:pageBlock>
+    
 </apex:component>
