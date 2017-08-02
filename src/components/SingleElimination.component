@@ -1,6 +1,6 @@
 <apex:component controller="SingleEliminationTournament">
     <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
-    <apex:pageBlock mode="maindetail" id="cGrid2" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size != 0}">
+    <apex:pageBlock mode="maindetail" id="cGrid2" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size !=0}">
             <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" style="width : {!100/countOfStageOneTournament }%;">
             <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representSingleEliminationGrid.size}%">
@@ -16,7 +16,7 @@
             </apex:repeat>
         </apex:pageBlockTable></center>
         
-        <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size != 0 && isLoserGroupGame}" style="width : {!100/countOfStageOneTournament }%;">
+        <center><apex:pageBlockTable value="{!ijz}" var="thisStageGames" rendered="{!representSingleEliminationGrid !=null &&representSingleEliminationGrid.size !=0 && isLoserGroupGame}" style="width : {!100/countOfStageOneTournament }%;">
             <apex:repeat value="{!representSingleEliminationGrid}" var="thisRows">
                 <apex:column width="{!100/representSingleEliminationGrid.size}%">
                     <apex:repeat value="{!thisRows}" var="thisGame">
