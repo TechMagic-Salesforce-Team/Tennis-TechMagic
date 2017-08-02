@@ -72,11 +72,14 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             if(i == CompetitorsIds.size()){
                 for(Integer stages = 2; stages<countStages;stages++){
                     for(Integer gamesPerRound = 1; gamesPerRound <= i/4;gamesPerRound++){
-                        thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                        if(i != 4)thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
                                                   Stage__c = stages, Tournament__c = currentTournament.Id));
+                        
                         if(i == 4){
                             thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
-                                                      Stage__c = stages, Tournament__c = currentTournament.Id, WinningGroup__c = false));
+                                                      Stage__c = stages, Tournament__c = currentTournament.Id, Type__c = 'Final'));
+                            thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                                                      Stage__c = stages, Tournament__c = currentTournament.Id, WinningGroup__c = false, Type__c = 'Final'));
                         }
                     }
                     i /=2;
@@ -85,7 +88,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             else if (i != CompetitorsIds.size()){
                 if(CompetitorsIds.size()==3){
                 thisGames.add(new Game__c(FirstCompetitor__c= CompetitorsIds.get(2) ,SecondCompetitor__c = '?',FirstCompetitorScore__c = 0,
-                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 2));
+                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 2, Type__c = 'Final'));
                 }
                 else if(CompetitorsIds.size()>4){
                     String currentTournamentId = currentTournament.Id;
@@ -93,6 +96,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                         for(Integer gamesPerRound = 1; gamesPerRound <=i/2; gamesPerRound++){
                             Game__c currentGame = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
                                                       Stage__c = stages, Tournament__c = currentTournamentId);
+                            if(stages == countStages) currentGame.Type__c = 'Final';
                             if(round < CompetitorsIds.size()){
                                 currentGame.FirstCompetitor__c = CompetitorsIds.get(round);
                                 if(round + 1 < CompetitorsIds.size()){
@@ -106,7 +110,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                         i /=2;
                     }
                     Game__c currentGameThirdPlace = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
-                                                                Stage__c = countStages, Tournament__c = currentTournamentId, WinningGroup__c = false);
+                                                                Stage__c = countStages, Tournament__c = currentTournamentId, WinningGroup__c = false, Type__c = 'Final');
                     thisGames.add(currentGameThirdPlace);
                 }
             }          
