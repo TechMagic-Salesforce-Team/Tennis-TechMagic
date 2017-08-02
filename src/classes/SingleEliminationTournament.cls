@@ -4,7 +4,11 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     public Map<String, String> competitorsName{
         get{
             if(oneTournament !=null && oneTournament.Type__c !=null && oneTournament.Type__c=='Single Elimination'){
-                if(competitorsName == null) return Helper.getIdAndNameMap(oneTournament);
+                if(competitorsName == null){
+                    Map<String, String> localCompetitorsName = Helper.getIdAndNameMap(oneTournament);
+                    localCompetitorsName.put('?','?');
+                    return localCompetitorsName;
+                }
                 return competitorsName;
             }else{return new Map<String, String>();}
         }
@@ -44,91 +48,157 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     
     public static void StartSingleEliminationTournament(List<String> CompetitorsIds, Tournament__c currentTournament){
         if(currentTournament !=null && currentTournament.Type__c !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Format__c !=null){
-            List<Game__c> thisGames = new List<Game__c>();
+            if(CompetitorsIds.size()<=1){
+                TournamentController.finish(currentTournament);
+                return;
+            }
             Integer i = 0;
+            Integer countStages = 0;
             for(Integer j = 1; j<=CompetitorsIds.size(); j *=2){
                 i = j;
+                countStages++;
             }
             Integer z;
             if(i == CompetitorsIds.size()){z = 0;}
-            else{z = 2*i-CompetitorsIds.size();}       
-            for(Integer round=0; round<CompetitorsIds.size()-z;round +=2){
+            else{z = 2*i-CompetitorsIds.size();}
+            Integer round=0;
+            List<Game__c> thisGames = new List<Game__c>();
+            for(; round<CompetitorsIds.size()-z;round +=2){
                 Integer match=round+1;
-                Game__c currentGame = new Game__c();
-                currentGame.FirstCompetitor__c= CompetitorsIds.get(round); 
-                currentGame.SecondCompetitor__c = CompetitorsIds.get(match);
-                currentGame.FirstCompetitorScore__c = 0;
-                currentGame.SecondCompetitorScore__c = 0;
-                currentGame.Tournament__c = currentTournament.Id;           
-                currentGame.Stage__c = 1;
+                Game__c currentGame = new Game__c(FirstCompetitor__c= CompetitorsIds.get(round),SecondCompetitor__c = CompetitorsIds.get(match),FirstCompetitorScore__c = 0,
+                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 1);
                 thisGames.add(CurrentGame);
             }
-            if(i != CompetitorsIds.size()){    
-                Integer k = 2*i-CompetitorsIds.size();
-                Id freeSlot;
-                If(currentTournament.Format__c == '1 x 1'){
-                    List<Player__c> freeSlotPlayer = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'];
-                    if(freeSlotPlayer.size() == 0){
-                        Player__c upsertPlayer = new Player__c(Name ='-', Email__c = 'www@gmail.com', Password__c = 'superuserlviv', Status__c = 'Active');
-                        upsert upsertPlayer; 
-                        freeSlot = upsertPlayer.Id;
-                    }else{ 
-                        freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
+            if(i == CompetitorsIds.size()){
+                for(Integer stages = 2; stages<countStages;stages++){
+                    for(Integer gamesPerRound = 1; gamesPerRound <= i/4;gamesPerRound++){
+                        thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                                                  Stage__c = stages, Tournament__c = currentTournament.Id));
+                        if(i == 4){
+                            thisGames.add(new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                                                      Stage__c = stages, Tournament__c = currentTournament.Id, WinningGroup__c = false));
+                        }
                     }
-                    PlayerTournament__c insertFakePlayer = new PlayerTournament__c(Player__c = freeSlot, Tournament__c = currentTournament.Id);
-                    upsert insertFakePlayer;
-                }
-                else{
-                    List<Team__c> myTestTeamList = [Select Id, Name From Team__c Where Name = '-'];
-                    if(myTestTeamList.size() == 0){
-                        Team__c upsertTeam = new Team__c(Name = '-', isComplete__c = true, Tournament__c = currentTournament.Id); 
-                        upsert upsertTeam;
-                        freeSlot = upsertTeam.Id;
-                    }else{ 
-                        freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
-                    }
-                }
-                for(Integer nextRound = CompetitorsIds.size()-1; k>0; nextRound--){
-                    Game__c currentGame = new Game__c();
-                    currentGame.FirstCompetitor__c= CompetitorsIds.get(nextRound); 
-                    currentGame.SecondCompetitor__c = freeSlot;
-                    currentGame.FirstCompetitorScore__c  = 2;
-                    currentGame.SecondCompetitorScore__c = 0;
-                    currentGame.FirstCompetitorAccept__c  = true;
-                    currentGame.SecondCompetitorAccept__c = true;
-                    currentGame.Stage__c = 1;
-                    currentGame.Tournament__c = currentTournament.Id;
-                    thisGames.add(CurrentGame);
-                    k--;    
+                    i /=2;
                 }
             }
-           
-        try{upsert thisGames;}
-        catch(DMLException e){}       
-        } 
+            else if (i != CompetitorsIds.size()){
+                if(CompetitorsIds.size()==3){
+                thisGames.add(new Game__c(FirstCompetitor__c= CompetitorsIds.get(2) ,SecondCompetitor__c = '?',FirstCompetitorScore__c = 0,
+                                                  SecondCompetitorScore__c = 0, Tournament__c = currentTournament.Id, Stage__c = 2));
+                }
+                else if(CompetitorsIds.size()>4){
+                    String currentTournamentId = currentTournament.Id;
+                    for(Integer stages = 2; stages<=countStages; stages++){
+                        for(Integer gamesPerRound = 1; gamesPerRound <=i/2; gamesPerRound++){
+                            Game__c currentGame = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                                                      Stage__c = stages, Tournament__c = currentTournamentId);
+                            if(round < CompetitorsIds.size()){
+                                currentGame.FirstCompetitor__c = CompetitorsIds.get(round);
+                                if(round + 1 < CompetitorsIds.size()){
+                                    currentGame.SecondCompetitor__c = CompetitorsIds.get(round+1);
+                                }                            
+                                round+=2;
+                            }
+                            thisGames.add(currentGame);
+                           
+                        }
+                        i /=2;
+                    }
+                    Game__c currentGameThirdPlace = new Game__c(FirstCompetitor__c = '?', SecondCompetitor__c = '?', FirstCompetitorScore__c  = 0, SecondCompetitorScore__c = 0, 
+                                                                Stage__c = countStages, Tournament__c = currentTournamentId, WinningGroup__c = false);
+                    thisGames.add(currentGameThirdPlace);
+                }
+            }          
+            try{insert thisGames;}
+            catch(DMLException e){}
+        }    
     }
+    
+    public static void createNextSingleEliminationStage(List<Game__c> gamesByPreviousRound, Tournament__c currentTournament){
+        if(currentTournament!=null && gamesByPreviousRound !=null && !gamesByPreviousRound.isEmpty()){
+            Decimal thisRoundStage = gamesByPreviousRound.get(0).Stage__c;
+            thisRoundStage++;
+            List<Game__c> gamesByThisStage = new List<Game__c>();
+            gamesByThisStage = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, 
+                                FirstCompetitorScore__c, SecondCompetitorScore__c, Stage__c, Tournament__c  
+                                From Game__c Where Stage__c = :thisRoundStage AND Tournament__c = :currentTournament.Id];
+            if(!gamesByPreviousRound.isEmpty() && !gamesByThisStage.isEmpty()){
+               List<String> winnerCompetitors = new List<String>();
+               List<String> loserCompetitors = new List<String>();
+               if(gamesByPreviousRound.size() == 1){
+                    if(gamesByPreviousRound.get(0).FirstCompetitorScore__c > gamesByPreviousRound.get(0).SecondCompetitorScore__c){winnerCompetitors.add(gamesByPreviousRound.get(0).FirstCompetitor__c);}
+                    else{winnerCompetitors.add(gamesByPreviousRound.get(0).SecondCompetitor__c);}
+                    Game__c myUpdateGame = new Game__c();
+                    for(Game__c x :gamesByThisStage){
+                        if(x.SecondCompetitor__c == '?'){
+                            x.SecondCompetitor__c = winnerCompetitors.get(0);
+                            myUpdateGame = x;
+                        }
+                    }
+                    try{update myUpdateGame;}
+                    catch(DMLException e){}
+                    return;
+               }
+               List<Game__c> thisGames = new List<Game__c>();
+               Boolean isFinal = false;
+               for(Game__c x : gamesByThisStage){
+                   if(x.WinningGroup__c == false) isFinal = true;
+               }
+               if(gamesByPreviousRound.size() == 2 && gamesByThisStage.size() == 2 && isFinal){
+                    for(Game__c g : gamesByPreviousRound){
+                        if(g.FirstCompetitorScore__c > gamesByPreviousRound.get(0).SecondCompetitorScore__c){
+                            winnerCompetitors.add(g.FirstCompetitor__c);
+                            loserCompetitors.add(g.SecondCompetitor__c);
+                        }
+                        else{
+                            winnerCompetitors.add(g.SecondCompetitor__c);
+                            loserCompetitors.add(g.FirstCompetitor__c);
+                        }
+                    }
+                    thisGames.add(new Game__c(FirstCompetitor__c = winnerCompetitors.get(0), FirstCompetitorScore__c = 0, 
+                                              SecondCompetitor__c = winnerCompetitors.get(1), SecondCompetitorScore__c = 0,
+                                              Stage__c = thisRoundStage, Tournament__c = currentTournament.Id));
+                    thisGames.add(new Game__c(FirstCompetitor__c = loserCompetitors.get(0), FirstCompetitorScore__c = 0, 
+                                              SecondCompetitor__c = loserCompetitors.get(1), SecondCompetitorScore__c = 0,
+                                              Stage__c = thisRoundStage, Tournament__c = currentTournament.Id, WinningGroup__c = false));
+                    try{update thisGames;}
+                    catch(DMLException e){}
+                    return;
+               }
+               if(gamesByPreviousRound.size() >= 2 && gamesByThisStage.size() >= 2 && !isFinal){
+                    for(Game__c g : gamesByPreviousRound){
+                        if(g.FirstCompetitorScore__c > g.SecondCompetitorScore__c){winnerCompetitors.add(g.FirstCompetitor__c);}
+                        else{winnerCompetitors.add(g.SecondCompetitor__c);}
+                    }
+               }
+               Integer competitorCount = 0;
+               for(Game__c x : gamesByThisStage){
+                    if(x.FirstCompetitor__c == '?'){
+                        x.FirstCompetitor__c = winnerCompetitors.get(competitorCount);
+                        competitorCount++;
+                    }
+                    if(x.SecondCompetitor__c == '?'){
+                        x.SecondCompetitor__c = winnerCompetitors.get(competitorCount);
+                        competitorCount++; 
+                    }
+                    thisGames.add(x);
+               }
+               try{update thisGames;}
+               catch(DMLException e){throw e;}
+            } 
+        }else{}
+    }
+    
     public List<List<Game__c>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
         if(currentTournament != null && currentTournament.Type__c =='Single Elimination'){
-            Integer i = 0; //Stage count
             List<List<Game__c>> thisGames = new List<List<Game__c>>();
             
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
                     SecondCompetitorScore__c, Stage__c, Tournament__c 
-                    From Game__c Where Tournament__c = :currentTournament.Id];
-            List<Game__c> firstRoundGames = new List<Game__c>();
-            for(Game__c x : gamesForCurrentTournament){
-                if(x.Stage__c ==1 ){
-                    firstRoundGames.add(x);
-                }   
-            }
-            Integer countGames = firstRoundGames.size(); 
-            if(countGames >0 && countGames !=null){               
-                for(Integer j =1; j<=countGames ;j*=2){
-                    i++;
-                }                                
-            }
-            if(gamesForCurrentTournament !=null){
-                for(Integer j = 1; j<=i;j++){
+                    From Game__c Where Tournament__c = :currentTournament.Id Order By Stage__c];
+            if(gamesForCurrentTournament !=null && !gamesForCurrentTournament.isEmpty()){
+                for(Integer j = 1; j<=gamesForCurrentTournament.get(gamesForCurrentTournament.size()-1).Stage__c.intValue();j++){
                     List<Game__c> stageLists = new List<Game__c>();
                     for(Game__c x : gamesForCurrentTournament){
                         if(j !=null && j == x.Stage__c.intValue()){
@@ -137,117 +207,11 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                     }
                     thisGames.add(stageLists);    
                 }
-            }
+            }else{return new List<List<Game__c>>();}
             return thisGames;
         }else{
             competitorsName = new Map<String, String>();
             return new List<List<Game__c>>();
         }    
     }
-    
-    public static void createNextSingleEliminationStage(List<Game__c> gamesByPreviousRound, Tournament__c currentTournament){
-        if(currentTournament !=null && gamesByPreviousRound !=null &&
-           currentTournament.Type__c != null && currentTournament.Type__c =='Single Elimination'){
-            if(gamesByPreviousRound.size() >2){ 
-                List<Game__c> nextRoundGames = new List<Game__c>();
-                List<Id> competitorsWinnersId = new List<Id>();
-                for(Game__c x : gamesByPreviousRound){
-                    if(x.FirstCompetitorScore__c> x.SecondCompetitorScore__c) {competitorsWinnersId.add(x.FirstCompetitor__c);}
-                    else{competitorsWinnersId .add(x.SecondCompetitor__c);}
-                }
-                Decimal thisGameStage = gamesByPreviousRound.get(0).Stage__c;
-                thisGameStage++;
-                Id freeSlot;
-                If(currentTournament.Format__c == '1 x 1'){ 
-                    freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
-                } else{ 
-                    freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
-                }                    
-                for(Integer round=0; round<=competitorsWinnersId.size()-1;round +=2){
-                        Integer match=round+1;
-                        Game__c currentGame = new Game__c();
-                        currentGame.FirstCompetitor__c= competitorsWinnersId.get(round);
-                        currentGame.FirstCompetitorScore__c= 0;
-                        currentGame.SecondCompetitorScore__c = 0;
-                        currentGame.Stage__c = thisGameStage;
-                        currentGame.Tournament__c = currentTournament.Id;
-                        if(match < competitorsWinnersId.size()){
-                            currentGame.SecondCompetitor__c= competitorsWinnersId.get(match);
-                        }else{
-                              currentGame.FirstCompetitorScore__c = 1;
-                              currentGame.FirstCompetitorAccept__c= true;
-                              currentGame.SecondCompetitorAccept__c= true;                              
-                              currentGame.SecondCompetitor__c= freeSlot;
-                              }
-                        nextRoundGames.add(currentGame);
-                    }
-                    if(nextRoundGames !=null && nextRoundGames.size()>0){
-                        try{upsert nextRoundGames;}
-                        catch(DMLException e){}
-                    
-                    }
-            }
-            
-            else if(gamesByPreviousRound.size() == 2){
-                createFinalAndRhirdPlaceMatch(gamesByPreviousRound, currentTournament);       
-            }                      
-                     
-        }     
-    }
-  
-    private static void createFinalAndRhirdPlaceMatch(List<Game__c> gamesByPreviousRound, Tournament__c currentTournament){
-        List<Game__c> nextRoundGames = new List<Game__c>();
-        List<Id> competitorsWinnersId = new List<Id>();
-        List<Id> competitorsLosersId = new List<Id>();    
-        Decimal thisGameStage = gamesByPreviousRound.get(0).Stage__c;
-        thisGameStage++;
-        Id freeSlot;
-        If(currentTournament.Format__c == '1 x 1'){ 
-            freeSlot = [Select ID,Name, Email__c From Player__c Where Email__c='www@gmail.com'].Id;
-        }
-        else{ 
-            freeSlot =[Select Id, Name From Team__c Where Name = '-'].Id;
-        }                 
-        for(Game__c x : gamesByPreviousRound){
-            if(x.FirstCompetitorScore__c> x.SecondCompetitorScore__c){
-                competitorsWinnersId.add(x.FirstCompetitor__c);
-                competitorsLosersId.add(x.SecondCompetitor__c);
-            }
-            else{
-                competitorsWinnersId.add(x.SecondCompetitor__c);
-                competitorsLosersId.add(x.FirstCompetitor__c);
-            }
-        }
-        Game__c FinalGame = new Game__c();
-        FinalGame.FirstCompetitor__c= competitorsWinnersId.get(0);
-        FinalGame.SecondCompetitor__c= competitorsWinnersId.get(1);
-        FinalGame.FirstCompetitorScore__c= 0;
-        FinalGame.SecondCompetitorScore__c = 0;
-        FinalGame.Stage__c = thisGameStage;
-        FinalGame.Tournament__c = currentTournament.Id;
-        nextRoundGames.add(FinalGame );
-        
-        Game__c thirdPlaceMatch = new Game__c();
-        thirdPlaceMatch.FirstCompetitor__c= competitorsLosersId.get(0);
-        thirdPlaceMatch.SecondCompetitor__c= competitorsLosersId.get(1);
-        if(competitorsLosersId.get(1) != freeSlot){
-            thirdPlaceMatch.FirstCompetitorScore__c= 0;
-        }
-        else{
-            thirdPlaceMatch.FirstCompetitorScore__c= 2;
-            thirdPlaceMatch.FirstCompetitorAccept__c = true;
-            thirdPlaceMatch.SecondCompetitorAccept__c= true;
-        }
-        thirdPlaceMatch.SecondCompetitorScore__c = 0;
-        thirdPlaceMatch.Stage__c = thisGameStage;
-        thirdPlaceMatch.WinningGroup__c = false;
-        thirdPlaceMatch.Tournament__c = currentTournament.Id;                
-        nextRoundGames.add(thirdPlaceMatch);
-        
-        if(nextRoundGames !=null && nextRoundGames.size()>0){
-            try{upsert nextRoundGames;}
-            catch(DMLException e){}
-         
-        }
-    }  
 }

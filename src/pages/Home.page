@@ -89,6 +89,7 @@
  
     <c:Header />
     <div style="float:left; width:100%;">
+
         <div class="w3-content w3-section" style="padding:0px; margin:0px;" id = "mainDiv" >
         <img class="mySlides" id="aaa" src="{!URLFOR($Resource.SiteSamples,
                           'img/slider001.jpg')}" width="100%;"/>
@@ -99,8 +100,10 @@
           <img class="mySlides" id = "aad" src="{!URLFOR($Resource.SiteSamples,
                           'img/slider004.jpg')}" width="100%;"/>
         </div>
+
         
         <div id = "anotherElements" style="width:100%; height:auto; margin-top: 35%;">
+
             <div style="height:10px; float:left; margin-top:0px;" id="divAllHTML">
                                 <div id="menu" style="margin-bottom: 10px;">
                      <ul id = 'ulCircles'>
@@ -116,6 +119,7 @@
                 </div>
             </div>
         </div>  
+
         
          
          <div style="width: 100%; height: auto; background-size: cover; background-repeat: no-repeat; float:left; border-radius:30%; margin-left: 20px; margin-bottom: 20px;">
