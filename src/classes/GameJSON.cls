@@ -22,6 +22,10 @@ public with sharing class GameJSON {
         public String firstCompetitorName {get;set;}
         public String secondCompetitorName {get;set;}
         public Boolean editable {get;set;}
+        public String player1OfTeamColor {get;set;}
+        public String player2OfTeamColor {get;set;}
+        public String player1OfTeam2Color {get;set;}
+        public String player2OfTeam2Color {get;set;}
         public GameJSON(){}
         public GameJSON(String gameId1,String color1,String playerName1,String score1){
             gameId = gameId1; color = color1; playerName = playerName1; score = score1;

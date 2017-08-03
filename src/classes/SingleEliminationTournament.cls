@@ -14,6 +14,17 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
         }
         set;
     }
+    
+    public GameJSON selectedGameJSON {get;set;}
+    public String gameJsonId{
+        get{
+            if (gameJsonId == null) gameJsonId = '';
+            return gameJsonId;
+        }
+        set;
+    }
+    
+    public Map<Id,Team__c> teams {get;set;}
 
 
     public List<List<GameJSON>> representSingleEliminationGrid{
@@ -215,6 +226,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     }
     
     public List<List<GameJSON>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
+        teams = new Map<Id,Team__c>();
         if(currentTournament != null && currentTournament.Type__c =='Single Elimination'){
             //List<List<Game__c>> thisGames = new List<List<Game__c>>();
             List<List<GameJSON>> gameJSONList = new List<List<GameJSON>>();
@@ -230,7 +242,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                 teamsOrPlayers = new Map<Id,Player__c>([select Id,Name from Player__c]);
                 if (currentPlayer!=null) playerOrTeamRelatedToPlayerFromCookie = currentPlayer.Id;
             } else {
-                teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
+                teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c,Player__r.Name from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
                 if (currentPlayer!=null){
                     for (Team__c team: (List<Team__c>)teamsOrPlayers.Values()){
                         playerOrTeamRelatedToPlayerFromCookie = 
@@ -243,6 +255,10 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
                     SecondCompetitorScore__c, Stage__c, Tournament__c 
                     From Game__c Where Tournament__c = :currentTournament.Id Order By Stage__c];
+            
+            if (currentTournament.Format__c=='2 x 2'){
+                teams = (Map<Id,Team__c>) teamsOrPlayers;
+            }
             if(gamesForCurrentTournament !=null && !gamesForCurrentTournament.isEmpty()){
                 for(Integer j = 1; j<=gamesForCurrentTournament.get(gamesForCurrentTournament.size()-1).Stage__c.intValue();j++){
                     List<GameJSON> gameJson = new List<GameJSON>();
@@ -260,6 +276,20 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                                 gamejs.firstCompetitorId==playerOrTeamRelatedToPlayerFromCookie || gamejs.secondCompetitorId==playerOrTeamRelatedToPlayerFromCookie;    
                             if (gamejs.editable) gamejs.hrefTo = 'Game?id='+gamejs.gameId;
                             else gamejs.hrefTo = '#table1';
+                            
+                            if (currentTournament.Format__c=='2 x 2'){
+                                gamejs.player1OfTeam = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__r.Name;
+                                gamejs.player2OfTeam = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__r.Name;
+                                gamejs.player1OfTeam2 = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__r.Name;
+                                gamejs.player2OfTeam2 = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__r.Name;
+                                if (currentPlayer!=null){
+                                    gamejs.player1OfTeamColor = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black';
+                                    gamejs.player2OfTeamColor = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black';
+                                    gamejs.player1OfTeam2Color = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black';
+                                    gamejs.player2OfTeam2Color = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black';
+                                }
+                            }
+                            
                             gameJson.add(gamejs);
                         }
                     }
@@ -271,5 +301,19 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             competitorsName = new Map<String, String>();
             return new List<List<GameJSON>>();
         }    
+    }
+    
+    public void changeSelectedGameJSON(){
+        Boolean exitCycle = false;
+        for (List<GameJSON> gameJsons: representSingleEliminationGrid){
+            for (GameJSON g: gameJsons){
+                if (g.gameId==gameJsonId){
+                    selectedGameJson = g;
+                    exitCycle = true;
+                }
+                if (exitCycle) break;
+            }
+        }
+        system.debug('selected game json: '+selectedGameJSON);
     }
 }
