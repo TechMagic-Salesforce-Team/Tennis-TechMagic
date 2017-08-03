@@ -17,11 +17,6 @@
                 margin: auto;
                 width: 50%;
             }
-            .custom2{
-                margin-top : 2px;
-                margin-bottom : 2px;
-                text-decoration: blink;
-            }
             .thisLinks:link, thisLinks:visited{ 
                 background-color: white;
                 color: black;
@@ -33,23 +28,11 @@
                 border-radius : 20%;        
             }
             
-            .thisLinksNotEditable:link,.thisLinksNotEditable:visited {
-            background-color: white;
-            color: black;
-            border: 2px solid black;
-            margin-bottom: 5px;
-            padding: 10px 20px;
-            margin-top:10px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            border-radius : 20%;
-        }
-            
             .thisLinks:hover{
                 background-color: #cc1e1e;
                 color: white;
              }
+
              .tournamentFields{
                  font-size : 17px;
              }
@@ -93,6 +76,29 @@
                 margin: 15px;
 
              }
+             .outputTextInCustom2{
+                 font-family: Arial Unicode MS;
+                 text-align : center;
+             }
+             .outputTextInCustom2Header{
+                 font : italic bold 22px/30px Georgia, serif;
+                 text-align : center;
+             }
+             .thisLinks{
+                 border : 1px solid;
+             }
+             .thisLinksNotEditable:link,.thisLinksNotEditable:visited {
+                background-color: white;
+                color: black;
+                border: 2px solid black;
+                margin-bottom: 5px;
+                padding: 10px 20px;
+                margin-top:10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                border-radius : 20%;
+            }
         </style>        
     </head>
     <apex:pageBlock rendered="{!NOT(ISNULL(pdfCurrentTournament.Name))}">
@@ -108,22 +114,35 @@
             
             </apex:outputPanel>
         </apex:pageBlock><br/>
-        <apex:outputText styleClass="hYellowBackground" value="All Competetitors Who Take Part At This Tournament :"/><br/><br/>
+        <apex:outputText rendered="{!competitorsName.size>0 && pdfCurrentTournament.Status__c =='Upcoming'}" styleClass="hYellowBackground" value="All Competetitors Who Take Part At This Tournament :"/>
+        <apex:outputText rendered="{!competitorsName.size>0 && pdfCurrentTournament.Status__c =='Current'}" styleClass="hYellowBackground" value="This tournament hasn't finished yet. It's not final result."/><br/><br/>        
         <apex:pageblock rendered="{!pdfCurrentTournament !=null && competitorsName!=null && competitorsName.size > 0}">
-            <apex:pageblockTable value="{!competitorsName}" var="competitor">
-                <apex:column headerValue="">
-                            <apex:outputPanel layout="block" styleClass="custom2">
-                                <apex:outputText style="font-family: Arial Unicode MS;" value="{!competitor}"/><br/>
-                            </apex:outputPanel>
+            <apex:pageblockTable value="{!playerStatistic}" var="competitor" style="width : 100%;">
+                
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" headerValue="Team" rendered="{!pdfCurrentTournament.Format__c = '2 x 2'}">
+                    <apex:outputText rendered="{!competitor.Player__r.Id != winnerOfThisTournamentId}" value="{!competitor.Player__r.Name}"></apex:outputText>
+                    <apex:outputText rendered="{!competitor.Player__r.Id == winnerOfThisTournamentId}" style="background : green;" value="{!competitor.Player__r.Name}"></apex:outputText>   
                 </apex:column>
+
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" headerValue="Player Name">
+                    <apex:outputText rendered="{!competitor.Player__r.Id != winnerOfThisTournamentId}" value="{!competitor.Player__r.Name}"></apex:outputText>
+                    <apex:outputText rendered="{!competitor.Player__r.Id == winnerOfThisTournamentId}" style="background : green;" value="{!competitor.Player__r.Name}"></apex:outputText>
+                </apex:column>
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" Value="{!competitor.CountWonGames__c}" headerValue="Won Games"/>
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" Value="{!competitor.CountWonSets__c}" headerValue="Won Sets"/>
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" Value="{!competitor.CountLostGames__c}" headerValue="Lost Games"/>
+                <apex:column headerClass="outputTextInCustom2Header" styleClass="outputTextInCustom2" Value="{!competitor.CountLostSets__c}" headerValue="Lost Sets"/>
             </apex:pageblockTable>
         </apex:pageblock>
+        <apex:pageblockTable value="{!competitorsName}" var="competitor" rendered="{!pdfCurrentTournament.Status__c =='Upcoming' && competitorsName.size>0}">
+            <apex:column style="font-family: Arial Unicode MS;" value="{!competitor}" headerValue="Player"/>
+        </apex:pageblockTable> 
         <apex:outputText style="font-family: Arial Unicode MS;" value="Noone has registered at this tournament" rendered="{!competitorsName.size == 0}"></apex:outputText>
         <br/><br/>
         
-        <div class ="divComponents"><c:SingleElimination componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Single Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
-        <div class ="divComponents"><c:DoubleEliminationTournament componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Double Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
-        <div class ="divComponents"><c:RoundRobin componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Round Robin' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
+        <div class ="divComponents" style="font-family: Arial Unicode MS;"><c:SingleElimination componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Single Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
+        <div class ="divComponents" style="font-family: Arial Unicode MS;"><c:DoubleEliminationTournament componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Double Elimination' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
+        <div class ="divComponents" style="font-family: Arial Unicode MS;"><c:RoundRobin componentTournament="{!pdfCurrentTournament}" rendered="{!pdfCurrentTournament.Type__c=='Round Robin' && pdfCurrentTournament.Status__c!='Upcoming'}"/></div>
     </apex:pageBlock>
     <apex:pageBlock rendered="{!ISNULL(pdfCurrentTournament.Name)}">
         <apex:outputText ><h1>Ooooooops... This Tournament Doesn't Exist, Sorry...</h1></apex:outputText>
