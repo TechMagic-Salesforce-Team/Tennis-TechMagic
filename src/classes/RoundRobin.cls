@@ -26,6 +26,7 @@ public with sharing class RoundRobin{
         insert currentTournamentGames;
     }
      public List<List<GameJSON>> RoundRobinGrid(Tournament__c myTournament) {
+        System.debug('RR Grid');
         Integer count = 0;
         Player__c currentPlayer = null;
         Boolean isLoggedIn = ApexPages.currentPage().getCookies().get('PlayerFromCookie')!=null;

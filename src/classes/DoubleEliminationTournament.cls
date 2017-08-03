@@ -3,7 +3,10 @@ public with sharing class DoubleEliminationTournament {
     public integer ijz {get {return 1;} set;}
     public Tournament__c oneTournament{get;set;}
     public List<List<GameJSON>> representDoubleEliminationGridJSON{get{
-            if (representDoubleEliminationGridJSON==null && oneTournament!=null) generateDoubleEliminationGrid(oneTournament);
+            if (representDoubleEliminationGridJSON==null && oneTournament!=null){
+             System.debug('represent==null'+oneTournament);    
+             generateDoubleEliminationGrid(oneTournament);
+            }
             return representDoubleEliminationGridJSON;
     }set;}
     

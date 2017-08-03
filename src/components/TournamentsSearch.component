@@ -12,18 +12,19 @@
 
 
     <apex:attribute type="Player__c" name="player" assignTo="{!currentPlayer2}" description="Value to pass into the controller"/>
+    <apex:attribute type="String" name="home" assignTo="{!isHome}" description="Value to pass into the controller"/>
     <apex:form >
         <apex:pageBlock >
             <apex:pageBlockSection >
-                <apex:inputField value="{!searchTournament.Name}" required="false" styleClass="styled-select"/>
-                <apex:inputField value="{!searchTournament.Type__c}" required="false" styleClass="styled-select"/>
-                <apex:inputField value="{!searchTournament.Format__c}" required="false" styleClass="styled-select"/>
-                <apex:inputField value="{!searchTournament.Status__c}" required="false" styleClass="styled-select"/>
+                <apex:inputField value="{!searchTournament.Name}" required="false" styleClass="styled-select" onkeyup="searchTournaments()" rendered="{!isHome != 'true'}"/>
+                <apex:inputField value="{!searchTournament.Type__c}" required="false" styleClass="styled-select" onchange="searchTournaments()"/>
+                <apex:inputField value="{!searchTournament.Format__c}" required="false" styleClass="styled-select" onchange="searchTournaments()"/>
+                <apex:inputField value="{!searchTournament.Status__c}" required="false" styleClass="styled-select" onchange="searchTournaments()" rendered="{!isHome != 'true'}"/>
             </apex:pageBlockSection>
             <apex:pageBlockButtons location="bottom">
-                <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable"/>
+                <apex:commandButton value="Search" action="{!search}" rerender="allTournamentsTable" rendered="false"/>
                 <apex:actionFunction name="searchAction" action="{!search}" rerender="allTournamentsTable"/>
-                <apex:commandButton value="New tournament" action="{!create}" rendered="{!isManager}"/>
+                <apex:commandButton value="New tournament" action="{!create}" rendered="{!isManager && isHome != 'true'}"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
         <apex:pageBlock id="allTournamentsTable">
