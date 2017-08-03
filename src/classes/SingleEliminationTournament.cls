@@ -167,12 +167,25 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                             loserCompetitors.add(g.FirstCompetitor__c);
                         }
                     }
-                    thisGames.add(new Game__c(FirstCompetitor__c = winnerCompetitors.get(0), FirstCompetitorScore__c = 0, 
-                                              SecondCompetitor__c = winnerCompetitors.get(1), SecondCompetitorScore__c = 0,
-                                              Stage__c = thisRoundStage, Tournament__c = currentTournament.Id));
-                    thisGames.add(new Game__c(FirstCompetitor__c = loserCompetitors.get(0), FirstCompetitorScore__c = 0, 
-                                              SecondCompetitor__c = loserCompetitors.get(1), SecondCompetitorScore__c = 0,
-                                              Stage__c = thisRoundStage, Tournament__c = currentTournament.Id, WinningGroup__c = false));
+                    if(gamesByThisStage.get(0).WinningGroup__c){
+                        gamesByThisStage.get(0).FirstCompetitor__c = winnerCompetitors.get(0);
+                        gamesByThisStage.get(0).SecondCompetitor__c = winnerCompetitors.get(1);                        
+                        gamesByThisStage.get(1).FirstCompetitor__c = loserCompetitors.get(0);
+                        gamesByThisStage.get(1).SecondCompetitor__c = loserCompetitors.get(1);
+                    
+                        thisGames.add(gamesByThisStage.get(0));
+                        thisGames.add(gamesByThisStage.get(1));
+                       
+                    }else{
+                        gamesByThisStage.get(1).FirstCompetitor__c = winnerCompetitors.get(0);
+                        gamesByThisStage.get(1).SecondCompetitor__c = winnerCompetitors.get(1);                        
+                        gamesByThisStage.get(0).FirstCompetitor__c = loserCompetitors.get(0);
+                        gamesByThisStage.get(0).SecondCompetitor__c = loserCompetitors.get(1);
+                    
+                        thisGames.add(gamesByThisStage.get(0));
+                        thisGames.add(gamesByThisStage.get(1));
+                    }
+                    
                     try{update thisGames;}
                     catch(DMLException e){}
                     return;

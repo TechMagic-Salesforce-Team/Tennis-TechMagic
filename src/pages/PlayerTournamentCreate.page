@@ -9,7 +9,7 @@
   <apex:pageBlock rendered="{!!isAlreadyApplied && isValidParameter && currentTournament.Status__c != 'Upcoming'}">
     <h2>You can not apply for this tournament as it is either in progres or finished!</h2>
   </apex:pageBlock>
-  <apex:pageBlock>
+  <apex:pageBlock >
     <c:TournamentInformation tournament="{!currentTournament}"/>
   </apex:pageBlock>
   <c:Footer />
