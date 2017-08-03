@@ -338,8 +338,9 @@ function carousel(){
     isAppleProduct();
     id = setInterval(slideShow,6000);
 </script>
-
-     <apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
+<c:TournamentsSearch home="true"/>
+     <!--
+<apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
           
          <script>
               function rerenderCurrentTournament()
@@ -368,14 +369,8 @@ function carousel(){
              <apex:inputHidden value="{!selectedTournament}" id="deletePersonBlock"/>
              <apex:actionFunction name="rerenderPageBlockForSelectedTournament" action="{!rerenderPageBlockForSelectedTournament}" reRender="cGrid8, cGrid, cGrid2, cGrid3, DetalInformationForSelectedTournament"/>
              
-    
-            <!-- <apex:pageBlock mode="maindetail">
-                 <apex:pageBlockSection columns="1" id="search">
-                     <apex:selectList label="Tournament" onchange="rerenderCurrentTournament()" value="{!selectedTournament}" size="1" >
-                         <apex:selectOptions  value="{!tournamentOptions}"></apex:selectOptions>
-                     </apex:selectList>
-                 </apex:pageBlockSection>
-             </apex:pageBlock> -->
+  
+            
              
              <apex:pageBlock title="All Current Tournament" mode="maindetail">
                  <apex:pageBlockSection columns="2">   
@@ -407,12 +402,14 @@ function carousel(){
       
      <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      
-     <c:Footer />  
+   
      
         <script>
             function rerenderTournament(id){
                 $('[id$=deletePersonBlock]').val(id);
                 rerenderPageBlockForSelectedTournament();
             }
-        </script>
+        </script>-->
+     
+       <c:Footer />  
 </apex:page>

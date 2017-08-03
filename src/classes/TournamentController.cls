@@ -3,6 +3,8 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     public String currentTournamentId {get; set;}
     public Tournament__c currentTournament {get; set;}
     
+    public String isHome {get; set;}
+    
     public Player__c currentPlayer2 {get; set;}
     public Player__c currentPlayerTmp {get; set;}
     
@@ -237,6 +239,10 @@ public with sharing virtual class TournamentController extends PlayerCookie{
     }
     
     public void search() {
+        if (isHome == 'true') {
+            searchTournament.Status__c = 'Current';
+            searchTournament.Name = '';
+        }
         allTournaments = findAll();
     }
     

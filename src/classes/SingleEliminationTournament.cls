@@ -226,6 +226,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
     }
     
     public List<List<GameJSON>> generateSingleEliminationStageGrid(Tournament__c currentTournament){
+        System.debug('SET');
         teams = new Map<Id,Team__c>();
         if(currentTournament != null && currentTournament.Type__c =='Single Elimination'){
             //List<List<Game__c>> thisGames = new List<List<Game__c>>();
