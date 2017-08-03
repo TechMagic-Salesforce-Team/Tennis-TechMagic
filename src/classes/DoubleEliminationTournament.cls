@@ -78,10 +78,9 @@ public with sharing class DoubleEliminationTournament {
             if (isLoggedIn){
                 if (currentTournament.Format__c!='1 x 1'){
                     for (Team__c team: (List<Team__c>)teamsOrPlayers.Values()){
-                        playerOrTeamRelatedToPlayerFromCookie = team.PlayerTeams__r.get(0).Player__c==currentPlayer.Id?team.PlayerTeams__r.get(0).Player__c:null;
-                        if (playerOrTeamRelatedToPlayerFromCookie==null)
-                            playerOrTeamRelatedToPlayerFromCookie = team.PlayerTeams__r.get(1).Player__c==currentPlayer.Id?team.PlayerTeams__r.get(1).Player__c:null;
-                        if (playerOrTeamRelatedToPlayerFromCookie!=null) break; 
+                        playerOrTeamRelatedToPlayerFromCookie = 
+                            team.PlayerTeams__r.get(0).Player__c == currentPlayer.Id || team.PlayerTeams__r.get(1).Player__c == currentPlayer.Id?team.Id:null;
+                        if (playerOrTeamRelatedToPlayerFromCookie!=null) break;
                     }
                 } else {
                     playerOrTeamRelatedToPlayerFromCookie = currentPlayer.Id;

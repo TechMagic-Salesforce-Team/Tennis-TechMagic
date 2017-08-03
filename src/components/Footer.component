@@ -6,18 +6,18 @@
                           'img/google.png')}" width="200px;" style="float:left;"/>
             </a>
             
-            <div style='float:left; margin-left: 60%; margin-top: 1px;'>
+            <div style='float:right; margin-left: 60%; margin-top: 1px;'>
                 <a href='https://www.facebook.com/TechMagic.co' style="float: left;">
-                    <img src="http://www.iconninja.com/ico/128/facebook-899630.ico" style="width:40px; height: 40px"/>
+                    <img src="http://www.iconninja.com/ico/128/facebook-899630.ico" style="width:40px; height: 40px;"/>
                 </a>
                 
-                <a href='https://www.instagram.com/techmagic/' style="float: left;">
-                    <img src="http://gitelarochesuryon.fr/wp-content/uploads/2016/11/Instagram-logo-1-300x300.png" style="width:40px; height: 40px; margin-left: 10px;"/>
+                <a href='https://www.instagram.com/techmagic/' style="float: left; margin-left: 10px;">
+                    <img src="http://gitelarochesuryon.fr/wp-content/uploads/2016/11/Instagram-logo-1-300x300.png" style="width:40px; height: 40px;"/>
                 </a>
                 
                         
-                <a href='https://twitter.com/TechMagic_inc' style="float: left;">
-                    <img src="https://www.pi-expertises.com/wp-content/uploads/2016/10/twitter-bird-white-on-blue.png" style="width:40px; height: 40px; margin-left: 10px;"/>
+                <a href='https://twitter.com/TechMagic_inc' style="float: left; margin-left: 10px;">
+                    <img src="https://www.pi-expertises.com/wp-content/uploads/2016/10/twitter-bird-white-on-blue.png" style="width:40px; height: 40px;"/>
                 </a>
                 
             </div>

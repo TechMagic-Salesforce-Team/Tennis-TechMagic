@@ -34,6 +34,8 @@
                 ("<li><a href = 'LoginRegister?pageType=login' style='color: white; text-decoration: none;'>Login</a></li>");
             } else {
                 $("#ul_option").append
+                ("<li><a href='player?playerId={!currentPlayer.id}' style='color: white; text-decoration: none;'>Profile</a></li>");
+                $("#ul_option").append
                 ("<li><a href='LogoutPage' style='color: white; text-decoration: none;'>Logout</a></li>");
             }
         }
