@@ -339,7 +339,7 @@ function carousel(){
     id = setInterval(slideShow,6000);
 </script>
 
-     <apex:pageBlock rendered="true" mode="maindetail">
+     <apex:pageBlock rendered="{!tournamentsInProgressSize > 0}" mode="edit">
           
          <script>
               function rerenderCurrentTournament()
@@ -354,7 +354,7 @@ function carousel(){
                 
                 </script>
     
-     <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgress.size>0}" mode="maindetail">
+     <apex:pageBlock tabStyle="Tournament__c" rendered="{!tournamentsInProgressSize > 0}" mode="maindetail">
      
          <apex:form >
              <apex:inputHidden value="{!selectedTournament}" id="tournamentIdHidden"/>
@@ -377,8 +377,8 @@ function carousel(){
                  </apex:pageBlockSection>
              </apex:pageBlock> -->
              
-             <apex:pageBlock title="All Current Tournaments" mode="maindetail">
-                 <apex:pageBlockSection columns="2" >   
+             <apex:pageBlock title="All Current Tournament" mode="maindetail">
+                 <apex:pageBlockSection columns="2">   
                      <apex:outputLabel style="font-size : 22px;">Type  &nbsp; &nbsp;<apex:selectList onchange="rerenderCurrentTournamentsType()" value="{!selectedTournamentType}" size="1" styleClass="styled-select">
                          <apex:selectOptions value="{!tournamentTypeOptions}"></apex:selectOptions>
                      </apex:selectList></apex:outputLabel>
@@ -396,22 +396,16 @@ function carousel(){
                     <apex:column value="{!tournament.Format__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
                     <apex:column value="{!tournament.Status__c}" onclick="rerenderTournament('{!tournament.Id}')"/>
                 </apex:pageBlockTable>
-            </apex:pageBlock>   
-
-            
-
+            </apex:pageBlock>      
          </apex:form>
-         </apex:pageBlock>  
-
-            <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments Found" rendered="{!tournamentsInProgressSize == 0}"></apex:pageBlock> 
-            </apex:pageBlock>
+         </apex:pageBlock>     
+     </apex:pageBlock>
      
-     
-     <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
-          <apex:form ><c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/></apex:form>
-     </apex:pageBlock> 
+     <apex:pageBlock mode="maindetail" rendered="{!tournamentsInProgressSize > 0 && tournamentsInProgress.size !=null && tournamentsInProgress.size > 0 && tournamentBySelectOption !=null}">     
+          <c:TournamentInformation id="cGrid" tournament="{!tournamentBySelectOption}"/>
+     </apex:pageBlock>    
       
-     
+     <apex:pageBlock tabStyle="Tournament__c" title="No Current Tournaments For Now" rendered="{!tournamentsInProgressSize == 0}"/>
      
      <c:Footer />  
      
@@ -421,5 +415,4 @@ function carousel(){
                 rerenderPageBlockForSelectedTournament();
             }
         </script>
-        
 </apex:page>
