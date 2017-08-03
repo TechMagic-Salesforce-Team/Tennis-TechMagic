@@ -278,15 +278,16 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                             else gamejs.hrefTo = '#table1';
                             
                             if (currentTournament.Format__c=='2 x 2'){
-                                gamejs.player1OfTeam = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__r.Name;
-                                gamejs.player2OfTeam = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__r.Name;
-                                gamejs.player1OfTeam2 = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__r.Name;
-                                gamejs.player2OfTeam2 = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__r.Name;
+                                gamejs.player1OfTeam = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__r.Name:'?';
+                                gamejs.player2OfTeam = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__r.Name:'?';
+                                gamejs.player1OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__r.Name:'?';
+                                gamejs.player2OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__r.Name:'?';
                                 if (currentPlayer!=null){
-                                    gamejs.player1OfTeamColor = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black';
-                                    gamejs.player2OfTeamColor = teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black';
-                                    gamejs.player1OfTeam2Color = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black';
-                                    gamejs.player2OfTeam2Color = teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black';
+                                    
+                                    gamejs.player1OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                    gamejs.player2OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                    gamejs.player1OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                    gamejs.player2OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
                                 }
                             }
                             
