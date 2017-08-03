@@ -283,11 +283,12 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                                 gamejs.player1OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__r.Name:'?';
                                 gamejs.player2OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__r.Name:'?';
                                 if (currentPlayer!=null){
-                                    
                                     gamejs.player1OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
                                     gamejs.player2OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
                                     gamejs.player1OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
                                     gamejs.player2OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                } else {
+                                    gamejs.player1OfTeamColor = gamejs.player2OfTeamColor = gamejs.player1OfTeam2Color = gamejs.player2OfTeam2Color = 'black';
                                 }
                             }
                             

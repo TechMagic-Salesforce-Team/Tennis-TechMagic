@@ -3,7 +3,7 @@ public with sharing class DoubleEliminationTournament {
     public integer ijz {get {return 1;} set;}
     public Tournament__c oneTournament{get;set;}
     public List<List<GameJSON>> representDoubleEliminationGridJSON{get{
-            if (representDoubleEliminationGridJSON==null) generateDoubleEliminationGrid(oneTournament);
+            if (representDoubleEliminationGridJSON==null && oneTournament!=null) generateDoubleEliminationGrid(oneTournament);
             return representDoubleEliminationGridJSON;
     }set;}
     
@@ -14,6 +14,8 @@ public with sharing class DoubleEliminationTournament {
         }
         set;
     }
+    
+    public Map<Id,Team__c> teams {get;set;}
     
     
     public Map<String, String> competitorsName{
@@ -66,11 +68,11 @@ public with sharing class DoubleEliminationTournament {
                 currentPlayer = [select Id,Name,Email__c,Password__c,IsManager__c from Player__c where Id = :playerId];
             } 
             
-            Map<Id,Sobject> teamsOrPlayers = null;
+            Map<Id,Sobject> teamsOrPlayers = new Map<Id,Sobject>();
             String playerOrTeamRelatedToPlayerFromCookie = null;
             if (currentTournament.Format__c=='1 x 1'){
                 teamsOrPlayers = new Map<Id,Player__c>([select Id,Name from Player__c]);
-            } else teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
+            } else teamsOrPlayers = new Map<Id,Team__c>([select Id,Name, (select Player__c,Player__r.Name from PlayerTeams__r) from Team__c where Tournament__c =: currentTournament.Id]);
             
             
              /////////////////////////////////////////////////////////////////////
@@ -87,7 +89,11 @@ public with sharing class DoubleEliminationTournament {
                 }
             }
             
-           
+           System.debug('I am here'+teamsOrPlayers.size());
+            
+            if (currentTournament.Format__c=='2 x 2'){
+                teams = (Map<Id,Team__c>) teamsOrPlayers;
+            }
             for (List<Game__c> gameList: thisGames){
                 List<GameJSON> gamejsList = new List<GameJSON>();                
                     for (Game__c g: gameList){
@@ -103,7 +109,8 @@ public with sharing class DoubleEliminationTournament {
                         gamejs.secondCompetitorColor = g.SecondCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';
                         gamejs.winningGroup = g.WinningGroup__c; gamejs.stage = g.Stage__c.intValue();
                         gamejs.editable = gamejs.firstCompetitorId==playerOrTeamRelatedToPlayerFromCookie||gamejs.secondCompetitorId==playerOrTeamRelatedToPlayerFromCookie;
-                        
+                        if (gamejs.editable) gamejs.hrefTo = 'Game?id='+gamejs.gameId;
+                            else gamejs.hrefTo = '#table1';
                     
                         if (currentTournament.Format__c=='1 x 1'){
                             if (gamejs.firstCompetitorId!='?'){
@@ -123,12 +130,20 @@ public with sharing class DoubleEliminationTournament {
                             Team__c team = (Team__c) teamsOrPlayers.get(gamejs.secondCompetitorId);
                             gamejs.secondCompetitorName = team.Name;
                         } else gamejs.secondCompetitorName='?';
-                        }
-                        
-                                     //******too many sql queries (101)****//
-                    //gamejs.firstCompetitorName =  competitorsName.get(gamejs.firstCompetitorId);
-                        //gamejs.secondCompetitorName =  competitorsName.get(gamejs.secondCompetitorId);
-                         
+                                gamejs.player1OfTeam = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__r.Name:'?';
+                                gamejs.player2OfTeam = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__r.Name:'?';
+                                gamejs.player1OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__r.Name:'?';
+                                gamejs.player2OfTeam2 = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__r.Name:'?';
+
+                                    if (currentPlayer!=null){
+                                        gamejs.player1OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                        gamejs.player2OfTeamColor = gamejs.firstCompetitorId!='?'?teams.get(gamejs.firstCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                        gamejs.player1OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(0).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                        gamejs.player2OfTeam2Color = gamejs.secondCompetitorId!='?'?teams.get(gamejs.secondCompetitorId).PlayerTeams__r.get(1).Player__c==currentPlayer.Id?'#FF69B4':'black':'black';
+                                    } else {
+                                    gamejs.player1OfTeamColor = gamejs.player2OfTeamColor = gamejs.player1OfTeam2Color = gamejs.player2OfTeam2Color = 'black';
+                                }
+                            }
                         gamejsList.add(gamejs);
                     }
                 representDoubleEliminationGridJSON.add(gamejsList);
