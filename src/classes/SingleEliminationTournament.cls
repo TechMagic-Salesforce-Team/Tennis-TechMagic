@@ -29,8 +29,15 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
 
     public List<List<GameJSON>> representSingleEliminationGrid{
         get{
-            if(representSingleEliminationGrid == null && oneTournament !=null) return generateSingleEliminationStageGrid(oneTournament);
-            if(representSingleEliminationGrid == null && oneTournament ==null) return new List<List<GameJSON>>();
+            if(representSingleEliminationGrid == null && oneTournament !=null){
+                SYSTEM.debug('REPRESENT'+oneTournament);
+                return generateSingleEliminationStageGrid(oneTournament);
+            }
+            if(representSingleEliminationGrid == null && oneTournament ==null) {
+                SYSTEM.debug('NULL,NULL');
+                return new List<List<GameJSON>>();
+            }
+            SYSTEM.DEBUG('END OF REPRESENT');
             return representSingleEliminationGrid;
         }
         set;
@@ -44,19 +51,6 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
         }
         set;
     }
-    public boolean isLoserGroupGame{
-        get{
-            if(representSingleEliminationGrid !=null){
-                for(List<GameJSON> x : representSingleEliminationGrid){
-                    for(GameJSON thisGame : x){
-                        if(!thisGame.winningGroup && thisGame!=null) return true;
-                    }
-                }     
-            }return false;
-        }
-        set;
-    }
-    
     public static void StartSingleEliminationTournament(List<String> CompetitorsIds, Tournament__c currentTournament){
         if(currentTournament !=null && currentTournament.Type__c !=null && currentTournament.Type__c == 'Single Elimination' && currentTournament.Format__c !=null){
             if(CompetitorsIds.size()<=1){
@@ -254,7 +248,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
             }
             
             List<Game__c>gamesForCurrentTournament = [Select Name, WinningGroup__c, FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, 
-                    SecondCompetitorScore__c, Stage__c, Tournament__c 
+                    SecondCompetitorScore__c, Stage__c, Tournament__c, Type__c 
                     From Game__c Where Tournament__c = :currentTournament.Id Order By Stage__c];
             
             if (currentTournament.Format__c=='2 x 2'){
@@ -269,6 +263,7 @@ public with sharing class SingleEliminationTournament implements ISingleEliminat
                             GameJSON gamejs = new GameJSON();
                             gamejs.gameId = x.Id; gamejs.firstCompetitorId = x.FirstCompetitor__c; gamejs.secondCompetitorId = x.SecondCompetitor__c;
                             gamejs.firstCompetitorScore = ''+x.FirstCompetitorScore__c; gamejs.secondCompetitorScore = ''+x.SecondCompetitorScore__c;
+                            gamejs.gameType = x.Type__c;
                             gamejs.stage = x.Stage__c.intValue();
                             gamejs.winningGroup = x.WinningGroup__c;
                             gamejs.firstCompetitorColor = x.FirstCompetitor__c==playerOrTeamRelatedToPlayerFromCookie?'#FF69B4':'black';

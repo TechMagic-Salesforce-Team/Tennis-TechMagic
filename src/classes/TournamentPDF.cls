@@ -8,8 +8,14 @@ public with sharing class TournamentPDF extends TournamentController{
         get{
             if(winnerOfThisTournamentId == null && pdfCurrentTournament !=null){
               List<Game__c> thisGame = new List<Game__c>();
-              thisGame = [Select Id,FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, SecondCompetitorScore__c From Game__c Where Type__c = 'Final' AND WinningGroup__c = true AND Tournament__c = :pdfCurrentTournament.Id];
-              if(thisGame.size()==1){
+              thisGame = [Select Id,FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, SecondCompetitorScore__c, WinningGroup__c, Type__c From Game__c Where Tournament__c = :pdfCurrentTournament.Id];
+              if(thisGame.size()>=1){
+                  if(thisGame.size()>=2){
+                      if(thisGame.size()>=3){
+                      
+                      
+                      }
+                  }
                   if(thisGame.get(0).FirstCompetitorScore__c > thisGame.get(0).SecondCompetitorScore__c) return thisGame.get(0).FirstCompetitor__c;
                   return thisGame.get(0).SecondCompetitor__c;
               }
