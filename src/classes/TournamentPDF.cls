@@ -3,31 +3,81 @@ public with sharing class TournamentPDF extends TournamentController{
     public Tournament__c pdfCurrentTournament{get;set;}
     private Map<String, String> competitorsMap{get;set;}
     public List<String> competitorsName{get;set;}
-    public String myURL{get;set;}
-    public String winnerOfThisTournamentId{
+    public Map<String, String> teamNameLinkedToPlayer{
         get{
-            if(winnerOfThisTournamentId == null && pdfCurrentTournament !=null){
-              List<Game__c> thisGame = new List<Game__c>();
-              thisGame = [Select Id,FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, SecondCompetitorScore__c, WinningGroup__c, Type__c From Game__c Where Tournament__c = :pdfCurrentTournament.Id];
-              if(thisGame.size()>=1){
-                  if(thisGame.size()>=2){
-                      if(thisGame.size()>=3){
-                      
-                      
+            if(pdfCurrentTournament!=null){
+                if(teamNameLinkedToPlayer== null){
+                    Map<String, String> localCompetitorsName = getIdAndNameMap(pdfCurrentTournament);
+                    localCompetitorsName.put('?','?');
+                    return localCompetitorsName;
+                }
+                return teamNameLinkedToPlayer;
+            }else{return new Map<String, String>();}
+        }
+        set;
+    }
+    public String myURL{get;set;}
+    public List<String> winnerOfThisTournamentId{
+        get{
+            if(winnerOfThisTournamentId == null && pdfCurrentTournament !=null && pdfCurrentTournament.Type__c == 'Single Elimination'){
+              List<Game__c> thisListGame = new List<Game__c>();
+              thisListGame = [Select Id,FirstCompetitor__c, SecondCompetitor__c, FirstCompetitorScore__c, SecondCompetitorScore__c, WinningGroup__c,Stage__c, Type__c From Game__c Where Tournament__c = :pdfCurrentTournament.Id Order By Stage__c DESC, WinningGroup__c DESC];
+              //Set<Game__c> thisSetGame = new Set<Game__c>();
+              //thisSetGame.addAll(thisListGame);
+              List<String> localyWinnersList = new List<String>();
+              if(thisListGame.size()>=1){
+                  if(thisListGame.get(0).FirstCompetitorScore__c > thisListGame.get(0).SecondCompetitorScore__c){
+                      localyWinnersList.add(thisListGame.get(0).FirstCompetitor__c);
+                      localyWinnersList.add(thisListGame.get(0).SecondCompetitor__c);
+                  }
+                  else{
+                      localyWinnersList.add(thisListGame.get(0).SecondCompetitor__c);
+                      localyWinnersList.add(thisListGame.get(0).FirstCompetitor__c);
+                  }
+                  if(thisListGame.size() >=2){
+                      if(thisListGame.get(1).FirstCompetitorScore__c > thisListGame.get(0).SecondCompetitorScore__c){
+                          localyWinnersList.add(thisListGame.get(1).FirstCompetitor__c);
+                      }
+                      else{
+                          localyWinnersList.add(thisListGame.get(1).SecondCompetitor__c);
                       }
                   }
-                  if(thisGame.get(0).FirstCompetitorScore__c > thisGame.get(0).SecondCompetitorScore__c) return thisGame.get(0).FirstCompetitor__c;
-                  return thisGame.get(0).SecondCompetitor__c;
               }
+            return localyWinnersList;
             }
-            if(winnerOfThisTournamentId == null && pdfCurrentTournament ==null) return '?';
+            if(winnerOfThisTournamentId == null && pdfCurrentTournament == null) return new List<String>();
             return winnerOfThisTournamentId;            
+        }
+        set;
+    }
+    public String goldId{
+        get{
+            if(winnerOfThisTournamentId.size() > 0){
+                return winnerOfThisTournamentId.get(0);
+            }return '?';
+        }
+        set;
+    }
+    public String silverId{
+        get{
+            if(winnerOfThisTournamentId.size() > 1){
+                return winnerOfThisTournamentId.get(1);
+            }return '?';
+        }
+        set;
+    }
+    public String bronzeId{
+        get{
+            if(winnerOfThisTournamentId.size() > 2){
+                return winnerOfThisTournamentId.get(2);
+            }return '?';
         }
         set;
     }
     public List<PlayerStatistics__c> playerStatistic{
         get{
-            if(playerStatistic == null && pdfCurrentTournament !=null) return [Select CountLostGames__c, CountLostSets__c, CountWonGames__c, CountWonSets__c,Player__r.Id, Player__r.Name, Tournament__c From PlayerStatistics__c Where Tournament__c = :pdfCurrentTournament.Id Order By CountWonGames__c DESC, CountWonSets__c DESC];
+            if(playerStatistic == null && pdfCurrentTournament !=null) return [Select CountLostGames__c, CountLostSets__c, CountWonGames__c, CountWonSets__c,Player__r.Id, Player__r.Name, Tournament__c From PlayerStatistics__c 
+                                                                               Where Tournament__c = :pdfCurrentTournament.Id Order By CountWonGames__c DESC, CountWonSets__c DESC];
             if(playerStatistic == null && pdfCurrentTournament ==null) return new List<PlayerStatistics__c>();
             return playerStatistic;            
         }
@@ -101,5 +151,26 @@ public with sharing class TournamentPDF extends TournamentController{
             return finalCompetitorsResult;    
         }else{return new List<String>();}
     }
-           
+    private Map<String, String> getIdAndNameMap(Tournament__c tournament){
+        Map<String,String> result = new Map<String,String>();
+        List<PlayerStatistics__c> playersFromTeam = [Select Player__r.Id From PlayerStatistics__c Where Tournament__c = :tournament.Id];
+        List<Id> playerIds = new List<Id>();
+        for(PlayerStatistics__c x : playersFromTeam){
+            playerIds.add(x.Player__r.Id);
+        }
+        List<Team__c> teams = [Select Id, Name From Team__c Where Tournament__c =:tournament.id];
+        List<Id> teamIds = new List<Id>();
+        for(Team__c x : teams){
+            teamIds .add(x.Id);
+        }
+        List<PlayerTeam__c> pt = [Select Player__r.Id, Team__r.Name, Id From PlayerTeam__c WHERE Player__c = :playerIds and Team__c = :teamIds];
+        for(PlayerTeam__c x : pt){
+            result.put(x.Player__r.Id, x.Team__r.Name);
+        }
+        for(Team__c x : teams){
+            result.put(x.Id, x.Name);
+        }
+        return result;
+    }
+       
 }
