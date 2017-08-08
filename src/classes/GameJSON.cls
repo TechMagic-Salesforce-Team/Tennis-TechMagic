@@ -9,6 +9,7 @@ public with sharing class GameJSON {
         public String firstCompetitorId {get;set;}
         public String secondCompetitorId {get;set;}
         public String fontColor {get;set;}
+        public String gameType{get;set;}
         public String player1OfTeam {get;set;}
         public String player2OfTeam {get;set;}
         public String player1OfTeam2 {get;set;}
