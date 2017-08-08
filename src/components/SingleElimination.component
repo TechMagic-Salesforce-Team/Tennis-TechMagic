@@ -13,12 +13,14 @@
                 /*margin-left: 250px;*/
                 z-index: 10;
                 margin-top: -30px;
+                font-family: Arial Unicode MS !important;
             }
  
             .spansInfo {
                 visibility: visible;
                 cursor: pointer;
                 text-align: left;
+                font-family: Arial Unicode MS !important;
             }
         </style></head>
 <apex:attribute name="componentTournament" type="Tournament__c" assignTo="{!oneTournament}" description="need to give this tournament for good work" required="true"/>
@@ -33,20 +35,20 @@
                                 <apex:outputText rendered="{!thisGame.gameType ='Final'}"><h3 style="color:#aa142b;">Final</h3></apex:outputText>
                             </apex:facet>
                             <center>
-                             <span class="spansInfo" id="{!thisGame.gameId}_1_span" style="color: {!thisGame.firstCompetitorColor}; text-align: center;" onmouseout="outMouse()" onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_1')"><apex:outputText value="{!competitorsName[thisGame.firstCompetitorId]}"/></span><p style='clear:left;'/>
+                             <span class="spansInfo" id="{!thisGame.gameId}_1_span" style="color: {!thisGame.firstCompetitorColor}; text-align: center;" onmouseout="outMouse()" onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_1')"><apex:outputText style="font-family: Arial Unicode MS;" value="{!competitorsName[thisGame.firstCompetitorId]}"/></span><p style='clear:left;'/>
                             <apex:pageBlock rendered="{!oneTournament.Format__c=='2 x 2'}" mode="maindetail">
                                             <div class="littleWindowsTeam" id="{!thisGame.gameId}_1">
-                                            <p style="text-align: center; color: {!thisGame.player1OfTeamColor}">Player 1: {!thisGame.player1OfTeam}</p> 
-                                            <p style="text-align: center; color: {!thisGame.player2OfTeamColor}">Player 2: {!thisGame.player2OfTeam}</p>
+                                            <p style="text-align: center; color: {!thisGame.player1OfTeamColor};font-family: Arial Unicode MS !important;">Player 1: {!thisGame.player1OfTeam}</p> 
+                                            <p style="text-align: center; color: {!thisGame.player2OfTeamColor};font-family: Arial Unicode MS !important;">Player 2: {!thisGame.player2OfTeam}</p>
                             </div></apex:pageBlock>
                             <apex:outputLink rendered="{!thisGame.editable}" styleClass="thisLinks" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
                             <apex:outputLink rendered="{!!thisGame.editable}" styleClass="thisLinksNotEditable" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
                             <p style='clear:left;'/>
-                            <span class="spansInfo" id="{!thisGame.gameId}_2_span" style="color: {!thisGame.secondCompetitorColor}; text-align: center;" onmouseout="outMouse()"  onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_2')"><apex:outputText value="{!competitorsName[thisGame.secondCompetitorId]}"/></span> 
+                            <span class="spansInfo" id="{!thisGame.gameId}_2_span" style="color: {!thisGame.secondCompetitorColor}; text-align: center;" onmouseout="outMouse()"  onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_2')"><apex:outputText style="font-family: Arial Unicode MS;" value="{!competitorsName[thisGame.secondCompetitorId]}"/></span> 
                             <apex:pageBlock rendered="{!oneTournament.Format__c=='2 x 2'}" mode="maindetail">
                                         <div class="littleWindowsTeam" id="{!thisGame.gameId}_2">
-                                            <p style="text-align: center; color: {!thisGame.player1OfTeam2Color}">Player 1: {!thisGame.player1OfTeam2}</p> 
-                                            <p style="text-align: center; color: {!thisGame.player2OfTeam2Color}">Player 2: {!thisGame.player2OfTeam2}</p>
+                                            <p style="text-align: center; color: {!thisGame.player1OfTeam2Color};font-family: Arial Unicode MS !important;">Player 1: {!thisGame.player1OfTeam2}</p> 
+                                            <p style="text-align: center; color: {!thisGame.player2OfTeam2Color};font-family: Arial Unicode MS !important;">Player 2: {!thisGame.player2OfTeam2}</p>
                             </div></apex:pageBlock>
                             </center>
                         </apex:pageBlock>   
@@ -54,18 +56,18 @@
                             <apex:facet name="header">
                                 <apex:outputText ><h3 style="color:#aa142b;">3rd Place Match</h3></apex:outputText>
                             </apex:facet>
-                            <span class="spansInfo" id="{!thisGame.gameId}_1_span" style="color: {!thisGame.firstCompetitorColor}; text-align: center;" onmouseout="outMouse()" onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_1')"><apex:outputText value="{!competitorsName[thisGame.firstCompetitorId]}"/></span><p style='clear:left;'/>
+                            <span class="spansInfo" id="{!thisGame.gameId}_1_span" style="color: {!thisGame.firstCompetitorColor}; text-align: center;" onmouseout="outMouse()" onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_1')"><apex:outputText style="font-family: Arial Unicode MS;" value="{!competitorsName[thisGame.firstCompetitorId]}"/></span><p style='clear:left;'/>
                             <apex:pageBlock rendered="{!oneTournament.Format__c=='2 x 2'}" mode="maindetail"><div class="littleWindowsTeam" id="{!thisGame.gameId}_1">
-                                            <p style="text-align: center; color: {!thisGame.player1OfTeamColor}">Player 1: {!thisGame.player1OfTeam}</p> 
-                                            <p style="text-align: center; color: {!thisGame.player2OfTeamColor}">Player 2: {!thisGame.player2OfTeam}</p>
+                                            <p style="text-align: center; color: {!thisGame.player1OfTeamColor};font-family: Arial Unicode MS !important;">Player 1: {!thisGame.player1OfTeam}</p> 
+                                            <p style="text-align: center; color: {!thisGame.player2OfTeamColor};font-family: Arial Unicode MS !important;">Player 2: {!thisGame.player2OfTeam}</p>
                             </div></apex:pageBlock>
                             <apex:outputLink rendered="{!thisGame.editable}" styleClass="thisLinks" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
                             <apex:outputLink rendered="{!!thisGame.editable}" styleClass="thisLinksNotEditable" value="{!thisGame.hrefTo}">{!thisGame.firstCompetitorScore} : {!thisGame.secondCompetitorScore}</apex:outputLink>
                             <p style='clear:left;'/>
-                            <span class="spansInfo" id="{!thisGame.gameId}_2_span" style="color: {!thisGame.secondCompetitorColor}; text-align: center;" onmouseout="outMouse()"  onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_2')"><apex:outputText value="{!competitorsName[thisGame.secondCompetitorId]}"/></span> 
+                            <span class="spansInfo" id="{!thisGame.gameId}_2_span" style="color: {!thisGame.secondCompetitorColor}; text-align: center;" onmouseout="outMouse()"  onmouseover="mouseOverTeam(event,'{!thisGame.gameId}_2')"><apex:outputText style="font-family: Arial Unicode MS;" value="{!competitorsName[thisGame.secondCompetitorId]}"/></span> 
                             <apex:pageBlock rendered="{!oneTournament.Format__c=='2 x 2'}" mode="maindetail"><div class="littleWindowsTeam" id="{!thisGame.gameId}_2">
-                                            <p style="text-align: center; color: {!thisGame.player1OfTeam2Color}">Player 1: {!thisGame.player1OfTeam2}</p> 
-                                            <p style="text-align: center; color: {!thisGame.player2OfTeam2Color}">Player 2: {!thisGame.player2OfTeam2}</p>
+                                            <p style="text-align: center; color: {!thisGame.player1OfTeam2Color};font-family: Arial Unicode MS !important;">Player 1: {!thisGame.player1OfTeam2}</p> 
+                                            <p style="text-align: center; color: {!thisGame.player2OfTeam2Color};font-family: Arial Unicode MS !important;">Player 2: {!thisGame.player2OfTeam2}</p>
                             </div></apex:pageBlock>
                             </center>
                         </apex:pageBlock>
